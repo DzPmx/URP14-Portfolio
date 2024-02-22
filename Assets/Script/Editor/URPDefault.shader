@@ -22,7 +22,7 @@ Shader "MyURPShader/#Name#"
         ENDHLSL
         Pass
         {
-            
+
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -30,7 +30,9 @@ Shader "MyURPShader/#Name#"
 
             CBUFFER_START(UnityPerMaterial)
             CBUFFER_END
-            TEXTURE2D(_MainTex);SAMPLER(sampler_MainTex);
+            TEXTURE2D(_MainTex);
+            SAMPLER(sampler_MainTex);
+
             struct Attributes
             {
                 float4 posOS : POSITION;
@@ -53,7 +55,7 @@ Shader "MyURPShader/#Name#"
 
             float4 frag(Varings input) : SV_Target
             {
-                return SAMPLE_TEXTURE2D(_MainTex,sampler_MainTex,input.uv0);
+                return SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv0);
             }
             ENDHLSL
         }

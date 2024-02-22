@@ -1,8 +1,6 @@
 ﻿Shader "MyURPShader/ShaderURPPostProcessing"
 {
-    Properties
-    {
-    }
+    Properties {}
 
     SubShader
     {
@@ -21,14 +19,15 @@
             name"DrawProcedure"
             Cull Off
             Zwrite Off
-            
+
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
 
-            TEXTURE2D(_PostProcessTexture);SAMPLER(sampler_PostProcessTexture);
+            TEXTURE2D(_PostProcessTexture);
+            SAMPLER(sampler_PostProcessTexture);
             float4 _ColorTint;
-            
+
             #if SHADER_API_GLES
                 struct Attributes
                 {
@@ -37,17 +36,17 @@
                     UNITY_VERTEX_INPUT_INSTANCE_ID
                 };
             #else
-                struct Attributes
-                {
-                    uint vertexID : SV_VertexID;
-                    UNITY_VERTEX_INPUT_INSTANCE_ID
-                };
+            struct Attributes
+            {
+                uint vertexID : SV_VertexID;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
             #endif
 
             struct Varyings
             {
                 float4 posCS : SV_POSITION;
-                float2 uv0   : TEXCOORD0;
+                float2 uv0 : TEXCOORD0;
             };
 
             Varyings vert(Attributes input)
@@ -61,13 +60,14 @@
                 output.posCS = GetFullScreenTriangleVertexPosition(input.vertexID);
                 output.uv0 = GetFullScreenTriangleTexCoord(input.vertexID);
                 #endif
-                
+
                 return output;
             }
 
             float4 frag(Varyings input) : SV_Target
             {
-                return SAMPLE_TEXTURE2D(_PostProcessTexture,sampler_PostProcessTexture,input.uv0)*float4(_ColorTint.rgb,1.0);
+                return SAMPLE_TEXTURE2D(_PostProcessTexture, sampler_PostProcessTexture, input.uv0) * float4(
+                    _ColorTint.rgb, 1.0);
             }
             ENDHLSL
         }
