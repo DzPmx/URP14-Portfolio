@@ -20,6 +20,9 @@ public class RF01_ColotTintFeature : ScriptableRendererFeature
         private int postprocessingTexture = Shader.PropertyToID("_PostProcessTexture");
         private int colorTint = Shader.PropertyToID("_ColorTint");
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
         public RF01_ColotTintPass(Material material, Color color)
         {
             this.material = material;
@@ -31,6 +34,9 @@ public class RF01_ColotTintFeature : ScriptableRendererFeature
             this.sourceColor = sourceColor;
         }
 
+        /// <summary>
+        /// 渲染逻辑、每帧执行
+        /// </summary>
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
             CommandBuffer buffer = CommandBufferPool.Get("后处理集成");
@@ -48,7 +54,10 @@ public class RF01_ColotTintFeature : ScriptableRendererFeature
     }
 
     private RF01_ColotTintPass colotTintPass;
-    
+
+    /// <summary>
+    /// 第一步 创建初始化Pass
+    /// </summary>
     public override void Create()
     {
         this.name = "colorTint";
@@ -57,6 +66,9 @@ public class RF01_ColotTintFeature : ScriptableRendererFeature
         colotTintPass.renderPassEvent = renderPassEvent;
     }
 
+    /// <summary>
+    /// 添加汇入RenderPass的逻辑及Pass需要的输入
+    /// </summary>
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
         if (renderingData.cameraData.cameraType is CameraType.Game)
@@ -66,12 +78,17 @@ public class RF01_ColotTintFeature : ScriptableRendererFeature
 
         colotTintPass.ConfigureInput(ScriptableRenderPassInput.Color);
     }
-
+    /// <summary>
+    /// 初始化Pass需要的RT
+    /// </summary>
     public override void SetupRenderPasses(ScriptableRenderer renderer, in RenderingData renderingData)
     {
         colotTintPass.SetUp(renderer.cameraColorTargetHandle);
     }
-
+    /// <summary>
+    /// 销毁RF中和RenderPass中的资源
+    /// </summary>
+    /// <param name="disposing"></param>
     protected override void Dispose(bool disposing)
     {
         CoreUtils.Destroy(material);

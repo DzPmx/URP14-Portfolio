@@ -71,4 +71,4 @@ MonoBehaviour:
   m_Active: 1
   shader: {fileID: 4800000, guid: b860881af3ffae04882e4ddaace4cd8d, type: 3}
   colorTint: {r: 0.7169812, g: 0.34834465, b: 0.34834465, a: 0}
-  renderPassEvent: 450
+  renderPassEvent: 550
