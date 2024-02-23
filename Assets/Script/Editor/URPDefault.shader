@@ -28,10 +28,10 @@ Shader "MyURPShader/#Name#"
             #pragma fragment frag
             #pragma target 3.5
 
-            CBUFFER_START(UnityPerMaterial)
+            CBUFFER_START (UnityPerMaterial)
             CBUFFER_END
             TEXTURE2D(_MainTex);
-            SAMPLER(sampler_MainTex);
+            SAMPLER (sampler_MainTex);
 
             struct Attributes
             {

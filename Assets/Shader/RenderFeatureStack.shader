@@ -1,7 +1,5 @@
 ﻿Shader "MyURPShader/ShaderURPPostProcessing"
 {
-    Properties {}
-
     SubShader
     {
         LOD 100
@@ -24,8 +22,8 @@
             #pragma vertex vert
             #pragma fragment frag
 
-            TEXTURE2D(_PostProcessTexture);
-            SAMPLER(sampler_PostProcessTexture);
+            TEXTURE2D(_GrabTexture);
+            SAMPLER(sampler_GrabTexture);
             float4 _ColorTint;
 
             #if SHADER_API_GLES
@@ -66,7 +64,7 @@
 
             float4 frag(Varyings input) : SV_Target
             {
-                return SAMPLE_TEXTURE2D(_PostProcessTexture, sampler_PostProcessTexture, input.uv0) * float4(
+                return SAMPLE_TEXTURE2D(_GrabTexture, sampler_GrabTexture, input.uv0) * float4(
                     _ColorTint.rgb, 1.0);
             }
             ENDHLSL

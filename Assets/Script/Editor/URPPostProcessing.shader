@@ -23,8 +23,8 @@ Shader "MyURPShader/#Name#"
             #pragma vertex vert
             #pragma fragment frag
 
-            TEXTURE2D(_PostProcessTexture);
-            SAMPLER(sampler_PostProcessTexture);
+            TEXTURE2D (_GrabTexture);
+            SAMPLER (sampler_GrabTexture);
 
 
             #if SHADER_API_GLES
@@ -65,7 +65,7 @@ Shader "MyURPShader/#Name#"
 
             float4 frag(Varyings input) : SV_Target
             {
-                return SAMPLE_TEXTURE2D(_PostProcessTexture, sampler_PostProcessTexture, input.uv0);
+                return SAMPLE_TEXTURE2D(_GrabTexture, sampler_GrabTexture, input.uv0);
             }
             ENDHLSL
         }
