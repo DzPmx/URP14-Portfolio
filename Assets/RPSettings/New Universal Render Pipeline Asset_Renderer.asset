@@ -16,8 +16,8 @@ MonoBehaviour:
     debugReplacementPS: {fileID: 4800000, guid: cf852408f2e174538bcd9b7fda1c5ae7, type: 3}
     hdrDebugViewPS: {fileID: 4800000, guid: 573620ae32aec764abd4d728906d2587, type: 3}
   m_RendererFeatures:
-  - {fileID: 7323773911602911159}
-  m_RendererFeatureMap: b7575dd09145a365
+  - {fileID: 6919291833267783360}
+  m_RendererFeatureMap: c006302b43430660
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -69,7 +69,7 @@ MonoBehaviour:
   m_Name: "\u6D4B\u8BD5Configure\u6548\u679C"
   m_EditorClassIdentifier: 
   m_Active: 0
---- !u!114 &7323773911602911159
+--- !u!114 &6919291833267783360
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -78,7 +78,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51b100cbcbb4e744f8f8821dc0d4e054, type: 3}
-  m_Name: PostStack
+  m_Script: {fileID: 11500000, guid: e54a84002479402885ffc2fc44a1c5dc, type: 3}
+  m_Name: CustomRenderfeature
   m_EditorClassIdentifier: 
   m_Active: 1

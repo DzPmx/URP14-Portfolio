@@ -11,6 +11,7 @@ namespace RenderFeature.RenderPass
         private RTHandle cameraColor;
         private RTHandle GrabTex;
         private Material material;
+        private ColorTint colorTint;
         private const string profilerTag = "ColorTint";
         private ProfilingSampler colorTintSampler = new(profilerTag);
         private int colorTintID = Shader.PropertyToID("_ColorTint");
@@ -18,9 +19,10 @@ namespace RenderFeature.RenderPass
         /// <summary>
         /// 传入Material和颜色参数
         /// </summary>
-        public void Create(Material material)
+        public void Create(Material material,ColorTint colorTint)
         {
             this.material = material;
+            this.colorTint = colorTint;
         }
 
         public void SetUp(RTHandle cameraColor)
@@ -37,31 +39,21 @@ namespace RenderFeature.RenderPass
             ConfigureTarget(GrabTex);
             ConfigureClear(ClearFlag.Color, Color.clear);
         }
+        
 
-        /// <summary>
-        /// 获取Volume组件
-        /// </summary>
-        /// <returns></returns>
-        public ColorTint GetVolume()
-        {
-            var stack = VolumeManager.instance.stack;
-            ColorTint colorTint = stack.GetComponent<ColorTint>();
-            return colorTint;
-        }
-
+        
         /// <summary>
         /// 渲染逻辑、每帧执行
         /// </summary>
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
-            ColorTint colorTint = GetVolume();
             CommandBuffer buffer = CommandBufferPool.Get("后处理集成");
             material.SetColor(colorTintID, colorTint.color.value);
             using (new ProfilingScope(buffer, colorTintSampler))
             {
                 Blitter.BlitCameraTexture(buffer, cameraColor, GrabTex);
                 CoreUtils.SetRenderTarget(buffer, cameraColor);
-                buffer.DrawProcedural(Matrix4x4.identity, material, 0, MeshTopology.Triangles, 3);
+                buffer.DrawProcedural(Matrix4x4.identity, material, (int)PostStackPass.ColorTint, MeshTopology.Triangles, 3);
             }
 
             context.ExecuteCommandBuffer(buffer);
