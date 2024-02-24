@@ -23,5 +23,29 @@
             
             ENDHLSL
         }
+
+        Pass
+        {
+            name"BlurHorizontal"
+            Cull Off
+            Zwrite Off
+
+            HLSLPROGRAM
+            #pragma vertex triangleDrawVert
+            #pragma fragment BlurHorizontalPassFragment
+            ENDHLSL
+        }
+        
+        Pass
+        {
+            name"BlurVertical"
+            Cull Off
+            Zwrite Off
+
+            HLSLPROGRAM
+            #pragma vertex triangleDrawVert
+            #pragma fragment BlurVerticalPassFragment
+            ENDHLSL
+        }
     }
 }
