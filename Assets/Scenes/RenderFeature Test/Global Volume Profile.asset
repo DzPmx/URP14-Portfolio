@@ -16,6 +16,22 @@ MonoBehaviour:
   colorParameter:
     m_OverrideState: 1
     m_Value: {r: 1, g: 0.75, b: 0.75, a: 1}
+--- !u!114 &-4946880324746931444
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52dab0abec6a4e6b9676c8cd1dc26285, type: 3}
+  m_Name: ColorTintTest
+  m_EditorClassIdentifier: 
+  active: 1
+  colorParameter:
+    m_OverrideState: 0
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &-4851003297428156015
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -72,7 +88,7 @@ MonoBehaviour:
   - {fileID: 1271869327324617329}
   - {fileID: -4851003297428156015}
   - {fileID: 7147371409608767335}
-  - {fileID: -6563903930328240725}
+  - {fileID: -4946880324746931444}
 --- !u!114 &1271869327324617329
 MonoBehaviour:
   m_ObjectHideFlags: 3

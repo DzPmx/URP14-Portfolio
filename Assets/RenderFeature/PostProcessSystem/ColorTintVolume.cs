@@ -4,14 +4,14 @@ using UnityEngine.Rendering.Universal;
 
 namespace RenderFeature
 {
-    [VolumeComponentMenu("Custom Post-Processing/ColorTintTest")]
+    [VolumeComponentMenu("Custom Post-Processing/Color Tint")]
     public class ColorTintTest: MyPostProcessing
     {
         private BoolParameter enableEffect=new (true);
         private Material material;
         private const string shaderName = "MyURPShader/ShaderURPPostProcessing";
         public ColorParameter colorParameter = new ColorParameter(Color.white);
-        private int ColorTintID = Shader.PropertyToID("_ColorTint");
+        private int colorTintID = Shader.PropertyToID("_ColorTint");
         private RTHandle GrabTex;
         public override bool IsActive() => material != null && enableEffect==true;
         public override CustomPostProcessInjectPoint injectPoint => CustomPostProcessInjectPoint.BeforePostProcess;
@@ -32,7 +32,7 @@ namespace RenderFeature
         public override void Render(CommandBuffer cmd, ref RenderingData renderingData, RTHandle source, RTHandle dest)
         {
             if (material ==null)return;
-            material.SetColor(ColorTintID,colorParameter.value);
+            material.SetColor(colorTintID,colorParameter.value);
             Blitter.BlitCameraTexture(cmd, source, GrabTex);
             CoreUtils.SetRenderTarget(cmd, dest);
             cmd.DrawProcedural(Matrix4x4.identity, material, (int)PostStackPass.ColorTint, MeshTopology.Triangles, 3);
