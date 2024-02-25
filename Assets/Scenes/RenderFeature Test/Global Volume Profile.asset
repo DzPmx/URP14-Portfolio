@@ -13,25 +13,12 @@ MonoBehaviour:
   m_Name: ColorTintTest
   m_EditorClassIdentifier: 
   active: 1
+  enable:
+    m_OverrideState: 0
+    m_Value: 0
   colorParameter:
     m_OverrideState: 1
     m_Value: {r: 1, g: 0.75, b: 0.75, a: 1}
---- !u!114 &-4946880324746931444
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52dab0abec6a4e6b9676c8cd1dc26285, type: 3}
-  m_Name: ColorTintTest
-  m_EditorClassIdentifier: 
-  active: 1
-  colorParameter:
-    m_OverrideState: 0
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &-4851003297428156015
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -72,6 +59,25 @@ MonoBehaviour:
   maxNits:
     m_OverrideState: 0
     m_Value: 1000
+--- !u!114 &-4104362665314888802
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52dab0abec6a4e6b9676c8cd1dc26285, type: 3}
+  m_Name: ColorTint
+  m_EditorClassIdentifier: 
+  active: 1
+  enable:
+    m_OverrideState: 1
+    m_Value: 1
+  colorParameter:
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,7 +94,8 @@ MonoBehaviour:
   - {fileID: 1271869327324617329}
   - {fileID: -4851003297428156015}
   - {fileID: 7147371409608767335}
-  - {fileID: -4946880324746931444}
+  - {fileID: -4104362665314888802}
+  - {fileID: 5965434172887932599}
 --- !u!114 &1271869327324617329
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -136,6 +143,34 @@ MonoBehaviour:
   dirtIntensity:
     m_OverrideState: 0
     m_Value: 0
+--- !u!114 &5965434172887932599
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1098844a99e4be88d0635e7459278c8, type: 3}
+  m_Name: GussianBlur
+  m_EditorClassIdentifier: 
+  active: 1
+  enableEffect:
+    m_OverrideState: 1
+    m_Value: 1
+  downScale:
+    m_OverrideState: 1
+    m_Value: 4
+  blurTimes:
+    m_OverrideState: 1
+    m_Value: 1
+  blurRadius:
+    m_OverrideState: 1
+    m_Value: 1.73
+  mipmap:
+    m_OverrideState: 1
+    m_Value: 2.57
 --- !u!114 &7147371409608767335
 MonoBehaviour:
   m_ObjectHideFlags: 3

@@ -7,20 +7,20 @@ using UnityEngine.Rendering.Universal;
 
 namespace RenderFeature
 {
-    public class CustomRenderfeature: ScriptableRendererFeature
+    public class CustomRenderfeature : ScriptableRendererFeature
     {
         private List<MyPostProcessing> myPostProcessings;
         private CustomPostProcessingPass mAfterOpaqueAndSkyPass;
         private CustomPostProcessingPass mBeforePostProcessPass;
         private CustomPostProcessingPass mAfterPostProcessPass;
-        
+
         public override void Create()
         {
             var stack = VolumeManager.instance.stack;
             myPostProcessings = VolumeManager.instance.baseComponentTypeArray
                 .Where(t => t.IsSubclassOf(typeof(MyPostProcessing)))
                 .Select(t => stack.GetComponent(t) as MyPostProcessing).ToList();
-            
+
             GetRenderPass();
         }
 
@@ -32,14 +32,14 @@ namespace RenderFeature
             mAfterOpaqueAndSkyPass = new CustomPostProcessingPass();
             mAfterOpaqueAndSkyPass.Setup("Custom PostProcess after Skybox", afterOpaqueAndSkyCPPs);
             mAfterOpaqueAndSkyPass.renderPassEvent = RenderPassEvent.AfterRenderingSkybox;
-            
+
             var beforePostProcessingCPPs = myPostProcessings
                 .Where(c => c.injectPoint == CustomPostProcessInjectPoint.BeforePostProcess)
                 .OrderBy(c => c.OrderInInjectionPoint).ToList();
             mBeforePostProcessPass = new CustomPostProcessingPass();
             mBeforePostProcessPass.Setup("Custom PostProcess before PostProcess", beforePostProcessingCPPs);
             mBeforePostProcessPass.renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;
-            
+
             var afterPostProcessCPPs = myPostProcessings
                 .Where(c => c.injectPoint == CustomPostProcessInjectPoint.AfterPostProcess)
                 .OrderBy(c => c.OrderInInjectionPoint).ToList();
@@ -69,8 +69,7 @@ namespace RenderFeature
                 renderer.EnqueuePass(mAfterPostProcessPass);
             }
         }
-        
-        
+
 
         protected override void Dispose(bool disposing)
         {
@@ -78,7 +77,7 @@ namespace RenderFeature
             mAfterOpaqueAndSkyPass?.Dispose();
             mBeforePostProcessPass?.Dispose();
             mAfterPostProcessPass?.Dispose();
-            if (disposing && myPostProcessings!=null)
+            if (disposing && myPostProcessings != null)
             {
                 foreach (var item in myPostProcessings)
                 {

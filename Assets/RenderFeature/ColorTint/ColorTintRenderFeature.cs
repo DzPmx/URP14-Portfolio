@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using RenderFeature.RenderPass;
 using Renderfeature.VolumeStack;
+
 public class ColorTintRenderFeature : ScriptableRendererFeature
 {
     private Shader shader;
@@ -16,10 +16,10 @@ public class ColorTintRenderFeature : ScriptableRendererFeature
         colorTint = GetVolume();
 
         this.name = "ColorTint";
-        shader=Shader.Find("MyURPShader/ShaderURPPostProcessing");
+        shader = Shader.Find("MyURPShader/ShaderURPPostProcessing");
         material = CoreUtils.CreateEngineMaterial(shader);
         colotTintPass = new ColorTintRenderPass();
-        colotTintPass.Create(material,colorTint);
+        colotTintPass.Create(material, colorTint);
         colotTintPass.renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;
     }
 
@@ -34,7 +34,6 @@ public class ColorTintRenderFeature : ScriptableRendererFeature
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
-
         if (renderingData.cameraData.cameraType is CameraType.Reflection) return;
         renderer.EnqueuePass(colotTintPass);
         colotTintPass.ConfigureInput(ScriptableRenderPassInput.Color);
@@ -42,7 +41,6 @@ public class ColorTintRenderFeature : ScriptableRendererFeature
 
     public override void SetupRenderPasses(ScriptableRenderer renderer, in RenderingData renderingData)
     {
-
         if (renderingData.cameraData.cameraType is CameraType.Reflection) return;
         colotTintPass.SetUp(renderer.cameraColorTargetHandle);
     }
@@ -53,6 +51,4 @@ public class ColorTintRenderFeature : ScriptableRendererFeature
         CoreUtils.Destroy(material);
         colotTintPass.Dispose();
     }
-    
-    
 }

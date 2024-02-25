@@ -5,12 +5,12 @@ using UnityEngine.Rendering.Universal;
 
 namespace Renderfeature.VolumeStack
 {
-    [Serializable,VolumeComponentMenu("CustomPostStack/ColorTint")]
-    public class ColorTint : VolumeComponent , IPostProcessComponent
+    [Serializable, VolumeComponentMenu("VolumeTest/Test")]
+    public class ColorTint : VolumeComponent, IPostProcessComponent
     {
-        private BoolParameter enableEffect=new (true);
-        public bool IsActive() => enableEffect==true;
+        private BoolParameter enableEffect = new(true);
+        public bool IsActive() => enableEffect == true;
         public bool IsTileCompatible() => false;
-        public ColorParameter color=new ColorParameter(Color.white);
+        public ColorParameter color = new ColorParameter(Color.white);
     }
 }

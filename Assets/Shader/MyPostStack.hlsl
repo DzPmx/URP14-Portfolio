@@ -3,9 +3,16 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 //#include "Packages/com.unity.render-pipelines.core/Runtime/Utilities//blit.hlsl"
 
-TEXTURE2D(_GrabTexture);
-SAMPLER(sampler_GrabTexture);
-float4 _GrabTexture_TexelSize;
+TEXTURE2D(_BlitTexture);
+SAMPLER(sampler_BlitTexture);
+float4 _BlitTexture_TexelSize;
+uniform float4 _BlitScaleBias;
+uniform float4 _BlitScaleBiasRt;
+uniform float _BlitMipLevel;
+uniform float2 _BlitTextureSize;
+uniform uint _BlitPaddingSize;
+uniform int _BlitTexArraySlice;
+uniform float4 _BlitDecodeInstructions;
 
 struct Attributes
 {
@@ -40,11 +47,13 @@ float4 _ColorTint;
 
 float4 colorTintFrag(Varyings input) : SV_Target
 {
-    return SAMPLE_TEXTURE2D_LOD(_GrabTexture, sampler_GrabTexture, input.uv0, 0) * float4(
+    return SAMPLE_TEXTURE2D_LOD(_BlitTexture, sampler_BlitTexture, input.uv0, 0) * float4(
         _ColorTint.rgb, 1.0);
 }
 
-float4 BlurHorizontalPassFragment(Varyings input):SV_TARGET
+float4 _GussianBlurParams;
+
+float4 GussianBlurHorizontalPassFragment(Varyings input):SV_TARGET
 {
     float3 color = 0.0;
     float offests[] = {
@@ -56,14 +65,13 @@ float4 BlurHorizontalPassFragment(Varyings input):SV_TARGET
     };
     for (int i = 0; i < 9; i++)
     {
-        float offset = offests[i] * 2.0 * _GrabTexture_TexelSize.x;
-        color += SAMPLE_TEXTURE2D_LOD(_GrabTexture, sampler_GrabTexture, input.uv0+ float2(offset, 0.0), 0).rgb *
-            weights[i];
+        float offset = offests[i] * 2.0 * _BlitTexture_TexelSize.x*_GussianBlurParams.x;
+        color += SAMPLE_TEXTURE2D_LOD(_BlitTexture, sampler_BlitTexture, input.uv0+float2(offset, 0.0), _GussianBlurParams.w).rgb * weights[i];
     }
     return float4(color, 1.0);
 }
 
-float4 BlurVerticalPassFragment(Varyings input):SV_TARGET
+float4 GussianBlurVerticalPassFragment(Varyings input):SV_TARGET
 {
     float3 color = 0.0;
     float offests[] = {
@@ -74,9 +82,8 @@ float4 BlurVerticalPassFragment(Varyings input):SV_TARGET
     };
     for (int i = 0; i < 5; i++)
     {
-        float offset = offests[i] * 2.0 * _GrabTexture_TexelSize.y;
-        color += SAMPLE_TEXTURE2D_LOD(_GrabTexture, sampler_GrabTexture, input.uv0+ float2(0.0, offset), 0).rgb *
-            weights[i];
+        float offset = offests[i] * 2.0 * _BlitTexture_TexelSize.y*_GussianBlurParams.x;
+        color += SAMPLE_TEXTURE2D_LOD(_BlitTexture, sampler_BlitTexture, input.uv0+float2(0.0,offset), _GussianBlurParams.w).rgb* weights[i];
     }
     return float4(color, 1.0);
 }

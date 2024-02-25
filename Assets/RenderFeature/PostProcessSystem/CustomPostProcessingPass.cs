@@ -26,8 +26,6 @@ namespace RenderFeature.RenderPass
             this.myPostProcessings = myPostProcessings;
             mActiveCustomPostProcessingIndex = new List<int>(myPostProcessings.Count);
             mProfilingSamplers = this.myPostProcessings.Select(c => new ProfilingSampler(c.ToString())).ToList();
-            mTempRT0 = RTHandles.Alloc(mTempRT0Name, name: mTempRT0Name);
-            mTempRT1 = RTHandles.Alloc(mTempRT1Name, name: mTempRT1Name);
         }
 
         public bool SetupCustomPostProcessing()
@@ -52,11 +50,11 @@ namespace RenderFeature.RenderPass
             descriptor.msaaSamples = 1;
             descriptor.depthBufferBits = 0;
             RenderingUtils.ReAllocateIfNeeded(ref mTempRT0, descriptor, name: mTempRT0Name);
-            bool rt1Used = false;
+            //bool rt1Used = false;
             if (mActiveCustomPostProcessingIndex.Count > 1)
             {
                 RenderingUtils.ReAllocateIfNeeded(ref mTempRT1, descriptor, name: mTempRT1Name);
-                rt1Used = true;
+                // rt1Used = true;
             }
         }
 
@@ -66,37 +64,41 @@ namespace RenderFeature.RenderPass
 
             mDestRT = renderingData.cameraData.renderer.cameraColorTargetHandle;
             mSourceRT = renderingData.cameraData.renderer.cameraColorTargetHandle;
-
+            if (mActiveCustomPostProcessingIndex.Count==0)return;
             if (mActiveCustomPostProcessingIndex.Count == 1)
             {
                 int index = mActiveCustomPostProcessingIndex[0];
                 using (new ProfilingScope(cmd, mProfilingSamplers[index]))
                 {
-                    myPostProcessings[index].OnCameraSetup(cmd,ref renderingData);
+                    myPostProcessings[index].OnCameraSetup(cmd, ref renderingData);
                     myPostProcessings[index].Render(cmd, ref renderingData, mSourceRT, mTempRT0);
                 }
             }
             else
             {
-                Blitter.BlitCameraTexture(cmd, mSourceRT, mTempRT0);
+                using (new ProfilingScope(cmd,new ProfilingSampler("Grab Pass")))
+                {
+                    Blitter.BlitCameraTexture(cmd, mSourceRT, mTempRT0);
+                }
                 for (int i = 0; i < mActiveCustomPostProcessingIndex.Count; i++)
                 {
                     int index = mActiveCustomPostProcessingIndex[i];
                     var myPostProcessing = myPostProcessings[index];
                     using (new ProfilingScope(cmd, mProfilingSamplers[index]))
                     {
-                        myPostProcessing.OnCameraSetup(cmd,ref renderingData);
+                        myPostProcessing.OnCameraSetup(cmd, ref renderingData);
                         myPostProcessing.Render(cmd, ref renderingData, mTempRT0, mTempRT1);
                     }
-            
+
                     CoreUtils.Swap(ref mTempRT0, ref mTempRT1);
                 }
             }
 
-            using (new ProfilingScope(cmd,new ProfilingSampler("Blit回相机")))
+            using (new ProfilingScope(cmd, new ProfilingSampler("Back To Camera")))
             {
                 Blitter.BlitCameraTexture(cmd, mTempRT0, mDestRT);
             }
+
             context.ExecuteCommandBuffer(cmd);
             cmd.Clear();
             cmd.Dispose();
