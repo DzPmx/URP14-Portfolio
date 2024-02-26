@@ -34,6 +34,9 @@ public enum PostStackPass
     ColorTint,
     GussianBlurHorizontal,
     GussianBlurVertical,
+    BoxBlur,
+    KawaseBlur,
+    DualBlur,
 }
 
 public enum CustomPostProcessInjectPoint

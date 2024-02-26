@@ -16,11 +16,11 @@ namespace RenderFeature
 
         public override void Create()
         {
+            this.name = "Post Process System";
             var stack = VolumeManager.instance.stack;
             myPostProcessings = VolumeManager.instance.baseComponentTypeArray
                 .Where(t => t.IsSubclassOf(typeof(MyPostProcessing)))
                 .Select(t => stack.GetComponent(t) as MyPostProcessing).ToList();
-
             GetRenderPass();
         }
 

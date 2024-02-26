@@ -34,9 +34,10 @@ public class ColorTintRenderFeature : ScriptableRendererFeature
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
+        colotTintPass.ConfigureInput(ScriptableRenderPassInput.Color);
         if (renderingData.cameraData.cameraType is CameraType.Reflection) return;
         renderer.EnqueuePass(colotTintPass);
-        colotTintPass.ConfigureInput(ScriptableRenderPassInput.Color);
+       
     }
 
     public override void SetupRenderPasses(ScriptableRenderer renderer, in RenderingData renderingData)

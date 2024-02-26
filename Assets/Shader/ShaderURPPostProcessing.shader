@@ -19,7 +19,7 @@
 
             HLSLPROGRAM
             #pragma vertex triangleDrawVert
-            #pragma fragment colorTintFrag
+            #pragma fragment ColorTintFragment
             ENDHLSL
         }
 
@@ -31,11 +31,11 @@
 
             HLSLPROGRAM
             #pragma vertex triangleDrawVert
-            #pragma fragment GussianBlurHorizontalPassFragment
+            #pragma fragment GaussianBlurHorizontalPassFragment
             ENDHLSL
         }
         
-                Pass
+        Pass
         {
             name"GussianBlurVertical"
             Cull Off
@@ -43,7 +43,31 @@
 
             HLSLPROGRAM
             #pragma vertex triangleDrawVert
-            #pragma fragment GussianBlurVerticalPassFragment
+            #pragma fragment GaussianBlurVerticalPassFragment
+            ENDHLSL
+        }
+        
+        Pass
+        {
+            name"BoxBlur"
+            Cull Off
+            Zwrite Off
+
+            HLSLPROGRAM
+            #pragma vertex triangleDrawVert
+            #pragma fragment BoxBlurFragment
+            ENDHLSL
+        }
+        
+        Pass
+        {
+            name"KawaseBlur"
+            Cull Off
+            Zwrite Off
+
+            HLSLPROGRAM
+            #pragma vertex triangleDrawVert
+            #pragma fragment KawaseBlurFragment
             ENDHLSL
         }
 

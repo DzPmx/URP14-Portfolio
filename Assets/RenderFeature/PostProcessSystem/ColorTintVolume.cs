@@ -13,7 +13,7 @@ namespace RenderFeature.PostProcessSystem
         private const string shaderName = "MyURPShader/ShaderURPPostProcessing";
         public ColorParameter colorParameter = new ColorParameter(Color.white);
         private int colorTintID = Shader.PropertyToID("_ColorTint");
-        public override bool IsActive() => material != null && enable == true;
+        public override bool IsActive() => material != null && enable == true && colorParameter.value!=Color.white;
         public override CustomPostProcessInjectPoint injectPoint => CustomPostProcessInjectPoint.AfterPostProcess;
         public override int OrderInInjectionPoint => 10000;
 

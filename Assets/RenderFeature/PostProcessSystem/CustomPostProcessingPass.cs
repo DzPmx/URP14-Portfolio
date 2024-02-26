@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
@@ -49,11 +50,11 @@ namespace RenderFeature.RenderPass
             var descriptor = renderingData.cameraData.cameraTargetDescriptor;
             descriptor.msaaSamples = 1;
             descriptor.depthBufferBits = 0;
-            RenderingUtils.ReAllocateIfNeeded(ref mTempRT0, descriptor, name: mTempRT0Name);
+            RenderingUtils.ReAllocateIfNeeded(ref mTempRT0, descriptor, filterMode: FilterMode.Bilinear,name: mTempRT0Name);
             //bool rt1Used = false;
             if (mActiveCustomPostProcessingIndex.Count > 1)
             {
-                RenderingUtils.ReAllocateIfNeeded(ref mTempRT1, descriptor, name: mTempRT1Name);
+                RenderingUtils.ReAllocateIfNeeded(ref mTempRT1, descriptor,filterMode: FilterMode.Bilinear,name: mTempRT1Name);
                 // rt1Used = true;
             }
         }
@@ -96,7 +97,7 @@ namespace RenderFeature.RenderPass
 
             using (new ProfilingScope(cmd, new ProfilingSampler("Back To Camera")))
             {
-                Blitter.BlitCameraTexture(cmd, mTempRT0, mDestRT);
+                Blitter.BlitCameraTexture(cmd, mTempRT0, mDestRT,bilinear: true);
             }
 
             context.ExecuteCommandBuffer(cmd);

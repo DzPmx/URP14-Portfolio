@@ -5,6 +5,7 @@
 
 TEXTURE2D(_BlitTexture);
 SAMPLER(sampler_BlitTexture);
+SAMPLER(sampler_linear_clamp);
 float4 _BlitTexture_TexelSize;
 uniform float4 _BlitScaleBias;
 uniform float4 _BlitScaleBiasRt;
@@ -45,15 +46,16 @@ Varyings triangleDrawVert(Attributes input)
 
 float4 _ColorTint;
 
-float4 colorTintFrag(Varyings input) : SV_Target
+float4 ColorTintFragment(Varyings input) : SV_Target
 {
     return SAMPLE_TEXTURE2D_LOD(_BlitTexture, sampler_BlitTexture, input.uv0, 0) * float4(
         _ColorTint.rgb, 1.0);
 }
 
-float4 _GussianBlurParams;
+//X: GussianBlurRadius Y:0 Z:0 W：mipmap
+float4 _GaussianBlurParams; 
 
-float4 GussianBlurHorizontalPassFragment(Varyings input):SV_TARGET
+float4 GaussianBlurHorizontalPassFragment(Varyings input):SV_TARGET
 {
     float3 color = 0.0;
     float offests[] = {
@@ -65,13 +67,13 @@ float4 GussianBlurHorizontalPassFragment(Varyings input):SV_TARGET
     };
     for (int i = 0; i < 9; i++)
     {
-        float offset = offests[i] * 2.0 * _BlitTexture_TexelSize.x*_GussianBlurParams.x;
-        color += SAMPLE_TEXTURE2D_LOD(_BlitTexture, sampler_BlitTexture, input.uv0+float2(offset, 0.0), _GussianBlurParams.w).rgb * weights[i];
+        float offset = offests[i] * 2.0 * _BlitTexture_TexelSize.x*_GaussianBlurParams.x;
+        color += SAMPLE_TEXTURE2D_LOD(_BlitTexture, sampler_linear_clamp, input.uv0+float2(offset, 0.0), _GaussianBlurParams.w).rgb * weights[i];
     }
     return float4(color, 1.0);
 }
 
-float4 GussianBlurVerticalPassFragment(Varyings input):SV_TARGET
+float4 GaussianBlurVerticalPassFragment(Varyings input):SV_TARGET
 {
     float3 color = 0.0;
     float offests[] = {
@@ -82,10 +84,46 @@ float4 GussianBlurVerticalPassFragment(Varyings input):SV_TARGET
     };
     for (int i = 0; i < 5; i++)
     {
-        float offset = offests[i] * 2.0 * _BlitTexture_TexelSize.y*_GussianBlurParams.x;
-        color += SAMPLE_TEXTURE2D_LOD(_BlitTexture, sampler_BlitTexture, input.uv0+float2(0.0,offset), _GussianBlurParams.w).rgb* weights[i];
+        float offset = offests[i] * 2.0 * _BlitTexture_TexelSize.y*_GaussianBlurParams.x;
+        color += SAMPLE_TEXTURE2D_LOD(_BlitTexture, sampler_linear_clamp, input.uv0+float2(0.0,offset), _GaussianBlurParams.w).rgb* weights[i];
     }
     return float4(color, 1.0);
+}
+
+
+//X: BoxBlurRadius Y:0 Z:0 W：mipmap
+float4 _BoxBlurParams;
+
+float4 BoxBlurFragment(Varyings input):SV_TARGET
+{
+    float4 d = _BlitTexture_TexelSize.xyxy * float4(-1.0, -1.0, 1.0, 1.0) * _BoxBlurParams.x;
+    float3 color = 0;
+    color += SAMPLE_TEXTURE2D_LOD(_BlitTexture, sampler_linear_clamp, input.uv0+d.xy, _BoxBlurParams.w).rgb * 0.25;
+    color += SAMPLE_TEXTURE2D_LOD(_BlitTexture, sampler_linear_clamp, input.uv0+d.zy, _BoxBlurParams.w).rgb * 0.25;
+    color += SAMPLE_TEXTURE2D_LOD(_BlitTexture, sampler_linear_clamp, input.uv0+d.xw, _BoxBlurParams.w).rgb * 0.25;
+    color += SAMPLE_TEXTURE2D_LOD(_BlitTexture, sampler_linear_clamp, input.uv0+d.zw, _BoxBlurParams.w).rgb * 0.25;
+    return float4(color, 1.0);
+}
+
+
+ float _KawasePixelOffset;
+
+float4 KawaseBlurFragment(Varyings input):SV_TARGET
+{
+    float3 color = 0;
+    color += SAMPLE_TEXTURE2D(_BlitTexture, sampler_linear_clamp,
+                              input.uv0 + float2(_KawasePixelOffset +0.5, _KawasePixelOffset +0.5)*
+                              _BlitTexture_TexelSize).rgb;
+    color += SAMPLE_TEXTURE2D(_BlitTexture, sampler_linear_clamp,
+                              input.uv0 + float2(-_KawasePixelOffset -0.5, _KawasePixelOffset +0.5)*
+                              _BlitTexture_TexelSize).rgb;
+    color += SAMPLE_TEXTURE2D(_BlitTexture, sampler_linear_clamp,
+                              input.uv0 + float2(-_KawasePixelOffset -0.5, -_KawasePixelOffset -0.5)*
+                              _BlitTexture_TexelSize).rgb;
+    color += SAMPLE_TEXTURE2D(_BlitTexture, sampler_linear_clamp,
+                              input.uv0 + float2(_KawasePixelOffset +0.5, -_KawasePixelOffset -0.5)*
+                              _BlitTexture_TexelSize).rgb;
+    return float4(color * 0.25, 1.0);
 }
 
 #endif
