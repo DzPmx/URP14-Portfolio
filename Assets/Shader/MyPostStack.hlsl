@@ -43,15 +43,6 @@ Varyings triangleDrawVert(Attributes input)
     return output;
 }
 
-
-float4 _ColorTint;
-
-float4 ColorTintFragment(Varyings input) : SV_Target
-{
-    return SAMPLE_TEXTURE2D_LOD(_BlitTexture, sampler_BlitTexture, input.uv0, 0) * float4(
-        _ColorTint.rgb, 1.0);
-}
-
 //X: GussianBlurRadius Y:0 Z:0 W：mipmap
 float4 _GaussianBlurParams;
 
@@ -109,7 +100,6 @@ float4 BoxBlurFragment(Varyings input):SV_TARGET
 
 
 float _KawasePixelOffset;
-
 float4 KawaseBlurFragment(Varyings input):SV_TARGET
 {
     float3 color = 0;

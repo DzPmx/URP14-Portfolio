@@ -31,7 +31,6 @@ public abstract class MyPostProcessing : VolumeComponent, IPostProcessComponent,
 
 public enum PostStackPass
 {
-    ColorTint,
     GussianBlurHorizontal,
     GussianBlurVertical,
     BoxBlur,

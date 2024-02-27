@@ -11,17 +11,6 @@
         HLSLINCLUDE
         #include "MyPostStack.hlsl"
         ENDHLSL
-        Pass
-        {
-            name"ColorTint"
-            Cull Off
-            Zwrite Off
-
-            HLSLPROGRAM
-            #pragma vertex triangleDrawVert
-            #pragma fragment ColorTintFragment
-            ENDHLSL
-        }
 
         Pass
         {
