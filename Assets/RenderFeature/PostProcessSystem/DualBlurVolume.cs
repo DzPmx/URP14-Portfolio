@@ -15,7 +15,7 @@ namespace RenderFeature.PostProcessSystem
         public override int OrderInInjectionPoint => 104;
 
         private Material material;
-        private string shaderName = "MyURPShader/ShaderURPPostProcessing";
+        private string shaderName = "MyURPShader/URP_PostProcessing_Blur";
         private RTHandle dualBlurTex1;
         private RTHandle dualBlurTex2;
         private int dualBlurParamsID = Shader.PropertyToID("_DualBlurOffset");
@@ -48,7 +48,7 @@ namespace RenderFeature.PostProcessSystem
                     TextureWrapMode.Clamp,
                     name: "_DualBlurTex2");
                 scaleTimes++;
-                Blitter.BlitCameraTexture(cmd, dualBlurTex1, dualBlurTex2, material, (int)PostStackPass.DualBlurDown);
+                Blitter.BlitCameraTexture(cmd, dualBlurTex1, dualBlurTex2, material, (int)BlurPass.DualBlurDown);
                 CoreUtils.Swap(ref dualBlurTex1, ref dualBlurTex2);
             }
 
@@ -59,11 +59,11 @@ namespace RenderFeature.PostProcessSystem
                 RenderingUtils.ReAllocateIfNeeded(ref dualBlurTex2, in descriptor, FilterMode.Bilinear,
                     TextureWrapMode.Clamp,
                     name: "_DualBlurTex2");
-                Blitter.BlitCameraTexture(cmd, dualBlurTex1, dualBlurTex2, material, (int)PostStackPass.DualBlurUp);
+                Blitter.BlitCameraTexture(cmd, dualBlurTex1, dualBlurTex2, material, (int)BlurPass.DualBlurUp);
                 CoreUtils.Swap(ref dualBlurTex1, ref dualBlurTex2);
             }
 
-            Blitter.BlitCameraTexture(cmd, dualBlurTex1, dest, material, (int)PostStackPass.DualBlurUp);
+            Blitter.BlitCameraTexture(cmd, dualBlurTex1, dest, material, (int)BlurPass.DualBlurUp);
         }
 
         public override void Dispose(bool disposing)

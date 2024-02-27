@@ -66,12 +66,19 @@ MonoBehaviour:
   m_Name: ColorTintTest
   m_EditorClassIdentifier: 
   active: 1
+  <displayName>k__BackingField: 
   enable:
     m_OverrideState: 0
     m_Value: 0
+  material: {fileID: 0}
   colorParameter:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 0.75, b: 0.75, a: 1}
+    m_Value:
+      r: 1
+      g: 0.75
+      b: 0.75
+      a: 1
+  colorTintID: 654
 --- !u!114 &-4851003297428156015
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -125,12 +132,19 @@ MonoBehaviour:
   m_Name: ColorTint
   m_EditorClassIdentifier: 
   active: 0
+  <displayName>k__BackingField: 
   enable:
     m_OverrideState: 1
     m_Value: 1
+  material: {fileID: 0}
   colorParameter:
     m_OverrideState: 1
-    m_Value: {r: 0.8301887, g: 0.6774653, b: 0.6774653, a: 1}
+    m_Value:
+      r: 0.8301887
+      g: 0.6774653
+      b: 0.6774653
+      a: 1
+  colorTintID: 654
 --- !u!114 &-3893162590307284178
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -203,7 +217,6 @@ MonoBehaviour:
   - {fileID: 1271869327324617329}
   - {fileID: -4851003297428156015}
   - {fileID: 7147371409608767335}
-  - {fileID: -4104362665314888802}
   - {fileID: 5965434172887932599}
   - {fileID: 6831398278332266129}
   - {fileID: 1882658299353524083}

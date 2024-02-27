@@ -22,7 +22,7 @@ namespace RenderFeature.PostProcessSystem
         public override CustomPostProcessInjectPoint injectPoint => CustomPostProcessInjectPoint.BeforePostProcess;
 
         private Material material;
-        private string shaderName = "MyURPShader/ShaderURPPostProcessing";
+        private string shaderName = "MyURPShader/URP_PostProcessing_Blur";
         private int radialBlurParamsID = Shader.PropertyToID("_RadialBlurParams");
 
 
@@ -38,7 +38,7 @@ namespace RenderFeature.PostProcessSystem
 
         public override void Render(CommandBuffer cmd, ref RenderingData renderingData, RTHandle source, RTHandle dest)
         {
-            Blitter.BlitCameraTexture(cmd,source,dest,material,(int)PostStackPass.RadialBlur);
+            Blitter.BlitCameraTexture(cmd,source,dest,material,(int)BlurPass.RadialBlur);
         }
 
         public override void Dispose(bool disposing)

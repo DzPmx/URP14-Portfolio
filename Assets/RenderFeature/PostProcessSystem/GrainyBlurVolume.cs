@@ -18,7 +18,7 @@ namespace RenderFeature.PostProcessSystem
         public override CustomPostProcessInjectPoint injectPoint => CustomPostProcessInjectPoint.BeforePostProcess;
 
         private Material material;
-        private string shaderName = "MyURPShader/ShaderURPPostProcessing";
+        private string shaderName = "MyURPShader/URP_PostProcessing_Blur";
         private RTHandle grainyBlurTex;
         private int grainyBlurParamsID = Shader.PropertyToID("_GrainyBlurParams");
 
@@ -43,7 +43,7 @@ namespace RenderFeature.PostProcessSystem
 
         public override void Render(CommandBuffer cmd, ref RenderingData renderingData, RTHandle source, RTHandle dest)
         {
-            Blitter.BlitCameraTexture(cmd, source, grainyBlurTex, material,(int)PostStackPass.GrainyBlur);
+            Blitter.BlitCameraTexture(cmd, source, grainyBlurTex, material,(int)BlurPass.GrainyBlur);
 
             Blitter.BlitCameraTexture(cmd, grainyBlurTex, dest, bilinear: true);
         }

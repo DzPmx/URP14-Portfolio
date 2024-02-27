@@ -18,7 +18,7 @@ namespace RenderFeature.PostProcessSystem
         public override CustomPostProcessInjectPoint injectPoint => CustomPostProcessInjectPoint.BeforePostProcess;
 
         private Material material;
-        private string shaderName = "MyURPShader/ShaderURPPostProcessing";
+        private string shaderName = "MyURPShader/URP_PostProcessing_Blur";
         private RTHandle directionalBlurTex;
         private int directionalBlurParamsID = Shader.PropertyToID("_DirectionalBlurParams");
 
@@ -45,7 +45,7 @@ namespace RenderFeature.PostProcessSystem
 
         public override void Render(CommandBuffer cmd, ref RenderingData renderingData, RTHandle source, RTHandle dest)
         {
-            Blitter.BlitCameraTexture(cmd, source, directionalBlurTex, material,(int)PostStackPass.DirectionalBlur);
+            Blitter.BlitCameraTexture(cmd, source, directionalBlurTex, material,(int)BlurPass.DirectionalBlur);
             Blitter.BlitCameraTexture(cmd, directionalBlurTex, dest, bilinear: true);
         }
 

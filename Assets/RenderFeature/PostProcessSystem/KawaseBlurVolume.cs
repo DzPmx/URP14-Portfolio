@@ -16,7 +16,7 @@ namespace RenderFeature.PostProcessSystem
         public override int OrderInInjectionPoint => 103;
 
         private Material material;
-        private string shaderName = "MyURPShader/ShaderURPPostProcessing";
+        private string shaderName = "MyURPShader/URP_PostProcessing_Blur";
         private RTHandle KawaseBlurTex1;
         private RTHandle KawaseBlurTex2;
         private int kawaseBlurParamsID = Shader.PropertyToID("_KawasePixelOffset");
@@ -48,8 +48,8 @@ namespace RenderFeature.PostProcessSystem
             {
                 material.SetFloat(kawaseBlurParamsID, blurRadius.value + radius);
                 radius += 0.5f;
-                Blitter.BlitCameraTexture(cmd, KawaseBlurTex1, KawaseBlurTex2, material, (int)PostStackPass.KawaseBlur);
-                Blitter.BlitCameraTexture(cmd, KawaseBlurTex2, KawaseBlurTex1, material, (int)PostStackPass.KawaseBlur);
+                Blitter.BlitCameraTexture(cmd, KawaseBlurTex1, KawaseBlurTex2, material, (int)BlurPass.KawaseBlur);
+                Blitter.BlitCameraTexture(cmd, KawaseBlurTex2, KawaseBlurTex1, material, (int)BlurPass.KawaseBlur);
             }
 
             Blitter.BlitCameraTexture(cmd, KawaseBlurTex1, dest, bilinear: true);

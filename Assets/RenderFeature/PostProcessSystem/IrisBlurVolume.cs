@@ -23,7 +23,7 @@ namespace RenderFeature.PostProcessSystem
         public override CustomPostProcessInjectPoint injectPoint => CustomPostProcessInjectPoint.BeforePostProcess;
 
         private Material material;
-        private string shaderName = "MyURPShader/ShaderURPPostProcessing";
+        private string shaderName = "MyURPShader/URP_PostProcessing_Blur";
         private int irisBokehBlurParamsID = Shader.PropertyToID("_IrisBokehBlurParams");
         private int goldenRotID = Shader.PropertyToID("_GoldenRot");
         private int irisBokehBlurgradientID = Shader.PropertyToID("_IrisBokehBlurGradient");
@@ -44,7 +44,7 @@ namespace RenderFeature.PostProcessSystem
 
         public override void Render(CommandBuffer cmd, ref RenderingData renderingData, RTHandle source, RTHandle dest)
         {
-            Blitter.BlitCameraTexture(cmd,source,dest,material,debug==true? (int)PostStackPass.IrisBlurDebug:(int)PostStackPass.IrisBlur);
+            Blitter.BlitCameraTexture(cmd,source,dest,material,debug==true? (int)BlurPass.IrisBlurDebug:(int)BlurPass.IrisBlur);
         }
 
         public override void Dispose(bool disposing)

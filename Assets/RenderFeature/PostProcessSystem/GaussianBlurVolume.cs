@@ -18,7 +18,7 @@ namespace RenderFeature.PostProcessSystem
 
         public override CustomPostProcessInjectPoint injectPoint => CustomPostProcessInjectPoint.BeforePostProcess;
         public override int OrderInInjectionPoint => 101;
-        private const string shaderName = "MyURPShader/ShaderURPPostProcessing";
+        private const string shaderName = "MyURPShader/URP_PostProcessing_Blur";
         private Material material;
         private RTHandle gaussianBlurTex1;
         private RTHandle gaussianBlurTex2;
@@ -52,9 +52,9 @@ namespace RenderFeature.PostProcessSystem
             for (int i = 0; i < blurTimes.value; i++)
             {
                 Blitter.BlitCameraTexture(cmd, gaussianBlurTex1, gaussianBlurTex2, material,
-                    (int)PostStackPass.GussianBlurHorizontal);
+                    (int)BlurPass.GussianBlurHorizontal);
                 Blitter.BlitCameraTexture(cmd, gaussianBlurTex2, gaussianBlurTex1, material,
-                    (int)PostStackPass.GussianBlurVertical);
+                    (int)BlurPass.GussianBlurVertical);
             }
 
             Blitter.BlitCameraTexture(cmd, gaussianBlurTex1, dest);

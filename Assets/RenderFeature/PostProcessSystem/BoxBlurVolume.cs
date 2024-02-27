@@ -19,7 +19,7 @@ namespace RenderFeature.PostProcessSystem
         public override CustomPostProcessInjectPoint injectPoint => CustomPostProcessInjectPoint.BeforePostProcess;
 
         private Material material;
-        private string shaderName = "MyURPShader/ShaderURPPostProcessing";
+        private string shaderName = "MyURPShader/URP_PostProcessing_Blur";
         private RTHandle BoxBlurTex1;
         private RTHandle BoxBlurTex2;
         private int boxBlurParamsID = Shader.PropertyToID("_BoxBlurParams");
@@ -53,9 +53,9 @@ namespace RenderFeature.PostProcessSystem
             for (int i = 0; i < blurTimes.value; i++)
             {
                 Blitter.BlitCameraTexture(cmd, BoxBlurTex1, BoxBlurTex2, material,
-                    (int)PostStackPass.BoxBlur);
+                    (int)BlurPass.BoxBlur);
                 Blitter.BlitCameraTexture(cmd, BoxBlurTex2, BoxBlurTex1, material,
-                    (int)PostStackPass.BoxBlur);
+                    (int)BlurPass.BoxBlur);
             }
 
             Blitter.BlitCameraTexture(cmd, BoxBlurTex1, dest, bilinear: true);

@@ -22,7 +22,7 @@ namespace RenderFeature.PostProcessSystem
         public override CustomPostProcessInjectPoint injectPoint => CustomPostProcessInjectPoint.BeforePostProcess;
 
         private Material material;
-        private string shaderName = "MyURPShader/ShaderURPPostProcessing";
+        private string shaderName = "MyURPShader/URP_PostProcessing_Blur";
         private int tiltBokehBlurParamsID = Shader.PropertyToID("_TiltBokehBlurParams");
         private int goldenRotID = Shader.PropertyToID("_GoldenRot");
         private int gradientID = Shader.PropertyToID("_TiltShiftBlurGradient");
@@ -43,7 +43,7 @@ namespace RenderFeature.PostProcessSystem
 
         public override void Render(CommandBuffer cmd, ref RenderingData renderingData, RTHandle source, RTHandle dest)
         {
-            Blitter.BlitCameraTexture(cmd,source,dest,material,debug==true?(int)PostStackPass.TiltShiftBokehBlurDebug:(int)PostStackPass.TiltShiftBlur);
+            Blitter.BlitCameraTexture(cmd,source,dest,material,debug==true?(int)BlurPass.TiltShiftBokehBlurDebug:(int)BlurPass.TiltShiftBlur);
         }
 
         public override void Dispose(bool disposing)
