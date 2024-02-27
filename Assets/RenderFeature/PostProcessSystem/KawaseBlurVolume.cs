@@ -17,8 +17,8 @@ namespace RenderFeature.PostProcessSystem
 
         private Material material;
         private string shaderName = "MyURPShader/URP_PostProcessing_Blur";
-        private RTHandle KawaseBlurTex1;
-        private RTHandle KawaseBlurTex2;
+        private RTHandle kawaseBlurTex1;
+        private RTHandle kawaseBlurTex2;
         private int kawaseBlurParamsID = Shader.PropertyToID("_KawasePixelOffset");
 
         public override void Setup()
@@ -32,34 +32,34 @@ namespace RenderFeature.PostProcessSystem
             descriptor.height /= downScale.value;
             descriptor.width /= downScale.value;
             descriptor.depthBufferBits = 0;
-            RenderingUtils.ReAllocateIfNeeded(ref KawaseBlurTex1, in descriptor, FilterMode.Bilinear,
+            RenderingUtils.ReAllocateIfNeeded(ref kawaseBlurTex1, in descriptor, FilterMode.Bilinear,
                 TextureWrapMode.Clamp,
                 name: "_KawaseBlurTex1");
-            RenderingUtils.ReAllocateIfNeeded(ref KawaseBlurTex2, in descriptor, FilterMode.Bilinear,
+            RenderingUtils.ReAllocateIfNeeded(ref kawaseBlurTex2, in descriptor, FilterMode.Bilinear,
                 TextureWrapMode.Clamp,
                 name: "_KawaseBlurTex2");
         }
 
         public override void Render(CommandBuffer cmd, ref RenderingData renderingData, RTHandle source, RTHandle dest)
         {
-            Blitter.BlitCameraTexture(cmd, source, KawaseBlurTex1, bilinear: true);
+            Blitter.BlitCameraTexture(cmd, source, kawaseBlurTex1, bilinear: true);
             float radius = 0;
             for (int i = 0; i < blurTimes.value; i++)
             {
                 material.SetFloat(kawaseBlurParamsID, blurRadius.value + radius);
                 radius += 0.5f;
-                Blitter.BlitCameraTexture(cmd, KawaseBlurTex1, KawaseBlurTex2, material, (int)BlurPass.KawaseBlur);
-                Blitter.BlitCameraTexture(cmd, KawaseBlurTex2, KawaseBlurTex1, material, (int)BlurPass.KawaseBlur);
+                Blitter.BlitCameraTexture(cmd, kawaseBlurTex1, kawaseBlurTex2, material, (int)BlurPass.KawaseBlur);
+                Blitter.BlitCameraTexture(cmd, kawaseBlurTex2, kawaseBlurTex1, material, (int)BlurPass.KawaseBlur);
             }
 
-            Blitter.BlitCameraTexture(cmd, KawaseBlurTex1, dest, bilinear: true);
+            Blitter.BlitCameraTexture(cmd, kawaseBlurTex1, dest, bilinear: true);
         }
 
         public override void Dispose(bool disposing)
         {
             CoreUtils.Destroy(material);
-            KawaseBlurTex1?.Release();
-            KawaseBlurTex2?.Release();
+            kawaseBlurTex1?.Release();
+            kawaseBlurTex2?.Release();
         }
     }
 }

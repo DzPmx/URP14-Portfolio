@@ -20,8 +20,8 @@ namespace RenderFeature.PostProcessSystem
 
         private Material material;
         private string shaderName = "MyURPShader/URP_PostProcessing_Blur";
-        private RTHandle BoxBlurTex1;
-        private RTHandle BoxBlurTex2;
+        private RTHandle boxBlurTex1;
+        private RTHandle boxBlurTex2;
         private int boxBlurParamsID = Shader.PropertyToID("_BoxBlurParams");
 
         public override void Setup()
@@ -37,10 +37,10 @@ namespace RenderFeature.PostProcessSystem
             descriptor.height /= downScale.value;
             descriptor.width /= downScale.value;
 
-            RenderingUtils.ReAllocateIfNeeded(ref BoxBlurTex1, in descriptor, FilterMode.Bilinear,
+            RenderingUtils.ReAllocateIfNeeded(ref boxBlurTex1, in descriptor, FilterMode.Bilinear,
                 TextureWrapMode.Clamp,
                 name: "_BoxBlurTex1");
-            RenderingUtils.ReAllocateIfNeeded(ref BoxBlurTex2, in descriptor, FilterMode.Bilinear,
+            RenderingUtils.ReAllocateIfNeeded(ref boxBlurTex2, in descriptor, FilterMode.Bilinear,
                 TextureWrapMode.Clamp,
                 name: "_BoxBlurTex2");
             material.SetVector(boxBlurParamsID, new Vector4(blurRadius.value, 0, 0, mipmap.value));
@@ -49,24 +49,24 @@ namespace RenderFeature.PostProcessSystem
 
         public override void Render(CommandBuffer cmd, ref RenderingData renderingData, RTHandle source, RTHandle dest)
         {
-            Blitter.BlitCameraTexture(cmd, source, BoxBlurTex1, bilinear: true);
+            Blitter.BlitCameraTexture(cmd, source, boxBlurTex1, bilinear: true);
             for (int i = 0; i < blurTimes.value; i++)
             {
-                Blitter.BlitCameraTexture(cmd, BoxBlurTex1, BoxBlurTex2, material,
+                Blitter.BlitCameraTexture(cmd, boxBlurTex1, boxBlurTex2, material,
                     (int)BlurPass.BoxBlur);
-                Blitter.BlitCameraTexture(cmd, BoxBlurTex2, BoxBlurTex1, material,
+                Blitter.BlitCameraTexture(cmd, boxBlurTex2, boxBlurTex1, material,
                     (int)BlurPass.BoxBlur);
             }
 
-            Blitter.BlitCameraTexture(cmd, BoxBlurTex1, dest, bilinear: true);
+            Blitter.BlitCameraTexture(cmd, boxBlurTex1, dest, bilinear: true);
         }
 
         public override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
             CoreUtils.Destroy(material);
-            BoxBlurTex1?.Release();
-            BoxBlurTex2?.Release();
+            boxBlurTex1?.Release();
+            boxBlurTex2?.Release();
         }
     }
 }
