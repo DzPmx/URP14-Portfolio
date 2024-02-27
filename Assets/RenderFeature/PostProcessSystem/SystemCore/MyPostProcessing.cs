@@ -36,7 +36,16 @@ public enum PostStackPass
     GussianBlurVertical,
     BoxBlur,
     KawaseBlur,
-    DualBlur,
+    DualBlurDown,
+    DualBlurUp,
+    BokehBlur,
+    TiltShiftBlur,
+    TiltShiftBokehBlurDebug,
+    IrisBlur,
+    IrisBlurDebug,
+    GrainyBlur,
+    RadialBlur,
+    DirectionalBlur
 }
 
 public enum CustomPostProcessInjectPoint

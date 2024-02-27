@@ -50,11 +50,11 @@ namespace RenderFeature.RenderPass
             var descriptor = renderingData.cameraData.cameraTargetDescriptor;
             descriptor.msaaSamples = 1;
             descriptor.depthBufferBits = 0;
-            RenderingUtils.ReAllocateIfNeeded(ref mTempRT0, descriptor, filterMode: FilterMode.Bilinear,name: mTempRT0Name);
+            RenderingUtils.ReAllocateIfNeeded(ref mTempRT0, descriptor,FilterMode.Bilinear,TextureWrapMode.Clamp,name: mTempRT0Name);
             //bool rt1Used = false;
             if (mActiveCustomPostProcessingIndex.Count > 1)
             {
-                RenderingUtils.ReAllocateIfNeeded(ref mTempRT1, descriptor,filterMode: FilterMode.Bilinear,name: mTempRT1Name);
+                RenderingUtils.ReAllocateIfNeeded(ref mTempRT1, descriptor,filterMode: FilterMode.Bilinear,TextureWrapMode.Clamp,name: mTempRT1Name);
                 // rt1Used = true;
             }
         }
