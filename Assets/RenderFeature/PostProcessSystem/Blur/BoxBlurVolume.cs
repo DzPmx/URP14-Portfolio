@@ -2,31 +2,34 @@
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace RenderFeature.PostProcessSystem
+namespace RenderFeature.PostProcessSystem.Blur
 {
     [VolumeComponentMenu("DZ Post Processing/Blur/Box Blur")]
     public class BoxBlur : MyPostProcessing
     {
-        public BoolParameter enableEffect = new BoolParameter(true);
-        public ClampedIntParameter downScale = new ClampedIntParameter(1, 1, 10);
-        public ClampedIntParameter blurTimes = new ClampedIntParameter(0, 0, 5);
-        public ClampedFloatParameter blurRadius = new ClampedFloatParameter(0.0f, 0f, 6f);
-        public ClampedFloatParameter mipmap = new ClampedFloatParameter(0f, 0f, 9);
+        public BoolParameter enableEffect = new BoolParameter(false);
+        public ClampedIntParameter downScale = new ClampedIntParameter(2, 1, 10);
+        public ClampedIntParameter blurTimes = new ClampedIntParameter(1, 0, 5);
+        public ClampedFloatParameter blurRadius = new ClampedFloatParameter(1.5f, 0f, 6f);
+        public ClampedFloatParameter mipmap = new ClampedFloatParameter(1.5f, 0f, 9);
 
-        public override bool IsActive() => material != null && enableEffect == true && blurTimes.value != 0;
+        public override bool IsActive() => enableEffect == true;
         public override bool IsTileCompatible() => false;
         public override int OrderInInjectionPoint => 102;
         public override CustomPostProcessInjectPoint injectPoint => CustomPostProcessInjectPoint.BeforePostProcess;
 
         private Material material;
-        private string shaderName = "MyURPShader/URP_PostProcessing_Blur";
+        private const string shaderName = "MyURPShader/URP_PostProcessing_Blur";
         private RTHandle boxBlurTex1;
         private RTHandle boxBlurTex2;
         private int boxBlurParamsID = Shader.PropertyToID("_BoxBlurParams");
 
         public override void Setup()
         {
-            material = CoreUtils.CreateEngineMaterial(shaderName);
+            if (IsActive())
+            {
+                if (material == null) material = CoreUtils.CreateEngineMaterial(shaderName);
+            }
         }
 
         public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)

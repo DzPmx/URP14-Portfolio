@@ -163,7 +163,7 @@
 
             HLSLPROGRAM
             #pragma vertex triangleDrawVert
-            #pragma fragment RaidalBlurFragment
+            #pragma fragment RadialBlurFragment
             ENDHLSL
         }
 

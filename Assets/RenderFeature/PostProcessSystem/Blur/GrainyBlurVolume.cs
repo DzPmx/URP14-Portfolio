@@ -2,17 +2,17 @@
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace RenderFeature.PostProcessSystem
+namespace RenderFeature.PostProcessSystem.Blur
 {
     [VolumeComponentMenu("DZ Post Processing/Blur/Grainy Blur")]
     public class GrainyBlur : MyPostProcessing
     {
-        public BoolParameter enableEffect = new BoolParameter(true);
-        public ClampedIntParameter downScale = new ClampedIntParameter(1, 1, 10);
-        public ClampedIntParameter blurTimes = new ClampedIntParameter(0, 0, 8);
-        public ClampedFloatParameter blurRadius = new ClampedFloatParameter(0.0f, 0f, 50f);
+        public BoolParameter enableEffect = new BoolParameter(false);
+        public ClampedIntParameter downScale = new ClampedIntParameter(2, 1, 10);
+        public ClampedIntParameter blurTimes = new ClampedIntParameter(3, 0, 8);
+        public ClampedFloatParameter blurRadius = new ClampedFloatParameter(6f, 0f, 50f);
 
-        public override bool IsActive() => material != null && enableEffect == true && blurTimes.value != 0;
+        public override bool IsActive() =>  enableEffect == true;
         public override bool IsTileCompatible() => false;
         public override int OrderInInjectionPoint => 108;
         public override CustomPostProcessInjectPoint injectPoint => CustomPostProcessInjectPoint.BeforePostProcess;
@@ -24,7 +24,10 @@ namespace RenderFeature.PostProcessSystem
 
         public override void Setup()
         {
-            material = CoreUtils.CreateEngineMaterial(shaderName);
+            if (IsActive())
+            {
+                if (material == null) material = CoreUtils.CreateEngineMaterial(shaderName);
+            }
         }
 
         public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)

@@ -2,22 +2,22 @@
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace RenderFeature.PostProcessSystem
+namespace RenderFeature.PostProcessSystem.Blur
 {
     [VolumeComponentMenu("DZ Post Processing/Blur/Bokeh Blur")]
     public class BokehBlur : MyPostProcessing
     {
-        public BoolParameter enableEffect = new BoolParameter(true);
-        public ClampedIntParameter downScale = new ClampedIntParameter(1, 1, 10);
-        public ClampedIntParameter blurTimes = new ClampedIntParameter(0, 0, 128);
-        public ClampedFloatParameter blurRadius = new ClampedFloatParameter(0.0f, 0f, 10f);
-        public override bool IsActive() => material != null && enableEffect == true && blurTimes.value != 0;
+        public BoolParameter enableEffect = new BoolParameter(false);
+        public ClampedIntParameter downScale = new ClampedIntParameter(10, 1, 10);
+        public ClampedIntParameter blurTimes = new ClampedIntParameter(50, 0, 128);
+        public ClampedFloatParameter blurRadius = new ClampedFloatParameter(0.25f, 0f, 10f);
+        public override bool IsActive() => enableEffect == true;
         public override bool IsTileCompatible() => false;
         public override int OrderInInjectionPoint => 105;
         public override CustomPostProcessInjectPoint injectPoint => CustomPostProcessInjectPoint.BeforePostProcess;
 
         private Material material;
-        private string shaderName = "MyURPShader/URP_PostProcessing_Blur";
+        private const string shaderName = "MyURPShader/URP_PostProcessing_Blur";
         private RTHandle bokehBlurTex;
         private int bokehBlurParamsID = Shader.PropertyToID("_BokehBlurParams");
         private int goldenRotID = Shader.PropertyToID("_GoldenRot");
@@ -26,7 +26,10 @@ namespace RenderFeature.PostProcessSystem
 
         public override void Setup()
         {
-            material=CoreUtils.CreateEngineMaterial(shaderName);
+            if (IsActive())
+            {
+                if (material == null) material = CoreUtils.CreateEngineMaterial(shaderName);
+            }
         }
 
         public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)

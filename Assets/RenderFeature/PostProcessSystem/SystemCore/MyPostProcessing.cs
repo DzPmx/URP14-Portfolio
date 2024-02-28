@@ -29,6 +29,8 @@ public abstract class MyPostProcessing : VolumeComponent, IPostProcessComponent,
     }
 }
 
+
+
 public enum BlurPass
 {
     GussianBlurHorizontal,
@@ -45,6 +47,31 @@ public enum BlurPass
     GrainyBlur,
     RadialBlur,
     DirectionalBlur
+}
+
+public enum GlitchPass
+{
+    RGBSplitHorizontal,
+    RGBSplitVertical,
+    RGBSplitCombine,
+    ImageBlock,
+    LineBlockHorizontal,
+    LineBlockVertical,
+    TileJitterHorizontal,
+    TileJitterVertical,
+    ScanLineJitterHorizontal,
+    ScanLineJitterVertical,
+    DigitalStripe,
+    AnalogNoise,
+    WaveJitterHorizontal,
+    WaveJitterVertical,
+
+}
+
+public enum IntervalType
+{
+    Random,
+    Infinite,
 }
 
 public enum CustomPostProcessInjectPoint

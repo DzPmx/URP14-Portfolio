@@ -3,32 +3,35 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Serialization;
 
-namespace RenderFeature.PostProcessSystem
+namespace RenderFeature.PostProcessSystem.Blur
 {
     [VolumeComponentMenu("DZ Post Processing/Blur/Radial Blur")]
     public class RadialBlur : MyPostProcessing
     {
-        public BoolParameter enableEffect = new BoolParameter(true);
-        public ClampedIntParameter blurTimes = new ClampedIntParameter(0, 0, 30);
+        public BoolParameter enableEffect = new BoolParameter(false);
+        public ClampedIntParameter blurTimes = new ClampedIntParameter(25, 0, 30);
         public ClampedFloatParameter blurRadius = new ClampedFloatParameter(0.5f, 0f, 1f);
         
         public ClampedFloatParameter radialCenterX = new ClampedFloatParameter(0.5f, 0f, 1f);
         public ClampedFloatParameter radialCenterY = new ClampedFloatParameter(0.5f, 0f, 1f);
 
-       
-        public override bool IsActive() => material != null && enableEffect == true && blurTimes.value != 0;
+
+        public override bool IsActive() => enableEffect == true ;
         public override bool IsTileCompatible() => false;
         public override int OrderInInjectionPoint => 109;
         public override CustomPostProcessInjectPoint injectPoint => CustomPostProcessInjectPoint.BeforePostProcess;
 
         private Material material;
-        private string shaderName = "MyURPShader/URP_PostProcessing_Blur";
+        private const string shaderName = "MyURPShader/URP_PostProcessing_Blur";
         private int radialBlurParamsID = Shader.PropertyToID("_RadialBlurParams");
 
 
         public override void Setup()
         {
-            material=CoreUtils.CreateEngineMaterial(shaderName);
+            if (IsActive())
+            {
+                if (material == null) material = CoreUtils.CreateEngineMaterial(shaderName);
+            }
         }
 
         public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)

@@ -2,27 +2,30 @@
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace RenderFeature.PostProcessSystem
+namespace RenderFeature.PostProcessSystem.Blur
 {
     [VolumeComponentMenu("DZ Post Processing/Blur/Dual Blur")]
     public class DualBlur : MyPostProcessing
     {
-        public BoolParameter enableEffect = new BoolParameter(true);
-        public ClampedIntParameter blurTimes = new ClampedIntParameter(0, 0, 5);
-        public ClampedFloatParameter blurRadius = new ClampedFloatParameter(0.0f, 0f, 4f);
-        public override bool IsActive() => enableEffect == true && material != null && blurTimes.value != 0;
+        public BoolParameter enableEffect = new BoolParameter(false);
+        public ClampedIntParameter blurTimes = new ClampedIntParameter(3, 0, 5);
+        public ClampedFloatParameter blurRadius = new ClampedFloatParameter(3f, 0f, 4f);
+        public override bool IsActive() => enableEffect == true ;
         public override bool IsTileCompatible() => false;
         public override int OrderInInjectionPoint => 104;
 
         private Material material;
-        private string shaderName = "MyURPShader/URP_PostProcessing_Blur";
+        private const string shaderName = "MyURPShader/URP_PostProcessing_Blur";
         private RTHandle dualBlurTex1;
         private RTHandle dualBlurTex2;
         private int dualBlurParamsID = Shader.PropertyToID("_DualBlurOffset");
 
         public override void Setup()
         {
-            material = CoreUtils.CreateEngineMaterial(shaderName);
+            if (IsActive())
+            {
+                if (material == null) material = CoreUtils.CreateEngineMaterial(shaderName);
+            }
         }
 
         public override void Render(CommandBuffer cmd, ref RenderingData renderingData, RTHandle source, RTHandle dest)

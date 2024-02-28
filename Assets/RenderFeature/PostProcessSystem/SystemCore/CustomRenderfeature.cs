@@ -2,6 +2,7 @@
 using System.Linq;
 using RenderFeature.RenderPass;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
@@ -84,6 +85,7 @@ namespace RenderFeature
                     item.Dispose();
                 }
             }
+            
         }
     }
 }

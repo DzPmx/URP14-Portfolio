@@ -2,28 +2,31 @@
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace RenderFeature.PostProcessSystem
+namespace RenderFeature.PostProcessSystem.Blur
 {
     [VolumeComponentMenu("DZ Post Processing/Blur/Kawase Blur")]
     public class KawaseBlur : MyPostProcessing
     {
-        public BoolParameter enableEffect = new BoolParameter(true);
-        public ClampedIntParameter downScale = new ClampedIntParameter(1, 1, 10);
-        public ClampedIntParameter blurTimes = new ClampedIntParameter(0, 0, 8);
-        public ClampedFloatParameter blurRadius = new ClampedFloatParameter(0.0f, 0f, 4f);
-        public override bool IsActive() => enableEffect == true && material != null && blurTimes.value != 0;
+        public BoolParameter enableEffect = new BoolParameter(false);
+        public ClampedIntParameter downScale = new ClampedIntParameter(2, 1, 10);
+        public ClampedIntParameter blurTimes = new ClampedIntParameter(2, 0, 8);
+        public ClampedFloatParameter blurRadius = new ClampedFloatParameter(1.5f, 0f, 4f);
+        public override bool IsActive() => enableEffect == true;
         public override bool IsTileCompatible() => false;
         public override int OrderInInjectionPoint => 103;
 
         private Material material;
-        private string shaderName = "MyURPShader/URP_PostProcessing_Blur";
+        private const string shaderName = "MyURPShader/URP_PostProcessing_Blur";
         private RTHandle kawaseBlurTex1;
         private RTHandle kawaseBlurTex2;
         private int kawaseBlurParamsID = Shader.PropertyToID("_KawasePixelOffset");
 
         public override void Setup()
         {
-            material = CoreUtils.CreateEngineMaterial(shaderName);
+            if (IsActive())
+            {
+                if (material == null) material = CoreUtils.CreateEngineMaterial(shaderName);
+            }
         }
 
         public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
