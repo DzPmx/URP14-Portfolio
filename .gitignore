@@ -5,6 +5,7 @@
 [Pp]ackages/
 [Ll]ogs/
 [Uu]serSettings/
+[Mm]emoryCaptures/
 
 
 *.sln
@@ -13,3 +14,4 @@
 *.idea
 *.plastic
 *.user
+*.snap

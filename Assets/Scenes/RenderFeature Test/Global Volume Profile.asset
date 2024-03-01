@@ -356,6 +356,28 @@ MonoBehaviour:
       b: 0.6774653
       a: 1
   colorTintID: 654
+--- !u!114 &-2691480636093933912
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b440c0ce8cb430296ad833d69692f6a, type: 3}
+  m_Name: PlannerReflectionBlurVolume
+  m_EditorClassIdentifier: 
+  active: 1
+  enableEffect:
+    m_OverrideState: 1
+    m_Value: 1
+  blurTimes:
+    m_OverrideState: 1
+    m_Value: 2
+  blurRadius:
+    m_OverrideState: 1
+    m_Value: 0.57
 --- !u!114 &-2096004052535733055
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -412,6 +434,7 @@ MonoBehaviour:
   - {fileID: 6367512011828742315}
   - {fileID: 22487539540382539}
   - {fileID: 7533992922987253025}
+  - {fileID: -2691480636093933912}
 --- !u!114 &22487539540382539
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -639,7 +662,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f921782d64134e739e1b0fa8fc633b47, type: 3}
   m_Name: DigitalStripe
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   enableEffect:
     m_OverrideState: 1
     m_Value: 1
