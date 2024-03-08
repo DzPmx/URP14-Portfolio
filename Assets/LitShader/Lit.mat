@@ -7,12 +7,15 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MyURPShader_Lit
-  m_Shader: {fileID: 4800000, guid: bc6e5d1a5c677f24ebd220eb51c9e99c, type: 3}
+  m_Name: Lit
+  m_Shader: {fileID: 4800000, guid: 08b1bfcbbb0c45eaabd6cf74cd8814e3, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_ValidKeywords:
+  - _SKINDIFFUSE_ON
+  - _SKINSPECULAR_ON
+  m_InvalidKeywords:
+  - _IBL_OFF
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -47,14 +50,20 @@ Material:
     m_Floats:
     - _Cutoff: 0.5
     - _DIFFUSE_OFF: 0
-    - _EnvRotation: 0
-    - _IBL_OFF: 0
+    - _EnvRotation: 360
+    - _IBL_OFF: 1
     - _Metallic: 0
     - _Normal: 1
     - _OcclusionStrength: 1
-    - _Roughness: 0.5
+    - _Roughness: 1
+    - _RoughnessLobe1: 0.183
+    - _RoughnessLobe2: 1
     - _SH_OFF: 0
-    - _SPECULAR_OFF: 0
+    - _SKINDIFFUSE_OFF: 0
+    - _SKINDIFFUSE_ON: 1
+    - _SKINSPECULAR_OFF: 0
+    - _SKINSPECULAR_ON: 1
+    - _SPECULAR_OFF: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

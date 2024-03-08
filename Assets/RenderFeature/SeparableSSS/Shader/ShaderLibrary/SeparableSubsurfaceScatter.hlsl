@@ -75,12 +75,16 @@ float4 SeparableSubsurface(float4 SceneColor, float2 UV, float2 SSSIntencity)
     float SceneDepth = LinearEyeDepth(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture,sampler_CameraDepthTexture,UV),_ZBufferParams);
     float BlurLength = DistanceToProjectionWindow / SceneDepth;
     float2 UVOffset = SSSIntencity * BlurLength;
+    //float2 jitter = SAMPLE_TEXTURE2D(_Noise, sampler_Noise,float4((UV + _Jitter.zw) * _screenSize.xy / _NoiseSize.xy, 0, -255)).xy; 
+    //float2 jitter = cellNoise(UV); 
+    //float2x2 rotateMatrix = float2x2(jitter.x, jitter.y, -jitter.y, jitter.x);   
     
     float4 BlurSceneColor = SceneColor;
     BlurSceneColor.rgb *= _Kernel[0].rgb;
     
     for (int i = 1; i < SamplerSteps; i++)
     {
+        //if(abs(_Kernel[i].a) < 0.05) UVOffset = mul(UVOffset, rotateMatrix);
         float2 SSSUV = UV + _Kernel[i].a * UVOffset;
         float4 SSSSceneColor = SAMPLE_TEXTURE2D(_BlitTexture,sampler_BlitTexture, SSSUV);
         float SSSDepth = LinearEyeDepth(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture,sampler_CameraDepthTexture, SSSUV),_ZBufferParams).r;

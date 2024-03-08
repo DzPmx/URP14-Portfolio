@@ -368,7 +368,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b440c0ce8cb430296ad833d69692f6a, type: 3}
   m_Name: PlannerReflectionBlurVolume
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   enableEffect:
     m_OverrideState: 1
     m_Value: 1
@@ -377,7 +377,7 @@ MonoBehaviour:
     m_Value: 2
   blurRadius:
     m_OverrideState: 1
-    m_Value: 1.25
+    m_Value: 0.6
 --- !u!114 &-2096004052535733055
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -570,11 +570,11 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 1
   scatter:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0.7
   clamp:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 2
   tint:
     m_OverrideState: 0
     m_Value: {r: 1, g: 1, b: 1, a: 1}
