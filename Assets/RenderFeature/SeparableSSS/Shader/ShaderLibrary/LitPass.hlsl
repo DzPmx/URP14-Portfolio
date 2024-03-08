@@ -58,8 +58,8 @@ void InitializeCustomSurfaceData(Varyings input, out CustomSurfacedata customSur
 
     half roughnessLobe1 = SAMPLE_TEXTURE2D(_RoughnessMap, sampler_RoughnessMap, input.uv).r * _RoughnessLobe1;
     half roughnessLobe2 = SAMPLE_TEXTURE2D(_RoughnessMap, sampler_RoughnessMap, input.uv).r * _RoughnessLobe2;
-    customSurfaceData.roughnessLobe1 = max(saturate(roughnessLobe1), 0.001f);
-    customSurfaceData.roughnessLobe2 = max(saturate(roughnessLobe2), 0.001f);
+    customSurfaceData.roughnessLobe1 = max(roughnessLobe1, 0.001f);
+    customSurfaceData.roughnessLobe2 = max(roughnessLobe2, 0.001f);
     //normalTS (tangent Space)
     float4 normalTS = SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, input.uv);
     customSurfaceData.normalTS = UnpackNormalScale(normalTS, _Normal);
@@ -85,7 +85,6 @@ Varyings LitPassVertex(Attributes input)
     half4 tangentWS = half4(normalInput.tangentWS.xyz, sign);
     output.tDirWS = tangentWS;
     output.posWS = vertexInput.positionWS;
-    output.shadowCoord = GetShadowCoord(vertexInput);
     output.posCS = vertexInput.positionCS;
 
     return output;
@@ -100,6 +99,7 @@ half4 SkinDiffusePassFragment(Varyings input) : SV_Target
 
     CustomSurfacedata customSurfaceData;
     InitializeCustomSurfaceData(input, customSurfaceData);
+    float4 shadowCoord = TransformWorldToShadowCoord(input.posWS);
     half4 color = PBR.StandardLit(customLitData, customSurfaceData, input.posWS, input.shadowCoord, _EnvRotation);
 
     return color;
@@ -114,10 +114,10 @@ half4 SkinDualLobePassFragment(Varyings input) : SV_Target
 
     CustomSurfacedata customSurfaceData;
     InitializeCustomSurfaceData(input, customSurfaceData);
-    float2 screenUV=input.posCS.xy/_ScaledScreenParams.xy;
+    float2 screenUV = input.posCS.xy / _ScaledScreenParams.xy;
     half4 color = PBR.StandardLit(customLitData, customSurfaceData, input.posWS, input.shadowCoord, _EnvRotation);
-    customSurfaceData.albedo = SAMPLE_TEXTURE2D(_SSSTexture,sampler_SSSTexture,screenUV)*_BaseColor;
-    color.rgb+=customSurfaceData.albedo;
+    customSurfaceData.albedo = SAMPLE_TEXTURE2D(_SSSTexture, sampler_SSSTexture, screenUV) * _BaseColor;
+    color.rgb += customSurfaceData.albedo;
     return color;
 }
 #endif

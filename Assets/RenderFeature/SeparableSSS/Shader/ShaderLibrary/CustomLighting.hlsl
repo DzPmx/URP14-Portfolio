@@ -8,15 +8,15 @@
 #define CUSTOM_NAMESPACE_CLOSE(namespace) }; _##namespace namespace;
 
 CUSTOM_NAMESPACE_START(Common)
-    inline half Pow2 (half x)
+    inline float Pow2 (half x)
     {
         return x*x;
     }
-    inline half Pow4 (half x)
+    inline float Pow4 (half x)
     {
         return x*x * x*x;
     }
-    inline half Pow5 (half x)
+    inline float Pow5 (half x)
     {
         return x*x * x*x * x;
     }
@@ -40,6 +40,7 @@ CUSTOM_NAMESPACE_START(BxDF)
         float d = ( NoH * a2 - NoH ) * NoH + 1;	// 2 mad
         return SafeDiv(a2,PI*d*d);					// 4 mul, 1 rcp
     }
+
     ////-----------------------------------------------------------  D  -------------------------------------------------------------------
 
     //----------------------------------------------------------- Vis ----------------------------------------------------------------
@@ -103,18 +104,6 @@ CUSTOM_NAMESPACE_START(BxDF)
         float D = D_GGX_UE5(a2,NoH);
         float Vis = Vis_SmithJointApprox(a2,NoV,NoL);
         float3 F = F_Schlick_UE5(specular,VoH);
-
-        return (D * Vis) * F;
-    }
-
-    float3 ClearCoatGGX(float roughness,float clearCoat,float NoH,float NoV,float NoL,float VoH,out float3 F)
-    {
-        float a2 = Common.Pow4(roughness);
-
-        float D = D_GGX_UE5(a2,NoH);
-        float Vis = Vis_SmithJointApprox(a2,NoV,NoL);
-        F = F_Schlick_UE5(float3(0.04,0.04,0.04),VoH) * clearCoat;
-
         return (D * Vis) * F;
     }
 
@@ -123,18 +112,17 @@ CUSTOM_NAMESPACE_START(BxDF)
         float a2Lobe1 = Common.Pow4(customSurfaceData.roughnessLobe1);
         float a2Lobe2 = Common.Pow4(customSurfaceData.roughnessLobe2);
         
-        half3 H = normalize(customLitData.V + L);
-        half NoH = max(dot(customLitData.N,H),0.0001);
-        half NoV = max(dot(customLitData.N,customLitData.V),0.0001);//区分正反面
-        half NoL = max(dot(customLitData.N,L),0.0001);
-        half VoH = max(dot(customLitData.V,H),0.0001);//LoH
+        float3 H = normalize(customLitData.V + L);
+        float NoH = max(dot(customLitData.N,H),0.01);
+        float NoV = max(dot(customLitData.N,customLitData.V),0.01);
+        float NoL = max(dot(customLitData.N,L),0.01);
+        float VoH = max(dot(customLitData.V,H),0.01);//LoH
         float3 radiance = NoL * lightColor * shadow * PI;//这里给PI是为了和Unity光照系统统一
 
         float3 diffuseTerm = Diffuse_Lambert(customSurfaceData.albedo);
         #if defined(_SKINDIFFUSE_ON)
             return diffuseTerm*radiance;
         #endif
-    
         float3 specularTermLobe1 = SpecularGGX(a2Lobe1,customSurfaceData.specular,NoH,NoV,NoL,VoH);
         float3 specularTermLobe2 = SpecularGGX(a2Lobe2,customSurfaceData.specular,NoH,NoV,NoL,VoH);
         float3 specularTerm=lerp(specularTermLobe1,specularTermLobe2,0.5);
@@ -146,7 +134,7 @@ CUSTOM_NAMESPACE_START(BxDF)
 
     half3 EnvBRDF(CustomLitData customLitData,CustomSurfacedata customSurfaceData,float envRotation,float3 positionWS)
     {
-        half NoV = max(dot(customLitData.N,customLitData.V),0.0001);//区分正反面
+        half NoV = max(dot(customLitData.N,customLitData.V),0.01);//区分正反面
         half3 R = reflect(-customLitData.V,customLitData.N);
         R = Common.RotateDirection(R,envRotation);
 
@@ -191,10 +179,10 @@ CUSTOM_NAMESPACE_START(DirectLighting)
         half4 shadowMask = (half4)1.0;
 
         //main light
-        half3 directLighting_MainLight = (half3)0;
+        float3 directLighting_MainLight = (half3)0;
         {
             Light light = GetMainLight(shadowCoord,positionWS,shadowMask);
-            half3 L = light.direction;
+            float3 L = light.direction;
             half3 lightColor = light.color;
             //SSAO
             #if defined(_SCREEN_SPACE_OCCLUSION)

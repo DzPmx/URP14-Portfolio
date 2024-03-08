@@ -69,7 +69,6 @@ Varyings triangleDrawVert(Attributes input)
     output.uv0 = GetFullScreenTriangleTexCoord(input.vertexID);
     return output;
 }
-
 float4 SeparableSubsurface(float4 SceneColor, float2 UV, float2 SSSIntencity)
 {
     float SceneDepth = LinearEyeDepth(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture,sampler_CameraDepthTexture,UV),_ZBufferParams);
