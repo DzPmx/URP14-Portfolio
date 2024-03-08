@@ -2,7 +2,7 @@
 
  **1. PostProcess System**
 
-简介：使用一个Renderfeature和RenderPass统一管理所有全屏后处理效果  后处理效果的激活和调整参数汇入Volueme中
+简介：使用一个Renderfeature和RenderPass统一管理所有全屏后处理效果  后处理效果的激活和调整参数汇入Volueme
 
 后处理内容：
 
