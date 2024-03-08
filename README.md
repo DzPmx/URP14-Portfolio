@@ -6,13 +6,9 @@
 
 后处理内容：
 
-Blur： 
+Blur： Gaussian Blur、Box Blur、Kawase Blur、DualKawase Blur、Bokeh Blur、Tile Shift Blur、Iris Blur、Grainy Blur、Directional Blur、Radial Blur
 
-Gaussian Blur、Box Blur、Kawase Blur、DualKawase Blur、Bokeh Blur、Tile Shift Blur、Iris Blur、Grainy Blur、Directional Blur、Radial Blur
-
-Glitch：
-
-RGB Split、Image Block、Line Block、Tile Jitter、Scanline Jitter、Digital Stripe、Analog Noise、Wave Jitter
+Glitch：RGB Split、Image Block、Line Block、Tile Jitter、Scanline Jitter、Digital Stripe、Analog Noise、Wave Jitter
 
 文件位置：[https://github.com/DzPmx/URP14-Portfolio/tree/main/Assets/RenderFeature/PostProcessSystem](https://github.com/DzPmx/URP14-Portfolio/tree/main/Assets/RenderFeature/PostProcessSystem)
 
