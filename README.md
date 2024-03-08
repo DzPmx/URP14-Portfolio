@@ -23,7 +23,7 @@ Plannar Reflection Blur：使用Renderfeature对反摄相机渲染做后处理�
 效果预览：null
 
 
- **3. Separab Subsurface Scattering**
+ **3. Separable Subsurface Scattering**
 
 文件位置：[https://github.com/DzPmx/URP14-Portfolio/tree/main/Assets/RenderFeature/SeparableSSS](https://github.com/DzPmx/URP14-Portfolio/tree/main/Assets/RenderFeature/SeparableSSS)
 
