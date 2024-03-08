@@ -6,16 +6,16 @@
 
 文件位置：[https://github.com/DzPmx/URP14-Portfolio/tree/main/Assets/RenderFeature/PostProcessSystem](https://github.com/DzPmx/URP14-Portfolio/tree/main/Assets/RenderFeature/PostProcessSystem)
 
+效果预览：null
+
  **2. Plannar Reflection**
 
 文件位置：[https://github.com/DzPmx/URP14-Portfolio/tree/main/Assets/RenderFeature/Reflection](https://github.com/DzPmx/URP14-Portfolio/tree/main/Assets/RenderFeature/Reflection)
 
-效果预览：
-![输入图片说明](/imgs/2024-03-08/wfkR4VLrAg8cTEYB.png)
+开启平面反射模糊：使用Renderfeature对反摄相机渲染做后处理模糊 模糊类型：Kawase
 
-开启平面反射模糊：
-使用Renderfeature对反摄相机渲染做后处理模糊 模糊类型：Kawase
-![输入图片说明](/imgs/2024-03-08/mVIJK8xpTeEgoNT2.png)
+效果预览：null
+
 
  **3. Separab Subsurface Scattering**
 
