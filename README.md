@@ -1,4 +1,11 @@
-URP14 Renderfeature后处理系统 使用一个Render Feature和Render Pass统一管理所有后处理内容
+作品集构成
 
-目前支持 十种高品质的模糊 八种故障风后处理 平面反射
+PostProcess System
+文件位置：https://github.com/DzPmx/URP14-Portfolio/tree/main/Assets/RenderFeature/PostProcessSystem
 
+Plannar Reflection
+文件位置：https://github.com/DzPmx/URP14-Portfolio/tree/main/Assets/RenderFeature/Reflection
+
+Separab Subsurface Scattering
+文件位置：https://github.com/DzPmx/URP14-Portfolio/tree/main/Assets/RenderFeature/SeparableSSS
+效果预览：https://www.bilibili.com/video/BV1Ym411d74y/?spm_id_from=333.999.0.0
