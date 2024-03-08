@@ -5,7 +5,7 @@ using UnityEngine.Rendering.Universal;
 namespace RenderFeature.PostProcessSystem.Blur
 {
     [VolumeComponentMenu("DZ Post Processing/Blur/Grainy Blur")]
-    public class GrainyBlur : MyPostProcessing
+    public class GrainyBlur : global::PostProcessSystem
     {
         public BoolParameter enableEffect = new BoolParameter(false);
         public ClampedIntParameter downScale = new ClampedIntParameter(2, 1, 10);

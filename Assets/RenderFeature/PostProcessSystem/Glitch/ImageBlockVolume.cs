@@ -5,7 +5,7 @@ using UnityEngine.Rendering.Universal;
 namespace RenderFeature.PostProcessSystem.Glitch
 {
     [VolumeComponentMenu("DZ Post Processing/Glitch/Image Block")]
-    public class ImageBlock : MyPostProcessing
+    public class ImageBlock : global::PostProcessSystem
     {
         public BoolParameter enableEffect = new BoolParameter(false);
         public ClampedFloatParameter speed = new ClampedFloatParameter(10, 0, 50f);

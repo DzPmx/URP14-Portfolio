@@ -5,7 +5,7 @@ using UnityEngine.Rendering.Universal;
 namespace RenderFeature.PostProcessSystem.Blur
 {
     [VolumeComponentMenu("DZ Post Processing/Blur/Dual Blur")]
-    public class DualBlur : MyPostProcessing
+    public class DualBlur : global::PostProcessSystem
     {
         public BoolParameter enableEffect = new BoolParameter(false);
         public ClampedIntParameter blurTimes = new ClampedIntParameter(3, 0, 5);

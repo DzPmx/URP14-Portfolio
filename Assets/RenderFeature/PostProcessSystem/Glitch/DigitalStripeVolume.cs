@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 namespace RenderFeature.PostProcessSystem.Glitch
 {
     [VolumeComponentMenu("DZ Post Processing/Glitch/Digital Stripe")]
-    public class DigitalStripe : MyPostProcessing
+    public class DigitalStripe : global::PostProcessSystem
     {
         public BoolParameter enableEffect = new BoolParameter(false);
         public ClampedFloatParameter intensity = new ClampedFloatParameter(0.1f, 0, 1);

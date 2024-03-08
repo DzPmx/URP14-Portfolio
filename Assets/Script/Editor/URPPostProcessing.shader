@@ -1,4 +1,4 @@
-Shader "MyURPShader/#Name#"
+Shader "MyURPShader/PostProcessing/#Name#"
 {
     Properties {}
 

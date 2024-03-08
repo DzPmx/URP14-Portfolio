@@ -6,7 +6,10 @@
 [Ll]ogs/
 [Uu]serSettings/
 [Mm]emoryCaptures/
-
+[Ss]haderReference-main/
+[Tt]oDoList/
+[Aa]llSky/
+[Rr]ecordings/
 
 *.sln
 *.conf

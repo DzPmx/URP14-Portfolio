@@ -5,7 +5,7 @@ using UnityEngine.Rendering.Universal;
 namespace RenderFeature.PostProcessSystem.Glitch
 {
     [VolumeComponentMenu("DZ Post Processing/Glitch/Tile Jitter")]
-    public class TileJitter : MyPostProcessing
+    public class TileJitter : global::PostProcessSystem
     {
         public BoolParameter enableEffect = new BoolParameter(false);
 

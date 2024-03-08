@@ -5,7 +5,7 @@ using UnityEngine.Rendering.Universal;
 namespace RenderFeature.PostProcessSystem.Blur
 {
     [VolumeComponentMenu("DZ Post Processing/Blur/Kawase Blur")]
-    public class KawaseBlur : MyPostProcessing
+    public class KawaseBlur : global::PostProcessSystem
     {
         public BoolParameter enableEffect = new BoolParameter(false);
         public ClampedIntParameter downScale = new ClampedIntParameter(2, 1, 10);

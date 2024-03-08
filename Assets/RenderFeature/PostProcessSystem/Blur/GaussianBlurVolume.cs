@@ -5,7 +5,7 @@ using UnityEngine.Rendering.Universal;
 namespace RenderFeature.PostProcessSystem.Blur
 {
     [VolumeComponentMenu("DZ Post Processing/Blur/Gaussian Blur")]
-    public class GaussianBlur : MyPostProcessing
+    public class GaussianBlur : global::PostProcessSystem
     {
         public BoolParameter enableEffect = new BoolParameter(false);
         public ClampedIntParameter downScale = new ClampedIntParameter(2, 1, 10);

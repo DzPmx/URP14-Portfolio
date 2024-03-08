@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 namespace RenderFeature.PostProcessSystem.Glitch
 {
     [VolumeComponentMenu("DZ Post Processing/Glitch/ScanLine Jitter")]
-    public class ScanlineJitter : MyPostProcessing
+    public class ScanlineJitter : global::PostProcessSystem
     {
         public BoolParameter enableEffect = new BoolParameter(false);
 

@@ -5,7 +5,7 @@ using UnityEngine.Rendering.Universal;
 namespace RenderFeature.PostProcessSystem.Glitch
 {
     [VolumeComponentMenu("DZ Post Processing/Glitch/RGB Split")]
-    public class RGBSplit : MyPostProcessing
+    public class RGBSplit : global::PostProcessSystem
     {
         public BoolParameter enableEffect = new BoolParameter(false);
         public VolumeParameter<SplitMode> mode = new VolumeParameter<SplitMode>();

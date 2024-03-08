@@ -5,7 +5,7 @@ using UnityEngine.Rendering.Universal;
 namespace RenderFeature.PostProcessSystem.Glitch
 {
     [VolumeComponentMenu("DZ Post Processing/Glitch/Line Block")]
-    public class LineBlock : MyPostProcessing
+    public class LineBlock : global::PostProcessSystem
     {
         public BoolParameter enableEffect = new BoolParameter(false);
         public VolumeParameter<LineBlockMode> lineBlockMode = new VolumeParameter<LineBlockMode>(){value = LineBlockMode.Horizontal};

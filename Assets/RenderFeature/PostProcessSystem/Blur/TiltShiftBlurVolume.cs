@@ -5,7 +5,7 @@ using UnityEngine.Rendering.Universal;
 namespace RenderFeature.PostProcessSystem.Blur
 {
     [VolumeComponentMenu("DZ Post Processing/Blur/Tilt Shift Blur")]
-    public class TiltShiftBlur : MyPostProcessing
+    public class TiltShiftBlur : global::PostProcessSystem
     {
         public BoolParameter enableEffect = new BoolParameter(false);
         public ClampedIntParameter blurTimes = new ClampedIntParameter(60, 0, 128);

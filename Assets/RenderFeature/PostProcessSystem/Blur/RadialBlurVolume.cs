@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 namespace RenderFeature.PostProcessSystem.Blur
 {
     [VolumeComponentMenu("DZ Post Processing/Blur/Radial Blur")]
-    public class RadialBlur : MyPostProcessing
+    public class RadialBlur : global::PostProcessSystem
     {
         public BoolParameter enableEffect = new BoolParameter(false);
         public ClampedIntParameter blurTimes = new ClampedIntParameter(25, 0, 30);

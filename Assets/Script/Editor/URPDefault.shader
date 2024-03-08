@@ -1,4 +1,4 @@
-Shader "MyURPShader/#Name#"
+Shader "MyURPShader/Default/#Name#"
 {
     Properties
     {
@@ -39,21 +39,21 @@ Shader "MyURPShader/#Name#"
                 float2 uv0 : TEXCOORD0;
             };
 
-            struct Varings
+            struct Varyings
             {
                 float4 posCS : SV_POSITION;
                 float2 uv0 : TEXCOORD0;
             };
 
-            Varings vert(Attributes input)
+            Varyings vert(Attributes input)
             {
-                Varings output;
+                Varyings output;
                 output.posCS = TransformObjectToHClip(input.posOS.xyz);
                 output.uv0 = input.uv0;
                 return output;
             }
 
-            float4 frag(Varings input) : SV_Target
+            float4 frag(Varyings input) : SV_Target
             {
                 return SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv0);
             }

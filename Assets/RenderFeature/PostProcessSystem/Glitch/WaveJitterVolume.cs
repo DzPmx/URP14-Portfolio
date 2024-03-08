@@ -5,7 +5,7 @@ using UnityEngine.Rendering.Universal;
 namespace RenderFeature.PostProcessSystem.Glitch
 {
     [VolumeComponentMenu("DZ Post Processing/Glitch/Wave Jitter")]
-    public class WaveJitter : MyPostProcessing
+    public class WaveJitter : global::PostProcessSystem
     {
         public BoolParameter enableEffect = new BoolParameter(false);
         public VolumeParameter<WaveJitterMode> waveJitterMode = new VolumeParameter<WaveJitterMode>()

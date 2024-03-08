@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ed9004444b0f2e4480fb997ca05798e, type: 3}
+  m_Name: SeparableSSS Settings
+  m_EditorClassIdentifier: 
+  blueNoise: {fileID: 2800000, guid: be1a86331b04ef047b7dc25e87ae8982, type: 3}
+  subsurfaceScaler: 2.7
+  subsurfaceColor: {r: 1, g: 0.4156863, b: 0, a: 0}
+  subsurfaceFalloff: {r: 0.6132076, g: 0.24007654, b: 0.24007654, a: 0}
