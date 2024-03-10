@@ -1,5 +1,5 @@
-#ifndef CUSTOM_LIT_INPUT_INCLUDED
-#define CUSTOM_LIT_INPUT_INCLUDED
+#ifndef CUSTOM_SKIN_LIT_INPUT_INCLUDED
+#define CUSTOM_SKIN_LIT_INPUT_INCLUDED
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 

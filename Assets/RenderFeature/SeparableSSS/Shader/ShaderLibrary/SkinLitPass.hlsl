@@ -1,8 +1,8 @@
-#ifndef CUSTOM_LIT_PASS_INCLUDED
-#define CUSTOM_LIT_PASS_INCLUDED
+#ifndef CUSTOM_SKIN_LIT_PASS_INCLUDED
+#define CUSTOM_SKIN_LIT_PASS_INCLUDED
 
-#include "CustomLitData.hlsl"
-#include "CustomLighting.hlsl"
+#include "SkinCustomLitData.hlsl"
+#include "SkinCustomLighting.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
 struct Attributes
@@ -99,7 +99,6 @@ half4 SkinDiffusePassFragment(Varyings input) : SV_Target
 
     CustomSurfacedata customSurfaceData;
     InitializeCustomSurfaceData(input, customSurfaceData);
-    float4 shadowCoord = TransformWorldToShadowCoord(input.posWS);
     half4 color = PBR.StandardLit(customLitData, customSurfaceData, input.posWS, input.shadowCoord, _EnvRotation);
 
     return color;

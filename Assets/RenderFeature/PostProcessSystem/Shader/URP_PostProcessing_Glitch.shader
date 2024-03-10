@@ -1,4 +1,4 @@
-﻿Shader "MyURPShader/URP_PostProcessing_Glitch"
+﻿Shader "MyURPShader/PostProcessing/URP_PostProcessing_Glitch"
 {
     SubShader
     {

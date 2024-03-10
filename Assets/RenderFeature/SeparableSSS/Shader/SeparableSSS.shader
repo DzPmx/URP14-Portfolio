@@ -1,4 +1,4 @@
-﻿Shader "MyURPShader/Character Renderding/SeparableSSS"
+﻿Shader "MyURPShader/Character Rendering/SeparableSSS"
 {
     SubShader
     {

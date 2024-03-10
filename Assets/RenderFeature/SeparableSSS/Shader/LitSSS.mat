@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Lit
+  m_Name: LitSSS
   m_Shader: {fileID: 4800000, guid: 08b1bfcbbb0c45eaabd6cf74cd8814e3, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -56,8 +56,8 @@ Material:
     - _Normal: 1
     - _OcclusionStrength: 1
     - _Roughness: 1
-    - _RoughnessLobe1: 0.3
-    - _RoughnessLobe2: 0.7
+    - _RoughnessLobe1: 0.322
+    - _RoughnessLobe2: 0.651
     - _SH_OFF: 0
     - _SKINDIFFUSE_OFF: 0
     - _SKINDIFFUSE_ON: 1

@@ -1,4 +1,4 @@
-Shader "MyURPShader/LitSSS"
+Shader "MyURPShader/Character Rendering/LitSSS"
 {
     Properties
     {
@@ -75,8 +75,8 @@ Shader "MyURPShader/LitSSS"
             #pragma fragment SkinDiffusePassFragment
 
             //不支持合批是因为后面的Pass用的cbuffer中的内容不一致，此处仅为了演示PBR效果故不更改
-            #include "ShaderLibrary/LitInput.hlsl"
-            #include "ShaderLibrary/LitPass.hlsl"
+            #include "ShaderLibrary/SkinLitInput.hlsl"
+            #include "ShaderLibrary/SkinLitPass.hlsl"
 
             ENDHLSL
         }
@@ -116,8 +116,8 @@ Shader "MyURPShader/LitSSS"
             #pragma fragment SkinDualLobePassFragment
 
             //不支持合批是因为后面的Pass用的cbuffer中的内容不一致，此处仅为了演示PBR效果故不更改
-            #include "ShaderLibrary/LitInput.hlsl"
-            #include "ShaderLibrary/LitPass.hlsl"
+            #include "ShaderLibrary/SkinLitInput.hlsl"
+            #include "ShaderLibrary/SkinLitPass.hlsl"
 
             ENDHLSL
         }
