@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine.Experimental.Rendering;
-using UnityEngine.Serialization;
 using Unity.Mathematics;
 
 namespace UnityEngine.Rendering.Universal

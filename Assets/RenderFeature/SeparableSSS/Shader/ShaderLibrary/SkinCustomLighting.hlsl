@@ -1,5 +1,5 @@
-#ifndef CUSTOM_SKIN_LITGHTING_INCLUDED
-#define CUSTOM_SKIN_LITGHTING_INCLUDED
+#ifndef SSSS_SKIN_LITGHTING_INCLUDED
+#define SSSS_SKIN_LITGHTING_INCLUDED
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/CommonLighting.hlsl"

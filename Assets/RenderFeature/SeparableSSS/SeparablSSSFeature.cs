@@ -61,7 +61,7 @@ namespace RenderFeature.SeparableSSS
         private List<Vector4> kernelArray = new List<Vector4>();
         private ProfilingSampler blurSampler = new ProfilingSampler("Separable SSS Blur");
         private ProfilingSampler dualLobeSampler = new ProfilingSampler("DualLobe");
-        private const string shaderName = "MyURPShader/Character Renderding/SeparableSSS";
+        private const string shaderName = "MyURPShader/Character Rendering/SeparableSSS";
         public SeparableSSSSettings settings;
         private static ShaderTagId dualLobe = new ShaderTagId("DualSpecular");
 
@@ -75,8 +75,6 @@ namespace RenderFeature.SeparableSSS
         {
             RenderTextureDescriptor descriptor = renderingData.cameraData.cameraTargetDescriptor;
             descriptor.depthBufferBits = 0;
-            // descriptor.msaaSamples = 1;
-            // descriptor.bindMS = false;
             RenderingUtils.ReAllocateIfNeeded(ref SSSTexture1, descriptor, FilterMode.Point, TextureWrapMode.Clamp,
                 name: "_SSSTexture1");
             RenderingUtils.ReAllocateIfNeeded(ref SSSTexture2, descriptor, FilterMode.Point, TextureWrapMode.Clamp,
@@ -112,7 +110,7 @@ namespace RenderFeature.SeparableSSS
             using (new ProfilingScope(buffer, blurSampler))
             {
                 CoreUtils.SetRenderTarget(buffer, SSSTexture1, sourceDepth);
-                CoreUtils.ClearRenderTarget(buffer,ClearFlag.Color,Color.gray);
+                CoreUtils.ClearRenderTarget(buffer,ClearFlag.Color,Color.grey);
                 buffer.DrawProcedural(Matrix4x4.identity, material, 0, MeshTopology.Triangles, 3);
                 Blitter.BlitCameraTexture(buffer,SSSTexture1,SSSTexture2,material,1);
                 CoreUtils.SetRenderTarget(buffer, sourceColor, sourceDepth);

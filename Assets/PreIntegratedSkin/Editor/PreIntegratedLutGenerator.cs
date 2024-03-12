@@ -1,6 +1,5 @@
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering;
 
 namespace PreIntegratedSkin.Editor
 {
@@ -21,7 +20,7 @@ namespace PreIntegratedSkin.Editor
         private static int lutID = Shader.PropertyToID("_LUT");
         private static int lutSizeID = Shader.PropertyToID("_LutSize");
         private static int integralIntervalID = Shader.PropertyToID("_IntegralInterval");
-        private string savedPath=null;
+        private string savedPath ;
 
         private void OnEnable()
         {
@@ -100,11 +99,13 @@ namespace PreIntegratedSkin.Editor
             {
                 interval = (IntegralInterval)EditorGUILayout.EnumPopup("积分区间", interval);
             }
+
             lutSize = (LutSize)EditorGUILayout.EnumPopup("纹理大小", lutSize);
-            if (EditorGUI.EndChangeCheck() && lut !=null )
+            if (EditorGUI.EndChangeCheck() && lut != null)
             {
                 RenderTexture.ReleaseTemporary(lut);
             }
+
             EditorGUILayout.EndVertical();
         }
 
@@ -113,7 +114,7 @@ namespace PreIntegratedSkin.Editor
             EditorGUILayout.LabelField("预览与存储:", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
             EditorGUI.indentLevel++;
-            EditorGUILayout.LabelField("(注)为了解决纹理Binding的问题,预览图会比存储的图片颜色浅,这是正常的");
+            EditorGUILayout.LabelField("(注)为了解决纹理Banding的问题,预览图会比存储的图片颜色浅,这是正常的");
             EditorGUI.indentLevel--;
             EditorGUI.indentLevel--;
             EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
@@ -134,11 +135,12 @@ namespace PreIntegratedSkin.Editor
 
             if (GUILayout.Button("存储纹理"))
             {
-                if (lut==null)
+                if (lut == null)
                 {
                     Debug.Log("请先烘焙纹理，再存储");
                     return;
                 }
+
                 SetupTexture2D();
                 SaveLut();
                 ReImport();
@@ -155,7 +157,7 @@ namespace PreIntegratedSkin.Editor
 
         private void SetupTexture2D()
         {
-            savedTexture = new Texture2D((int)lutSize, (int)lutSize, TextureFormat.RGBA32, true,true);
+            savedTexture = new Texture2D((int)lutSize, (int)lutSize, TextureFormat.RGBA32, true, true);
             savedTexture.name = textureType.ToString() + "Lut.png";
         }
 
@@ -175,6 +177,7 @@ namespace PreIntegratedSkin.Editor
             lutCompute.SetFloat(lutSizeID, (float)lutSize);
             lutCompute.Dispatch(kernelIndex, 512, 512, 1);
         }
+
         private void SaveLut()
         {
             if (lut != null)
@@ -183,11 +186,10 @@ namespace PreIntegratedSkin.Editor
                 savedTexture.ReadPixels(new Rect(0, 0, lut.width, lut.height), 0, 0);
                 savedTexture.Apply();
                 RenderTexture.active = null;
-                savedPath="Assets/PreIntegratedSkin/Resources/"+savedTexture.name;
-                System.IO.File.WriteAllBytes(savedPath,savedTexture.EncodeToPNG());
+                savedPath = "Assets/PreIntegratedSkin/Resources/" + savedTexture.name;
+                System.IO.File.WriteAllBytes(savedPath, savedTexture.EncodeToPNG());
                 AssetDatabase.ImportAsset(savedPath);
             }
-            
         }
 
         private void ReImport()

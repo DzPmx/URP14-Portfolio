@@ -1,4 +1,4 @@
-﻿Shader "MyURPShader/Reflection/PlaanarReflection"
+﻿Shader "MyURPShader/Reflection/PlannarReflection"
 {
     SubShader
     {

@@ -167,27 +167,6 @@ CUSTOM_NAMESPACE_START(BxDF)
         return  (diffuseTerm + specularTerm) * radiance;
     }
 
-half3 DualLobeBRDF(CustomLitData customLitData,CustomDualLobeSkinSurfacedata customSurfaceData,half3 L,half3 lightColor,float shadow)
-{
-    float a2Lobe1 = Common.Pow4(customSurfaceData.roughnessLobe1);
-    float a2Lobe2 = Common.Pow4(customSurfaceData.roughnessLobe2);
-
-    half3 H = normalize(customLitData.V + L);
-    half NoH = saturate(dot(customLitData.N,H));
-    half NoV = saturate(abs(dot(customLitData.N,customLitData.V)) + 1e-5);//区分正反面
-    half NoL = saturate(dot(customLitData.N,L));
-    half VoH = saturate(dot(customLitData.V,H));//LoH
-    float3 radiance = NoL * lightColor * shadow * PI;//这里给PI是为了和Unity光照系统统一
-
-    float3 specularLobe1 = SpecularGGX(a2Lobe1,customSurfaceData.specular,NoH,NoV,NoL,VoH);
-    float3 specularLobe2 = SpecularGGX(a2Lobe2,customSurfaceData.specular,NoH,NoV,NoL,VoH);
-    
-    float3 specularTerm = lerp(specularLobe1,specularLobe2,0.5);
-    
-
-    return  specularTerm* radiance;
-}
-    
     half3 ComplexBRDF(CustomLitData customLitData,CustomSurfacedata customSurfaceData,CustomClearCoatData customClearCoatData,half3 L,half3 lightColor,float shadow)
     {
         float a2 = Common.Pow4(customSurfaceData.roughness);
@@ -251,37 +230,6 @@ half3 DualLobeBRDF(CustomLitData customLitData,CustomDualLobeSkinSurfacedata cus
 	    #endif
         return indirectDiffuseTerm + indirectSpecularTerm;
     }
-
-half3 EnvDualLobeBRDF(CustomLitData customLitData,CustomDualLobeSkinSurfacedata customSurfaceData,float envRotation,float3 positionWS)
-{
-    // half NoV = saturate(abs(dot(customLitData.N,customLitData.V)) + 1e-5);//区分正反面
-    // half3 R = reflect(-customLitData.V,customLitData.N);
-    // R = Common.RotateDirection(R,envRotation);
-    //
-    // //SH
-    // float3 diffuseAO = GTAOMultiBounce(customSurfaceData.occlusion,customSurfaceData.albedo);
-    // float3 radianceSH = SampleSH(customLitData.N);
-    // float3 indirectDiffuseTerm = radianceSH * customSurfaceData.albedo * diffuseAO;
-    // #if defined(_SH_OFF)
-    // indirectDiffuseTerm = half3(0,0,0);
-    // #endif
-    //
-    // //IBL
-    // //The Split Sum: 1nd Stage
-    // half3 specularLD = GlossyEnvironmentReflection(R,positionWS,customSurfaceData.roughness,customSurfaceData.occlusion);
-    // //The Split Sum: 2nd Stage
-    // half3 specularDFG = EnvBRDFApprox(customSurfaceData.specular,customSurfaceData.roughness,NoV);
-    // //AO 处理漏光
-    // float specularOcclusion = GetSpecularOcclusionFromAmbientOcclusion(NoV,customSurfaceData.occlusion,customSurfaceData.roughness);
-    // float3 specularAO = GTAOMultiBounce(specularOcclusion,customSurfaceData.specular);
-    //
-    // float3 indirectSpecularTerm = specularLD * specularDFG * specularAO;
-    // #if defined(_IBL_OFF)
-    // indirectSpecularTerm = half3(0,0,0);
-    // #endif
-    // return indirectDiffuseTerm + indirectSpecularTerm;
-    return 0;
-}
 
     half3 ComplexEnvBRDF(CustomLitData customLitData,CustomSurfacedata customSurfaceData,CustomClearCoatData customClearCoatData,float envRotation,float3 positionWS)
     {
@@ -416,50 +364,6 @@ CUSTOM_NAMESPACE_START(DirectLighting)
         return directLighting_MainLight + directLighting_AddLight;
     }
 
-half3 DualLobeStandardShading(CustomLitData customLitData,CustomDualLobeSkinSurfacedata customSurfaceData,float3 positionWS,float4 shadowCoord)
-{
-    half3 directLighting = (half3)0;
-    #if defined(_MAIN_LIGHT_SHADOWS_SCREEN) && !defined(_SURFACE_TYPE_TRANSPARENT)
-    float4 positionCS = TransformWorldToHClip(positionWS);
-    shadowCoord = ComputeScreenPos(positionCS);
-    #else
-    shadowCoord = TransformWorldToShadowCoord(positionWS);
-    #endif
-    //urp shadowMask是用来考虑烘焙阴影的,因为这里不考虑烘焙阴影所以直接给1
-    half4 shadowMask = (half4)1.0;
-
-    //main light
-    half3 directLighting_MainLight = (half3)0;
-    {
-        Light light = GetMainLight(shadowCoord,positionWS,shadowMask);
-        half3 L = light.direction;
-        half3 lightColor = light.color;
-        //SSAO
-        #if defined(_SCREEN_SPACE_OCCLUSION)
-        AmbientOcclusionFactor aoFactor = GetScreenSpaceAmbientOcclusion(customLitData.ScreenUV);
-        lightColor *= aoFactor.directAmbientOcclusion;
-        #endif
-        half shadow = light.shadowAttenuation;
-        directLighting_MainLight = BxDF.DualLobeBRDF(customLitData,customSurfaceData,L,lightColor,shadow); 
-    }
-        
-    //add light
-    half3 directLighting_AddLight = (half3)0;
-    #ifdef _ADDITIONAL_LIGHTS
-    uint pixelLightCount = GetAdditionalLightsCount();
-    for(uint lightIndex = 0; lightIndex < pixelLightCount ; lightIndex++) 
-    {
-        Light light = GetAdditionalLight(lightIndex,positionWS,shadowMask);
-        half3 L = light.direction;
-        half3 lightColor = light.color;
-        half shadow = light.shadowAttenuation * light.distanceAttenuation;
-        directLighting_AddLight += BxDF.DualLobeBRDF(customLitData,customSurfaceData,L,lightColor,shadow);                                   
-    }
-    #endif
-    return directLighting_MainLight + directLighting_AddLight;
-}
-
-
     half3 ComplexShading(CustomLitData customLitData,CustomSurfacedata customSurfaceData,CustomClearCoatData customClearCoatData,float3 positionWS,float4 shadowCoord)
     {
         half3 directLighting = (half3)0;
@@ -510,15 +414,6 @@ CUSTOM_NAMESPACE_START(InDirectLighting)
         half3 inDirectLighting = (half3)0;
 
         inDirectLighting = BxDF.EnvBRDF(customLitData,customSurfaceData,envRotation,positionWS);
-
-        return inDirectLighting;
-    }
-
-    half3 EnvDualLobeShading(CustomLitData customLitData,CustomDualLobeSkinSurfacedata customSurfaceData,float envRotation,float3 positionWS)
-    {
-        half3 inDirectLighting = (half3)0;
-
-        inDirectLighting = BxDF.EnvDualLobeBRDF(customLitData,customSurfaceData,envRotation,positionWS);
 
         return inDirectLighting;
     }
@@ -575,28 +470,6 @@ CUSTOM_NAMESPACE_START(PBR)
         half3 inDirectLighting = InDirectLighting.EnvShading(customLitData,customSurfaceData,envRotation,positionWS);
         return half4(directLighting + inDirectLighting,1);
     }
-
-    half4 DualLobeHighLight(CustomLitData customLitData,CustomDualLobeSkinSurfacedata customSurfaceData,float3 positionWS,float4 shadowCoord,float envRotation)
-    {
-        float3 albedo = customSurfaceData.albedo;
-        customSurfaceData.albedo = lerp(customSurfaceData.albedo,float3(0.0,0.0,0.0),customSurfaceData.metallic);
-        customSurfaceData.specular = lerp(float3(0.04,0.04,0.04),albedo,customSurfaceData.metallic);
-        half3x3 TBN = half3x3(customLitData.T,customLitData.B,customLitData.N);
-        customLitData.N = normalize(mul(customSurfaceData.normalTS,TBN));
-
-        //SSAO
-        #if defined(_SCREEN_SPACE_OCCLUSION)
-        AmbientOcclusionFactor aoFactor = GetScreenSpaceAmbientOcclusion(customLitData.ScreenUV);
-        customSurfaceData.occlusion = min(customSurfaceData.occlusion,aoFactor.indirectAmbientOcclusion);
-        #endif
-
-        //DirectLighting
-        half3 directLighting = DirectLighting.DualLobeStandardShading(customLitData,customSurfaceData,positionWS,shadowCoord);
-            
-        //IndirectLighting
-        half3 inDirectLighting = InDirectLighting.EnvDualLobeShading(customLitData,customSurfaceData,envRotation,positionWS);
-        return half4(directLighting + inDirectLighting,1);
-    }   
 
     half4 ComplexLit(CustomLitData customLitData,CustomSurfacedata customSurfaceData,CustomClearCoatData customClearCoatData,float3 positionWS,float4 shadowCoord,float envRotation)
     {

@@ -1,5 +1,5 @@
-#ifndef CUSTOM_SKIN_LIT_PASS_INCLUDED
-#define CUSTOM_SKIN_LIT_PASS_INCLUDED
+#ifndef SSSS_SKIN_LIT_PASS_INCLUDED
+#define SSSS_SKIN_LIT_PASS_INCLUDED
 
 #include "SkinCustomLitData.hlsl"
 #include "SkinCustomLighting.hlsl"

@@ -368,7 +368,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b440c0ce8cb430296ad833d69692f6a, type: 3}
   m_Name: PlannerReflectionBlurVolume
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   enableEffect:
     m_OverrideState: 1
     m_Value: 1
@@ -413,6 +413,7 @@ MonoBehaviour:
   m_Name: Global Volume Profile
   m_EditorClassIdentifier: 
   components:
+  - {fileID: 6022819897082141991}
   - {fileID: -4851003297428156015}
   - {fileID: 7147371409608767335}
   - {fileID: -6032048966744252025}
@@ -434,7 +435,6 @@ MonoBehaviour:
   - {fileID: 22487539540382539}
   - {fileID: 7533992922987253025}
   - {fileID: -2691480636093933912}
-  - {fileID: 6022819897082141991}
 --- !u!114 &22487539540382539
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -615,7 +615,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2db86121404754db890f4c8dfe81b2, type: 3}
   m_Name: Bloom
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   skipIterations:
     m_OverrideState: 0
     m_Value: 1
@@ -624,7 +624,7 @@ MonoBehaviour:
     m_Value: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 3
+    m_Value: 1
   scatter:
     m_OverrideState: 0
     m_Value: 0.7

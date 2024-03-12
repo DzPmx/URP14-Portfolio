@@ -67,5 +67,6 @@ void CSDiffuse (uint3 id : SV_DispatchThreadID)
 [numthreads(8,8,1)]
 void CSSpecular (uint3 id : SV_DispatchThreadID)
 {
-    _LUT[id.xy] = float4( BakeSkinSpecularLUT(id.xy/_LutSize),1.0,1.0,1.0);
+    float result=BakeSkinSpecularLUT(id.xy/_LutSize);
+    _LUT[id.xy] = float4(result,result,result,1.0);
 }
