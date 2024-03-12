@@ -15,7 +15,7 @@ namespace RenderFeature.PostProcessSystem.Blur
         public override int OrderInInjectionPoint => 104;
 
         private Material material;
-        private const string shaderName = "MyURPShader/URP_PostProcessing_Blur";
+        private const string shaderName = "MyURPShader/PostProcessing/URP_PostProcessing_Blur";
         private RTHandle dualBlurTex1;
         private RTHandle dualBlurTex2;
         private int dualBlurParamsID = Shader.PropertyToID("_DualBlurOffset");

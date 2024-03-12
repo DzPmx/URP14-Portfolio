@@ -18,7 +18,7 @@ namespace RenderFeature.PostProcessSystem.Blur
         public override CustomPostProcessInjectPoint injectPoint => CustomPostProcessInjectPoint.BeforePostProcess;
 
         private Material material;
-        private string shaderName = "MyURPShader/URP_PostProcessing_Blur";
+        private string shaderName = "MyURPShader/PostProcessing/URP_PostProcessing_Blur";
         private RTHandle grainyBlurTex;
         private int grainyBlurParamsID = Shader.PropertyToID("_GrainyBlurParams");
 

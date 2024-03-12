@@ -22,7 +22,7 @@ namespace RenderFeature.PostProcessSystem.Blur
         public override CustomPostProcessInjectPoint injectPoint => CustomPostProcessInjectPoint.BeforePostProcess;
 
         private Material material;
-        private const string shaderName = "MyURPShader/URP_PostProcessing_Blur";
+        private const string shaderName = "MyURPShader/PostProcessing/URP_PostProcessing_Blur";
         private int radialBlurParamsID = Shader.PropertyToID("_RadialBlurParams");
 
 

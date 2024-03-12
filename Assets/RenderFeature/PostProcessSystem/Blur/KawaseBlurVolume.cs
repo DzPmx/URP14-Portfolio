@@ -16,7 +16,7 @@ namespace RenderFeature.PostProcessSystem.Blur
         public override int OrderInInjectionPoint => 103;
 
         private Material material;
-        private const string shaderName = "MyURPShader/URP_PostProcessing_Blur";
+        private const string shaderName = "MyURPShader/PostProcessing/URP_PostProcessing_Blur";
         private RTHandle kawaseBlurTex1;
         private RTHandle kawaseBlurTex2;
         private int kawaseBlurParamsID = Shader.PropertyToID("_KawasePixelOffset");

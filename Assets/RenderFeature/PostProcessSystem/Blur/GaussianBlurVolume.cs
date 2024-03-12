@@ -18,7 +18,7 @@ namespace RenderFeature.PostProcessSystem.Blur
 
         public override CustomPostProcessInjectPoint injectPoint => CustomPostProcessInjectPoint.BeforePostProcess;
         public override int OrderInInjectionPoint => 101;
-        private const string shaderName = "MyURPShader/URP_PostProcessing_Blur";
+        private const string shaderName = "MyURPShader/PostProcessing/URP_PostProcessing_Blur";
         private Material material;
         private RTHandle gaussianBlurTex1;
         private RTHandle gaussianBlurTex2;

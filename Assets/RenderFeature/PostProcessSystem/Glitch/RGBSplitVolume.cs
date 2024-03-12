@@ -22,7 +22,7 @@ namespace RenderFeature.PostProcessSystem.Glitch
 
         private Material material;
         private float timeX = 1.0f;
-        private const string shaderName = "MyURPShader/URP_PostProcessing_Glitch";
+        private const string shaderName = "MyURPShader/PostProcessing/URP_PostProcessing_Glitch";
         private int rgbSplitParamsID = Shader.PropertyToID("_RGBSplitParams");
         private int rgbSplitParams2ID = Shader.PropertyToID("_RGBSplitParams2");
 

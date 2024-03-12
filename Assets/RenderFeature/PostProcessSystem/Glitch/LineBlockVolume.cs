@@ -25,7 +25,7 @@ namespace RenderFeature.PostProcessSystem.Glitch
         private float timeX = 1.0f;
         private float randomFrequency;
         private int frameCount = 0;
-        private const string shaderName = "MyURPShader/URP_PostProcessing_Glitch";
+        private const string shaderName = "MyURPShader/PostProcessing/URP_PostProcessing_Glitch";
         private int lineBlockParamsID = Shader.PropertyToID("_LineBlockParams");
         private int lineBlockParams2ID = Shader.PropertyToID("_LineBlockParams2");
 

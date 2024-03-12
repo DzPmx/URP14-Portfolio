@@ -23,7 +23,7 @@ namespace RenderFeature.PostProcessSystem.Glitch
         public override CustomPostProcessInjectPoint injectPoint => CustomPostProcessInjectPoint.BeforePostProcess;
 
         private Material material;
-        private const string shaderName = "MyURPShader/URP_PostProcessing_Glitch";
+        private const string shaderName = "MyURPShader/PostProcessing/URP_PostProcessing_Glitch";
         Texture2D noiseTexture;
         RenderTexture trashFrame1;
         RenderTexture trashFrame2;

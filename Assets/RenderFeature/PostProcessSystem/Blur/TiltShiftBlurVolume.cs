@@ -22,7 +22,7 @@ namespace RenderFeature.PostProcessSystem.Blur
         public override CustomPostProcessInjectPoint injectPoint => CustomPostProcessInjectPoint.BeforePostProcess;
 
         private Material material;
-        private const string shaderName = "MyURPShader/URP_PostProcessing_Blur";
+        private const string shaderName = "MyURPShader/PostProcessing/URP_PostProcessing_Blur";
         private int tiltBokehBlurParamsID = Shader.PropertyToID("_TiltBokehBlurParams");
         private int goldenRotID = Shader.PropertyToID("_GoldenRot");
         private int gradientID = Shader.PropertyToID("_TiltShiftBlurGradient");

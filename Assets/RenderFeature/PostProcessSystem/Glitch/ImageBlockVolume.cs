@@ -16,7 +16,7 @@ namespace RenderFeature.PostProcessSystem.Glitch
         public override CustomPostProcessInjectPoint injectPoint => CustomPostProcessInjectPoint.BeforePostProcess;
 
         private Material material;
-        private const string shaderName = "MyURPShader/URP_PostProcessing_Glitch";
+        private const string shaderName = "MyURPShader/PostProcessing/URP_PostProcessing_Glitch";
         private int imageBlockParamsID = Shader.PropertyToID("_ImageBlockParams");
 
         public override void Setup()

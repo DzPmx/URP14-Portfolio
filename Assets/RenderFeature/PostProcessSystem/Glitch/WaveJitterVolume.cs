@@ -24,7 +24,7 @@ namespace RenderFeature.PostProcessSystem.Glitch
         public override CustomPostProcessInjectPoint injectPoint => CustomPostProcessInjectPoint.BeforePostProcess;
 
         private Material material;
-        private const string shaderName = "MyURPShader/URP_PostProcessing_Glitch";
+        private const string shaderName = "MyURPShader/PostProcessing/URP_PostProcessing_Glitch";
         private int waveJitterParamsID = Shader.PropertyToID("_WaveJitterParams");
         private int waveJitterResolutionID = Shader.PropertyToID("_WaveJitterResolution");
         private float randomFrequency;

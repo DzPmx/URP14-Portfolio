@@ -37,7 +37,7 @@ public class PlannarReflectionBlur : ScriptableRendererFeature
 public class PlannerReflectionBlurRenderPass : ScriptableRenderPass
 {
     private Material material;
-    private const string shaderName = "MyURPShader/URP_PostProcessing_Blur";
+    private const string shaderName = "MyURPShader/PostProcessing/URP_PostProcessing_Blur";
     private int dualBlurParamsID = Shader.PropertyToID("_DualBlurOffset");
     private RTHandle source;
     private RTHandle tempRT1;
