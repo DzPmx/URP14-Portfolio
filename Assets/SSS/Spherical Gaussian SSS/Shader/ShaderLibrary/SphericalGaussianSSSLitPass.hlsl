@@ -1,9 +1,9 @@
 #ifndef SPHERICAL_GAUSSIAN_SSS_LIT_PASS_INCLUDED
 #define SPHERICAL_GAUSSIAN_SSS_LIT_PASS_INCLUDED
 
-#include "CustomLitData.hlsl"
-#include "CustomLighting.hlsl"
 #include "SphericalGaussianSSS.hlsl"
+#include "SphericalGaussianSSSCustomLitData.hlsl"
+#include "SphericalGaussianSSSCustomLighting.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
 struct Attributes
@@ -32,9 +32,9 @@ void InitializeCustomLitData(Varyings input, out CustomLitData customLitData)
 
     customLitData.positionWS = input.posWS;
     customLitData.V = GetWorldSpaceNormalizeViewDir(input.posWS);
-    customLitData.N = normalize(input.nDirWS);
+    customLitData.NGeometry = normalize(input.nDirWS);
     customLitData.T = normalize(input.tDirWS.xyz);
-    customLitData.B = normalize(cross(customLitData.N, customLitData.T) * input.tDirWS.w);
+    customLitData.B = normalize(cross(customLitData.NGeometry, customLitData.T) * input.tDirWS.w);
     customLitData.ScreenUV = GetNormalizedScreenSpaceUV(input.posCS);
 }
 
@@ -56,9 +56,11 @@ void InitializeCustomSurfaceData(Varyings input, out CustomSurfacedata customSur
     //metallic & roughness
     half metallic = SAMPLE_TEXTURE2D(_MetallicMap, sampler_MetallicMap, input.uv).r * _Metallic;
     customSurfaceData.metallic = saturate(metallic);
-
-    half roughness = SAMPLE_TEXTURE2D(_RoughnessMap, sampler_RoughnessMap, input.uv).r * _Roughness;
-    customSurfaceData.roughness = max(saturate(roughness), 0.001f);
+    half var_roughness = SAMPLE_TEXTURE2D(_RoughnessMap, sampler_RoughnessMap, input.uv).r;
+    half roughnessLobe1 = var_roughness * _RoughnessLobe1;
+    half roughnessLobe2 = var_roughness * _RoughnessLobe2;
+    customSurfaceData.roughnessLobe1 = max(saturate(roughnessLobe1), 0.001f);
+    customSurfaceData.roughnessLobe2 = max(saturate(roughnessLobe2), 0.001f);
 
     //normalTS (tangent Space)
     float4 normalTS = SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, input.uv);
@@ -91,21 +93,6 @@ Varyings LitPassVertex(Attributes input)
     return output;
 }
 
-half4 SimpleLitPassFragment(Varyings input) : SV_Target
-{
-    UNITY_SETUP_INSTANCE_ID(input);
-
-    CustomLitData customLitData;
-    InitializeCustomLitData(input, customLitData);
-
-    CustomSurfacedata customSurfaceData;
-    InitializeCustomSurfaceData(input, customSurfaceData);
-
-    half4 color = PBR.SimpleLit(customLitData, customSurfaceData, input.posWS, input.shadowCoord, _EnvRotation);
-
-    return color;
-}
-
 half4 StandardLitPassFragment(Varyings input) : SV_Target
 {
     UNITY_SETUP_INSTANCE_ID(input);
@@ -116,7 +103,6 @@ half4 StandardLitPassFragment(Varyings input) : SV_Target
     CustomSurfacedata customSurfaceData;
     InitializeCustomSurfaceData(input, customSurfaceData);
     half4 color = PBR.StandardLit(customLitData, customSurfaceData, input.posWS, input.shadowCoord, _EnvRotation);
-
     return color;
 }
 #endif

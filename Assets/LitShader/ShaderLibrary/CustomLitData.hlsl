@@ -22,18 +22,6 @@ struct CustomSurfacedata
     half  alpha;
 };
 
-struct CustomDualLobeSkinSurfacedata
-{
-    half3 albedo;
-    half3 specular;
-    half3 normalTS;
-    half  metallic;
-    half  roughnessLobe1;
-    half  roughnessLobe2;
-    half  occlusion;
-    half  alpha;
-};
-
 struct CustomClearCoatData
 {
     half3 clearCoatNormal;

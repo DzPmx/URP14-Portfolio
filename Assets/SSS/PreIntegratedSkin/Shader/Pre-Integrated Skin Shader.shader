@@ -2,27 +2,27 @@ Shader "MyURPShader/Character Rendering/Pre-Integrated Skin"
 {
     Properties
     {
-        [MainTexture] _BaseMap("Albedo", 2D) = "white" {}
+        [MainTexture][NoScaleOffset] _BaseMap("Albedo", 2D) = "white" {}
         [MainColor] _BaseColor("Color", Color) = (1,1,1,1)
 
         _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
 
-        _MetallicMap("Metallic Map",2D) = "white"{}
+        [NoScaleOffset]_MetallicMap("Metallic Map",2D) = "white"{}
         _Metallic("Metallic", Range(0.0, 1.0)) = 0.0
 
-        _RoughnessMap("Roughness Map", 2D) = "white"{}
+        [NoScaleOffset]_RoughnessMap("Roughness Map", 2D) = "white"{}
         _Roughness("Roughness", Range(0.0, 1.0)) = 0.5
         
-        _NormalMap("Normal Map",2D) = "bump"{}
+        [NoScaleOffset]_NormalMap("Normal Map",2D) = "bump"{}
         _Normal("Normal",float) = 1.0
 
-        _OcclusionMap("OcclusionMap",2D) = "white"{}
+        [NoScaleOffset]_OcclusionMap("OcclusionMap",2D) = "white"{}
         _OcclusionStrength("Occlusion Strength",Range(0.0,1.0)) = 1.0
         _EnvRotation("EnvRotation",Range(0.0,360.0)) = 0.0
         
         _Curvature("Curvature",Range(0.01,1)) = 0.25
-        _SkinDiffsueLut("Diffuse Lut",2D) = "white"{}
-        _SkinSpecularLut("Specular Lut",2D) = "white"{}
+        [NoScaleOffset]_SkinDiffsueLut("Diffuse Lut",2D) = "white"{}
+        [NoScaleOffset]_SkinSpecularLut("Specular Lut",2D) = "white"{}
         
         [Toggle(_SSS_OFF)] _SSS_OFF("SSS OFF",Float) = 0.0
         [Toggle(_DIFFUSE_OFF)] _DIFFUSE_OFF("DIFFUSE OFF",Float) = 0.0

@@ -1,25 +1,30 @@
-Shader "MyURPShader/Character Rendering/Spherical Gaussian"
+Shader "MyURPShader/Character Rendering/Spherical Gaussian SSS"
 {
     Properties
     {
-        [MainTexture] _BaseMap("Albedo", 2D) = "white" {}
+        [MainTexture][NoScaleOffset] _BaseMap("Albedo", 2D) = "white" {}
         [MainColor] _BaseColor("Color", Color) = (1,1,1,1)
-
+        
+        _SkinScatterAmount("SSS Color", Color) = (1,1,1,1)
+        _SSSIntensity("SSS Intensity", Range(0.0, 3.0)) = 1
+        
         _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
 
-        _MetallicMap("Metallic Map",2D) = "white"{}
+        [NoScaleOffset]_MetallicMap("Metallic Map",2D) = "white"{}
         _Metallic("Metallic", Range(0.0, 1.0)) = 0.0
 
-        _RoughnessMap("Roughness Map", 2D) = "white"{}
-        _Roughness("Roughness", Range(0.0, 1.0)) = 0.5
-        
-        _NormalMap("Normal Map",2D) = "bump"{}
+        [NoScaleOffset]_RoughnessMap("Roughness Map", 2D) = "white"{}
+        _RoughnessLobe1("RoughnessLobe1", Range(0.0, 1.0)) = 0.5
+        _RoughnessLobe2("RoughnessLobe2", Range(0.0, 1.0)) = 0.5
+        [NoScaleOffset]_NormalMap("Normal Map",2D) = "bump"{}
         _Normal("Normal",float) = 1.0
 
-        _OcclusionMap("OcclusionMap",2D) = "white"{}
+        [NoScaleOffset]_OcclusionMap("OcclusionMap",2D) = "white"{}
         _OcclusionStrength("Occlusion Strength",Range(0.0,1.0)) = 1.0
         _EnvRotation("EnvRotation",Range(0.0,360.0)) = 0.0
-
+        
+        
+        [Toggle(_SSS_OFF)] _SSS_OFF("SSS OFF",Float) = 0.0
         [Toggle(_DIFFUSE_OFF)] _DIFFUSE_OFF("DIFFUSE OFF",Float) = 0.0
         [Toggle(_SPECULAR_OFF)] _SPECULAR_OFF("SPECULAR OFF",Float) = 0.0
         [Toggle(_SH_OFF)] _SH_OFF("SH OFF",Float) = 0.0
@@ -50,6 +55,7 @@ Shader "MyURPShader/Character Rendering/Spherical Gaussian"
             // -------------------------------------
             // Material Keywords
             #pragma shader_feature_local_fragment _ALPHATEST_ON
+            #pragma shader_feature_local_fragment _SSS_OFF
             #pragma shader_feature_local_fragment _DIFFUSE_OFF
             #pragma shader_feature_local_fragment _SPECULAR_OFF
             #pragma shader_feature_local_fragment _SH_OFF
@@ -75,8 +81,8 @@ Shader "MyURPShader/Character Rendering/Spherical Gaussian"
             #pragma fragment StandardLitPassFragment
 
             //不支持合批是因为后面的Pass用的cbuffer中的内容不一致，此处仅为了演示PBR效果故不更改
-            #include "ShaderLibrary/LitInput.hlsl"
-            #include "ShaderLibrary/LitPass.hlsl"
+            #include "ShaderLibrary\SphericalGaussianSSSLitInput.hlsl"
+            #include "ShaderLibrary\SphericalGaussianSSSLitPass.hlsl"
 
             ENDHLSL
         }

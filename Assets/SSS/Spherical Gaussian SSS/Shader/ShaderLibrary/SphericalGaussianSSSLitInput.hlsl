@@ -8,11 +8,14 @@ CBUFFER_START(UnityPerMaterial)
     float4 _BaseMap_ST;
     half4 _BaseColor;
     half _Metallic;
-    half _Roughness;
+    half _RoughnessLobe1;
+    half _RoughnessLobe2;
     half _Normal;
     half _OcclusionStrength;
     half _Cutoff;
     half _EnvRotation;
+    half3 _SkinScatterAmount;
+    half _SSSIntensity;
 CBUFFER_END
 TEXTURE2D(_BaseMap);         SAMPLER(sampler_BaseMap);
 TEXTURE2D(_MetallicMap);     SAMPLER(sampler_MetallicMap);

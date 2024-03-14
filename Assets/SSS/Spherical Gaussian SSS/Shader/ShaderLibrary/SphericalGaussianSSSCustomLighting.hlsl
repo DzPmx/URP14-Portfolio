@@ -1,5 +1,5 @@
-#ifndef PRE_INTEGRATED_SKIN_LITGHTING_INCLUDED
-#define PRE_INTEGRATED_SKIN_LITGHTING_INCLUDED
+#ifndef SPHERICAL_GAUSSIAN_SSS_LITGHTING_INCLUDED
+#define SPHERICAL_GAUSSIAN_SSS_LITGHTING_INCLUDED
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/CommonLighting.hlsl"
@@ -105,101 +105,79 @@ CUSTOM_NAMESPACE_START(BxDF)
         return SpecularColor * AB.x + AB.y;
     }
 
-    float3 SpecularGGX(float a2, float3 specular, float NoH, float NoV, float3 NoL, float VoH)
+    float3 SpecularGGX(float a2, float3 specular, float NoH, float NoV, float NoL, float VoH)
     {
         float D = D_GGX_UE5(a2, NoH);
         float Vis = Vis_SmithJointApprox(a2, NoV, NoL);
         float3 F = F_Schlick_UE5(specular, VoH);
+        Vis=saturate(Vis);
 
         return (D * Vis) * F;
     }
 
-    float3 SpecularBeckmannLut(float roughness, float VoH, float NoH, float3 H)
-    {
-        roughness=PerceptualRoughnessToRoughness(roughness);
-        float lobe = SAMPLE_TEXTURE2D(_SkinSpecularLut, sampler_SkinSpecularLut, float2(NoH,roughness));
-        float PH = pow(2.0 * lobe, 10);
-        float3 F = F_Schlick_UE5(0.04, VoH);
-        float frSpec = max(PH * F / dot(H, H), 0);
-        return frSpec*20;
-    }
-
-
-    float3 ClearCoatGGX(float roughness, float clearCoat, float NoH, float NoV, float NoL, float VoH, out float3 F)
-    {
-        float a2 = Common.Pow4(roughness);
-
-        float D = D_GGX_UE5(a2, NoH);
-        float Vis = Vis_SmithJointApprox(a2, NoV, NoL);
-        F = F_Schlick_UE5(float3(0.04, 0.04, 0.04), VoH) * clearCoat;
-
-        return (D * Vis) * F;
-    }
-
-    half3 StandardBRDF(CustomLitData customLitData, CustomSurfacedata customSurfaceData, half3 L, half3 lightColor,
+    half3 StandardBRDF(CustomLitData customLitData, CustomSurfacedata customSurfaceData, float3 L, half3 lightColor,
                        float shadow)
     {
+        float a2Lobe1 = Common.Pow4(customSurfaceData.roughnessLobe1);
+        float a2Lobe2 = Common.Pow4(customSurfaceData.roughnessLobe2);
         half3 H = normalize(customLitData.V + L);
-        half NoH = saturate(dot(customLitData.N, H));
+        half NoH = max(dot(customLitData.NMap, H),0.001);
+        half NoV = saturate(abs(dot(customLitData.NMap, customLitData.V)) + 1e-5); //区分正反面
+        half NoL = saturate(dot(customLitData.NMap, L));
+        half VoH = saturate(dot(customLitData.V, H)); //LoH
 
-        half rNoL = dot(customLitData.NB, L) * 0.5 + 0.5;
-        half bNoL = lerp(dot(customLitData.N, L) * 0.5 + 0.5, rNoL, 0.2);
-        half gNoL = lerp(rNoL, bNoL, 0.3);
-
-        float2 rUV = float2(rNoL * shadow, customSurfaceData.curvature);
-        float2 gUV = float2(gNoL * shadow, customSurfaceData.curvature);
-        float2 bUV = float2(bNoL * shadow, customSurfaceData.curvature);
-
+        half3 rN = customLitData.NGeometry;
+        half3 gN = lerp(customLitData.NGeometry, customLitData.NMap, 0.3);
+        half3 bN = lerp(customLitData.NGeometry, customLitData.NMap, 0.6);
         float3 SSS;
-        SSS.r = SAMPLE_TEXTURE2D(_SkinDiffsueLut, sampler_SkinDiffsueLut, rUV).r;
-        SSS.g = SAMPLE_TEXTURE2D(_SkinDiffsueLut, sampler_SkinDiffsueLut, gUV).g;
-        SSS.b = SAMPLE_TEXTURE2D(_SkinDiffsueLut, sampler_SkinDiffsueLut, bUV).b;
-
-        #if defined(_SSS_OFF)
-        SSS=saturate(dot(customLitData.N,L))*shadow;
+        float3 shadowSSS = SGShadow(shadow * 2 - 1, L, _SkinScatterAmount*_SSSIntensity);
+        SSS = SGDiffuseLighting(rN, gN, bN, L, _SkinScatterAmount * 1.25*_SSSIntensity);
+        #if  defined(_SSS_OFF)
+        SSS=NoL;
         #endif
+        float3 radiance = SSS * lightColor * shadowSSS * PI; //这里给PI是为了和Unity光照系统统一
 
-        half VoH = saturate(dot(customLitData.V, H)); 
-        float3 radiance = SSS * lightColor * PI; //这里给PI是为了和Unity光照系统统一
 
         float3 diffuseTerm = Diffuse_Lambert(customSurfaceData.albedo);
+
         #if defined(_DIFFUSE_OFF)
 		    diffuseTerm = half3(0,0,0);
         #endif
 
-        //float3 specularTerm = SpecularGGX(a2, customSurfaceData.specular, NoH, NoV, SSS, VoH);
-        float3 specularTerm =
-            SpecularBeckmannLut(customSurfaceData.roughness, VoH, NoH, H);;
+        float3 specularTermLobe1 = SpecularGGX(a2Lobe1, customSurfaceData.specular, NoH, NoV, NoL, VoH);
+        float3 specularTermLobe2 = SpecularGGX(a2Lobe2, customSurfaceData.specular, NoH, NoV, NoL, VoH);
+        float3 specularTerm=lerp(specularTermLobe1,specularTermLobe2,0.5);
         #if defined(_SPECULAR_OFF)
 		    specularTerm = half3(0,0,0);
         #endif
-        return (diffuseTerm + specularTerm * shadow) * radiance;
+        return (diffuseTerm + specularTerm) * radiance;
     }
 
     half3 EnvBRDF(CustomLitData customLitData, CustomSurfacedata customSurfaceData, float envRotation,
                   float3 positionWS)
     {
-        half NoV = saturate(abs(dot(customLitData.N, customLitData.V)) + 1e-5); //区分正反面
-        half3 R = reflect(-customLitData.V, customLitData.N);
+        half NoV = saturate(abs(dot(customLitData.NMap, customLitData.V)) + 1e-5); //区分正反面
+        half3 R = reflect(-customLitData.V, customLitData.NMap);
         R = Common.RotateDirection(R, envRotation);
 
         //SH
         float3 diffuseAO = GTAOMultiBounce(customSurfaceData.occlusion, customSurfaceData.albedo);
-        float3 radianceSH = SampleSH(customLitData.N);
+        float3 radianceSH = SampleSH(customLitData.NMap);
         float3 indirectDiffuseTerm = radianceSH * customSurfaceData.albedo * diffuseAO;
         #if defined(_SH_OFF)
 		    indirectDiffuseTerm = half3(0,0,0);
         #endif
 
+        half roughness=(customSurfaceData.roughnessLobe1+customSurfaceData.roughnessLobe2)*0.5;
         //IBL
         //The Split Sum: 1nd Stage
-        half3 specularLD = GlossyEnvironmentReflection(R, positionWS, customSurfaceData.roughness,
+        half3 specularLD = GlossyEnvironmentReflection(R, positionWS, roughness,
                                                        customSurfaceData.occlusion);
         //The Split Sum: 2nd Stage
-        half3 specularDFG = EnvBRDFApprox(customSurfaceData.specular, customSurfaceData.roughness, NoV);
+        half3 specularDFG = EnvBRDFApprox(customSurfaceData.specular, roughness, NoV);
         //AO 处理漏光
         float specularOcclusion = GetSpecularOcclusionFromAmbientOcclusion(
-            NoV, customSurfaceData.occlusion, customSurfaceData.roughness);
+            NoV, customSurfaceData.occlusion, roughness);
         float3 specularAO = GTAOMultiBounce(specularOcclusion, customSurfaceData.specular);
 
         float3 indirectSpecularTerm = specularLD * specularDFG * specularAO;
@@ -229,7 +207,7 @@ CUSTOM_NAMESPACE_START(DirectLighting)
         half3 directLighting_MainLight = (half3)0;
         {
             Light light = GetMainLight(shadowCoord, positionWS, shadowMask);
-            half3 L = light.direction;
+            float3 L = light.direction;
             half3 lightColor = light.color;
             //SSAO
             #if defined(_SCREEN_SPACE_OCCLUSION)
@@ -278,9 +256,8 @@ CUSTOM_NAMESPACE_START(PBR)
         float3 albedo = customSurfaceData.albedo;
         customSurfaceData.albedo = lerp(customSurfaceData.albedo, float3(0.0, 0.0, 0.0), customSurfaceData.metallic);
         customSurfaceData.specular = lerp(float3(0.04, 0.04, 0.04), albedo, customSurfaceData.metallic);
-        half3x3 TBN = half3x3(customLitData.T, customLitData.B, customLitData.N);
-        customLitData.N = normalize(mul(customSurfaceData.normalTS, TBN));
-        customLitData.NB = normalize(mul(customSurfaceData.normalTSBlur, TBN));
+        half3x3 TBN = half3x3(customLitData.T, customLitData.B, customLitData.NGeometry);
+        customLitData.NMap = normalize(mul(customSurfaceData.normalTS, TBN));
 
         //SSAO
         #if defined(_SCREEN_SPACE_OCCLUSION)
