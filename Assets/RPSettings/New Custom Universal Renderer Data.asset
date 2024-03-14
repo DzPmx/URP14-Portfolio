@@ -84,7 +84,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e54a84002479402885ffc2fc44a1c5dc, type: 3}
   m_Name: Post Process System
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
 --- !u!114 &2228367216973910576
 MonoBehaviour:
   m_ObjectHideFlags: 0

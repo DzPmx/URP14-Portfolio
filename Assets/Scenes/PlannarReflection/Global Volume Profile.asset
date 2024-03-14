@@ -368,7 +368,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b440c0ce8cb430296ad833d69692f6a, type: 3}
   m_Name: PlannerReflectionBlurVolume
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   enableEffect:
     m_OverrideState: 1
     m_Value: 1
