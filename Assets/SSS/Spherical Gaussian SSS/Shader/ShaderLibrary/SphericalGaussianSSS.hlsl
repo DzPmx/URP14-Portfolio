@@ -110,11 +110,12 @@ float3 SGDiffuseLighting(float3 rN, float3 gN, float3 bN, float3 lightDir, float
 
 // Compute the irradiance that would result from convolving a punctual light source
 // with the SG filtering kernels
-float3 SGShadow(float shadow, float3 lightDir, float3 ScatterAmt)
+float3 SGShadow(float shadow, float3 ScatterAmt)
 {
-    SphericalGaussian redKernel = MakeNormalizedSG(lightDir, 1.0f / max(ScatterAmt.x, 0.0001f));
-    SphericalGaussian greenKernel = MakeNormalizedSG(lightDir, 1.0f / max(ScatterAmt.y, 0.0001f));
-    SphericalGaussian blueKernel = MakeNormalizedSG(lightDir, 1.0f / max(ScatterAmt.z, 0.0001f));
+    
+    SphericalGaussian redKernel = MakeNormalizedSG(0.1, 1.0f / max(ScatterAmt.x, 0.0001f));
+    SphericalGaussian greenKernel = MakeNormalizedSG(0.1 ,1.0f / max(ScatterAmt.y, 0.0001f));
+    SphericalGaussian blueKernel = MakeNormalizedSG(0.1 ,1.0f / max(ScatterAmt.z, 0.0001f));
 
     float3 SGDiffuse = float3(DotCosineLobe(redKernel, shadow).x,
                               DotCosineLobe(greenKernel, shadow).x,

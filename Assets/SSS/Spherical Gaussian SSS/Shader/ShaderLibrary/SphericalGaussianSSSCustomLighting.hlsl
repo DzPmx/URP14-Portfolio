@@ -130,7 +130,7 @@ CUSTOM_NAMESPACE_START(BxDF)
         half3 gN = lerp(customLitData.NGeometry, customLitData.NMap, 0.3);
         half3 bN = lerp(customLitData.NGeometry, customLitData.NMap, 0.6);
         float3 SSS;
-        float3 shadowSSS = SGShadow(shadow * 2 - 1, L, _SkinScatterAmount*_SSSIntensity);
+        float3 shadowSSS = SGShadow(shadow * 2 - 1, _SkinScatterAmount*_SSSIntensity);
         SSS = SGDiffuseLighting(rN, gN, bN, L, _SkinScatterAmount * 1.25*_SSSIntensity);
         #if  defined(_SSS_OFF)
         SSS=NoL;
