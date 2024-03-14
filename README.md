@@ -36,3 +36,9 @@ Plannar Reflection Blur：使用Renderfeature对反摄相机渲染做后处理�
  工具预览：https://www.bilibili.com/video/BV1XC41187eC/?spm_id_from=333.999.0.0
 
  效果效果：https://www.bilibili.com/video/BV1mK421s7hj/?spm_id_from=333.999.0.0
+
+  **5. Spherical Gaussian Subsurface Scattering**
+
+ 工具预览：null
+
+ 效果效果：null
