@@ -110,18 +110,18 @@ CUSTOM_NAMESPACE_START(BxDF)
         float D = D_GGX_UE5(a2, NoH);
         float Vis = Vis_SmithJointApprox(a2, NoV, NoL);
         float3 F = F_Schlick_UE5(specular, VoH);
-        Vis=saturate(Vis);
+        Vis = saturate(Vis);
 
         return (D * Vis) * F;
     }
 
     half3 StandardBRDF(CustomLitData customLitData, CustomSurfacedata customSurfaceData, float3 L, half3 lightColor,
-                       float shadow,float distanceAtten=1.0)
+                       float shadow, float distanceAtten = 1.0)
     {
         float a2Lobe1 = Common.Pow4(customSurfaceData.roughnessLobe1);
         float a2Lobe2 = Common.Pow4(customSurfaceData.roughnessLobe2);
         half3 H = normalize(customLitData.V + L);
-        half NoH = max(dot(customLitData.NMap, H),0.001);
+        half NoH = max(dot(customLitData.NMap, H), 0.001);
         half NoV = saturate(abs(dot(customLitData.NMap, customLitData.V)) + 1e-5); //区分正反面
         half NoL = saturate(dot(customLitData.NMap, L));
         half VoH = saturate(dot(customLitData.V, H)); //LoH
@@ -130,12 +130,12 @@ CUSTOM_NAMESPACE_START(BxDF)
         half3 gN = lerp(customLitData.NGeometry, customLitData.NMap, 0.3);
         half3 bN = lerp(customLitData.NGeometry, customLitData.NMap, 0.6);
         float3 SSS;
-        float3 shadowSSS = SGShadow(shadow * 2 - 1, _SkinScatterAmount*_SSSIntensity);
-        SSS = SGDiffuseLighting(rN, gN, bN, L, _SkinScatterAmount * 1.25*_SSSIntensity);
+        float3 shadowSSS = SGShadow(shadow * 2 - 1, _SkinScatterAmount * _SSSIntensity);
+        SSS = SGDiffuseLighting(rN, gN, bN, L, _SkinScatterAmount * 1.25 * _SSSIntensity);
         #if  defined(_SSS_OFF)
         SSS=NoL;
         #endif
-        float3 radiance = SSS * lightColor * shadowSSS * PI*distanceAtten; //这里给PI是为了和Unity光照系统统一
+        float3 radiance = SSS * lightColor * shadowSSS * PI * distanceAtten; //这里给PI是为了和Unity光照系统统一
 
 
         float3 diffuseTerm = Diffuse_Lambert(customSurfaceData.albedo);
@@ -146,7 +146,7 @@ CUSTOM_NAMESPACE_START(BxDF)
 
         float3 specularTermLobe1 = SpecularGGX(a2Lobe1, customSurfaceData.specular, NoH, NoV, NoL, VoH);
         float3 specularTermLobe2 = SpecularGGX(a2Lobe2, customSurfaceData.specular, NoH, NoV, NoL, VoH);
-        float3 specularTerm=lerp(specularTermLobe1,specularTermLobe2,0.5);
+        float3 specularTerm = lerp(specularTermLobe1, specularTermLobe2, 0.5);
         #if defined(_SPECULAR_OFF)
 		    specularTerm = half3(0,0,0);
         #endif
@@ -168,7 +168,7 @@ CUSTOM_NAMESPACE_START(BxDF)
 		    indirectDiffuseTerm = half3(0,0,0);
         #endif
 
-        half roughness=(customSurfaceData.roughnessLobe1+customSurfaceData.roughnessLobe2)*0.5;
+        half roughness = (customSurfaceData.roughnessLobe1 + customSurfaceData.roughnessLobe2) * 0.5;
         //IBL
         //The Split Sum: 1nd Stage
         half3 specularLD = GlossyEnvironmentReflection(R, positionWS, roughness,

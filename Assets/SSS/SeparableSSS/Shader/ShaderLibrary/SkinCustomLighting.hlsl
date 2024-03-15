@@ -8,18 +8,21 @@
 #define CUSTOM_NAMESPACE_CLOSE(namespace) }; _##namespace namespace;
 
 CUSTOM_NAMESPACE_START(Common)
-    inline float Pow2 (half x)
+    inline float Pow2(half x)
     {
-        return x*x;
+        return x * x;
     }
-    inline float Pow4 (half x)
+
+    inline float Pow4(half x)
     {
-        return x*x * x*x;
+        return x * x * x * x;
     }
-    inline float Pow5 (half x)
+
+    inline float Pow5(half x)
     {
-        return x*x * x*x * x;
+        return x * x * x * x * x;
     }
+
     inline half3 RotateDirection(half3 R, half degrees)
     {
         float3 reflUVW = R;
@@ -29,16 +32,17 @@ CUSTOM_NAMESPACE_START(Common)
         reflUVW = half3(reflUVW.x * costha - reflUVW.z * sintha, reflUVW.y, reflUVW.x * sintha + reflUVW.z * costha);
         return reflUVW;
     }
+
 CUSTOM_NAMESPACE_CLOSE(Common)
 
 CUSTOM_NAMESPACE_START(BxDF)
     ////-----------------------------------------------------------  D  -------------------------------------------------------------------
     // GGX / Trowbridge-Reitz
     // [Walter et al. 2007, "Microfacet models for refraction through rough surfaces"]
-    float D_GGX_UE5( float a2, float NoH )
+    float D_GGX_UE5(float a2, float NoH)
     {
-        float d = ( NoH * a2 - NoH ) * NoH + 1;	// 2 mad
-        return SafeDiv(a2,PI*d*d);					// 4 mul, 1 rcp
+        float d = (NoH * a2 - NoH) * NoH + 1; // 2 mad
+        return SafeDiv(a2,PI * d * d); // 4 mul, 1 rcp
     }
 
     ////-----------------------------------------------------------  D  -------------------------------------------------------------------
@@ -51,132 +55,137 @@ CUSTOM_NAMESPACE_START(BxDF)
 
     // Appoximation of joint Smith term for GGX
     // [Heitz 2014, "Understanding the Masking-Shadowing Function in Microfacet-Based BRDFs"]
-    float Vis_SmithJointApprox( float a2, float NoV, float NoL )
+    float Vis_SmithJointApprox(float a2, float NoV, float NoL)
     {
         float a = sqrt(a2);
-        float Vis_SmithV = NoL * ( NoV * ( 1 - a ) + a );
-        float Vis_SmithL = NoV * ( NoL * ( 1 - a ) + a );
-        return 0.5 * rcp( Vis_SmithV + Vis_SmithL );
+        float Vis_SmithV = NoL * (NoV * (1 - a) + a);
+        float Vis_SmithL = NoV * (NoL * (1 - a) + a);
+        return 0.5 * rcp(Vis_SmithV + Vis_SmithL);
     }
+
     //----------------------------------------------------------- Vis ----------------------------------------------------------------
 
     //-----------------------------------------------------------  F -------------------------------------------------------------------
-    float3 F_None( float3 SpecularColor )
+    float3 F_None(float3 SpecularColor)
     {
         return SpecularColor;
     }
 
     // [Schlick 1994, "An Inexpensive BRDF Model for Physically-Based Rendering"]
-    float3 F_Schlick_UE5( float3 SpecularColor, float VoH )
+    float3 F_Schlick_UE5(float3 SpecularColor, float VoH)
     {
-        float Fc = Common.Pow5( 1 - VoH );					// 1 sub, 3 mul
+        float Fc = Common.Pow5(1 - VoH); // 1 sub, 3 mul
         //return Fc + (1 - Fc) * SpecularColor;		// 1 add, 3 mad
-        
+
         // Anything less than 2% is physically impossible and is instead considered to be shadowing
-        return saturate( 50.0 * SpecularColor.g ) * Fc + (1 - Fc) * SpecularColor;
+        return saturate(50.0 * SpecularColor.g) * Fc + (1 - Fc) * SpecularColor;
     }
+
     //-----------------------------------------------------------  F -------------------------------------------------------------------
 
-    float3 Diffuse_Lambert( float3 DiffuseColor )
+    float3 Diffuse_Lambert(float3 DiffuseColor)
     {
         return DiffuseColor * (1 / PI);
     }
 
-    half3 EnvBRDFApprox( half3 SpecularColor, half Roughness, half NoV )
+    half3 EnvBRDFApprox(half3 SpecularColor, half Roughness, half NoV)
     {
         // [ Lazarov 2013, "Getting More Physical in Call of Duty: Black Ops II" ]
         // Adaptation to fit our G term.
-        const half4 c0 = { -1, -0.0275, -0.572, 0.022 };
-        const half4 c1 = { 1, 0.0425, 1.04, -0.04 };
+        const half4 c0 = {-1, -0.0275, -0.572, 0.022};
+        const half4 c1 = {1, 0.0425, 1.04, -0.04};
         half4 r = Roughness * c0 + c1;
-        half a004 = min( r.x * r.x, exp2( -9.28 * NoV ) ) * r.x + r.y;
-        half2 AB = half2( -1.04, 1.04 ) * a004 + r.zw;
+        half a004 = min(r.x * r.x, exp2(-9.28 * NoV)) * r.x + r.y;
+        half2 AB = half2(-1.04, 1.04) * a004 + r.zw;
 
         // Anything less than 2% is physically impossible and is instead considered to be shadowing
         // Note: this is needed for the 'specular' show flag to work, since it uses a SpecularColor of 0
-        AB.y *= saturate( 50.0 * SpecularColor.g );
+        AB.y *= saturate(50.0 * SpecularColor.g);
 
         return SpecularColor * AB.x + AB.y;
     }
 
-    float3 SpecularGGX(float a2,float3 specular,float NoH,float NoV,float NoL,float VoH)
+    float3 SpecularGGX(float a2, float3 specular, float NoH, float NoV, float NoL, float VoH)
     {
-        float D = D_GGX_UE5(a2,NoH);
-        float Vis = Vis_SmithJointApprox(a2,NoV,NoL);
-        float3 F = F_Schlick_UE5(specular,VoH);
+        float D = D_GGX_UE5(a2, NoH);
+        float Vis = Vis_SmithJointApprox(a2, NoV, NoL);
+        float3 F = F_Schlick_UE5(specular, VoH);
         return (D * Vis) * F;
     }
 
-    half3 StandardBRDF(CustomLitData customLitData,CustomSurfacedata customSurfaceData,half3 L,half3 lightColor,float shadow)
+    half3 StandardBRDF(CustomLitData customLitData, CustomSurfacedata customSurfaceData, half3 L, half3 lightColor,
+                       float shadow)
     {
         float a2Lobe1 = Common.Pow4(customSurfaceData.roughnessLobe1);
         float a2Lobe2 = Common.Pow4(customSurfaceData.roughnessLobe2);
-        
+
         float3 H = normalize(customLitData.V + L);
-        float NoH = saturate(dot(customLitData.N,H));
-        float NoV = max(dot(customLitData.N,customLitData.V),0.001);
-        float NoL = saturate(dot(customLitData.N,L));
-        float VoH = saturate(dot(customLitData.V,H));//LoH
-        float3 radiance = NoL * lightColor * shadow * PI;//这里给PI是为了和Unity光照系统统一
-    
+        float NoH = saturate(dot(customLitData.N, H));
+        float NoV = max(dot(customLitData.N, customLitData.V), 0.001);
+        float NoL = saturate(dot(customLitData.N, L));
+        float VoH = saturate(dot(customLitData.V, H)); //LoH
+        float3 radiance = NoL * lightColor * shadow * PI; //这里给PI是为了和Unity光照系统统一
+
         float3 diffuseTerm = Diffuse_Lambert(customSurfaceData.albedo);
-        
+
         #if defined(_SKINDIFFUSE_ON)
             return diffuseTerm*radiance;
         #endif
-        float3 specularTermLobe1 = SpecularGGX(a2Lobe1,customSurfaceData.specular,NoH,NoV,NoL,VoH);
-        float3 specularTermLobe2 = SpecularGGX(a2Lobe2,customSurfaceData.specular,NoH,NoV,NoL,VoH);
-        float3 specularTerm=lerp(specularTermLobe1,specularTermLobe2,0.5);
+        float3 specularTermLobe1 = SpecularGGX(a2Lobe1, customSurfaceData.specular, NoH, NoV, NoL, VoH);
+        float3 specularTermLobe2 = SpecularGGX(a2Lobe2, customSurfaceData.specular, NoH, NoV, NoL, VoH);
+        float3 specularTerm = lerp(specularTermLobe1, specularTermLobe2, 0.5);
         #if defined(_SKINSPECULAR_ON)
 		    return specularTerm*radiance;
-	    #endif
+        #endif
         return 0;
     }
 
-    half3 EnvBRDF(CustomLitData customLitData,CustomSurfacedata customSurfaceData,float envRotation,float3 positionWS)
+    half3 EnvBRDF(CustomLitData customLitData, CustomSurfacedata customSurfaceData, float envRotation,
+                  float3 positionWS)
     {
-        half NoV = max(dot(customLitData.N,customLitData.V),0.01);//区分正反面
-        half3 R = reflect(-customLitData.V,customLitData.N);
-        R = Common.RotateDirection(R,envRotation);
+        half NoV = max(dot(customLitData.N, customLitData.V), 0.01); //区分正反面
+        half3 R = reflect(-customLitData.V, customLitData.N);
+        R = Common.RotateDirection(R, envRotation);
 
         //SH
-        float3 diffuseAO = GTAOMultiBounce(customSurfaceData.occlusion,customSurfaceData.albedo);
+        float3 diffuseAO = GTAOMultiBounce(customSurfaceData.occlusion, customSurfaceData.albedo);
         float3 radianceSH = SampleSH(customLitData.N);
-        
+
         float3 indirectDiffuseTerm = radianceSH * customSurfaceData.albedo * diffuseAO;
-    
+
         #if defined(_SKINDIFFUSE_ON)
         return indirectDiffuseTerm;
         #endif
 
-        float roughness=(customSurfaceData.roughnessLobe1+customSurfaceData.roughnessLobe2)*0.5;
+        float roughness = (customSurfaceData.roughnessLobe1 + customSurfaceData.roughnessLobe2) * 0.5;
         //IBL
         //The Split Sum: 1nd Stage
-        half3 specularLD = GlossyEnvironmentReflection(R,positionWS,roughness,customSurfaceData.occlusion);
+        half3 specularLD = GlossyEnvironmentReflection(R, positionWS, roughness, customSurfaceData.occlusion);
         //The Split Sum: 2nd Stage
-        half3 specularDFG = EnvBRDFApprox(customSurfaceData.specular,roughness,NoV);
+        half3 specularDFG = EnvBRDFApprox(customSurfaceData.specular, roughness, NoV);
         //AO 处理漏光
-        float specularOcclusion = GetSpecularOcclusionFromAmbientOcclusion(NoV,customSurfaceData.occlusion,roughness);
-        float3 specularAO = GTAOMultiBounce(specularOcclusion,customSurfaceData.specular);
+        float specularOcclusion = GetSpecularOcclusionFromAmbientOcclusion(NoV, customSurfaceData.occlusion, roughness);
+        float3 specularAO = GTAOMultiBounce(specularOcclusion, customSurfaceData.specular);
 
         float3 indirectSpecularTerm = specularLD * specularDFG * specularAO;
         #if defined(_SKINSPECULAR_ON)
             return indirectSpecularTerm;
-	    #endif
+        #endif
         return 0;
     }
 
 CUSTOM_NAMESPACE_CLOSE(BxDF)
 
 CUSTOM_NAMESPACE_START(DirectLighting)
-    half3 StandardShading(CustomLitData customLitData,CustomSurfacedata customSurfaceData,float3 positionWS,float4 shadowCoord)
+    half3 StandardShading(CustomLitData customLitData, CustomSurfacedata customSurfaceData, float3 positionWS,
+                          float4 shadowCoord)
     {
         half3 directLighting = (half3)0;
         #if defined(_MAIN_LIGHT_SHADOWS_SCREEN) && !defined(_SURFACE_TYPE_TRANSPARENT)
         	float4 positionCS = TransformWorldToHClip(positionWS);
             shadowCoord = ComputeScreenPos(positionCS);
-	    #else
-            shadowCoord = TransformWorldToShadowCoord(positionWS);
+        #else
+        shadowCoord = TransformWorldToShadowCoord(positionWS);
         #endif
         //urp shadowMask是用来考虑烘焙阴影的,因为这里不考虑烘焙阴影所以直接给1
         half4 shadowMask = (half4)1.0;
@@ -184,7 +193,7 @@ CUSTOM_NAMESPACE_START(DirectLighting)
         //main light
         float3 directLighting_MainLight = (half3)0;
         {
-            Light light = GetMainLight(shadowCoord,positionWS,shadowMask);
+            Light light = GetMainLight(shadowCoord, positionWS, shadowMask);
             float3 L = light.direction;
             half3 lightColor = light.color;
             //SSAO
@@ -193,9 +202,9 @@ CUSTOM_NAMESPACE_START(DirectLighting)
                 lightColor *= aoFactor.directAmbientOcclusion;
             #endif
             half shadow = light.shadowAttenuation;
-            directLighting_MainLight = BxDF.StandardBRDF(customLitData,customSurfaceData,L,lightColor,shadow); 
+            directLighting_MainLight = BxDF.StandardBRDF(customLitData, customSurfaceData, L, lightColor, shadow);
         }
-    
+
         //add light
         half3 directLighting_AddLight = (half3)0;
         #ifdef _ADDITIONAL_LIGHTS
@@ -216,11 +225,12 @@ CUSTOM_NAMESPACE_START(DirectLighting)
 CUSTOM_NAMESPACE_CLOSE(DirectLighting)
 
 CUSTOM_NAMESPACE_START(InDirectLighting)
-    half3 EnvShading(CustomLitData customLitData,CustomSurfacedata customSurfaceData,float envRotation,float3 positionWS)
+    half3 EnvShading(CustomLitData customLitData, CustomSurfacedata customSurfaceData, float envRotation,
+                     float3 positionWS)
     {
         half3 inDirectLighting = (half3)0;
 
-        inDirectLighting = BxDF.EnvBRDF(customLitData,customSurfaceData,envRotation,positionWS);
+        inDirectLighting = BxDF.EnvBRDF(customLitData, customSurfaceData, envRotation, positionWS);
 
         return inDirectLighting;
     }
@@ -228,14 +238,14 @@ CUSTOM_NAMESPACE_START(InDirectLighting)
 CUSTOM_NAMESPACE_CLOSE(InDirectLighting)
 
 CUSTOM_NAMESPACE_START(PBR)
-
-    half4 StandardLit(CustomLitData customLitData,CustomSurfacedata customSurfaceData,float3 positionWS,float4 shadowCoord,float envRotation)
+    half4 StandardLit(CustomLitData customLitData, CustomSurfacedata customSurfaceData, float3 positionWS,
+                      float4 shadowCoord, float envRotation)
     {
         float3 albedo = customSurfaceData.albedo;
-        customSurfaceData.albedo = lerp(customSurfaceData.albedo,float3(0.0,0.0,0.0),customSurfaceData.metallic);
-        customSurfaceData.specular = lerp(float3(0.04,0.04,0.04),albedo,customSurfaceData.metallic);
-        half3x3 TBN = half3x3(customLitData.T,customLitData.B,customLitData.N);
-        customLitData.N = normalize(mul(customSurfaceData.normalTS,TBN));
+        customSurfaceData.albedo = lerp(customSurfaceData.albedo, float3(0.0, 0.0, 0.0), customSurfaceData.metallic);
+        customSurfaceData.specular = lerp(float3(0.04, 0.04, 0.04), albedo, customSurfaceData.metallic);
+        half3x3 TBN = half3x3(customLitData.T, customLitData.B, customLitData.N);
+        customLitData.N = normalize(mul(customSurfaceData.normalTS, TBN));
 
         //SSAO
         #if defined(_SCREEN_SPACE_OCCLUSION)
@@ -244,12 +254,14 @@ CUSTOM_NAMESPACE_START(PBR)
         #endif
 
         //DirectLighting
-        half3 directLighting = DirectLighting.StandardShading(customLitData,customSurfaceData,positionWS,shadowCoord);
-        
+        half3 directLighting = DirectLighting.
+            StandardShading(customLitData, customSurfaceData, positionWS, shadowCoord);
+
         //IndirectLighting
-        half3 inDirectLighting = InDirectLighting.EnvShading(customLitData,customSurfaceData,envRotation,positionWS);
-        return half4(directLighting + inDirectLighting,1);
+        half3 inDirectLighting = InDirectLighting.EnvShading(customLitData, customSurfaceData, envRotation, positionWS);
+        return half4(directLighting + inDirectLighting, 1);
     }
+
 CUSTOM_NAMESPACE_CLOSE(PBR)
 
 #endif

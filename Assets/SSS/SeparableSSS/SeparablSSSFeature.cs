@@ -18,7 +18,7 @@ namespace RenderFeature.SeparableSSS
             separablSSS.settings = settings;
         }
 
-        public override void SetupRenderPasses(ScriptableRenderer renderer, in RenderingData renderingData )
+        public override void SetupRenderPasses(ScriptableRenderer renderer, in RenderingData renderingData)
         {
             separablSSS.Setup(renderer.cameraColorTargetHandle, renderer.cameraDepthTargetHandle);
         }
@@ -83,6 +83,7 @@ namespace RenderFeature.SeparableSSS
             {
                 material = CoreUtils.CreateEngineMaterial(shaderName);
             }
+
             material.SetTexture(noiseID, settings.blueNoise);
             material.SetVector(noiseSizeID, new Vector2(64, 64));
             Vector3 SSSC = Vector3.Normalize(new Vector3(settings.subsurfaceColor.r, settings.subsurfaceColor.g,
@@ -101,7 +102,7 @@ namespace RenderFeature.SeparableSSS
             material.SetFloat(sssScalerID, settings.subsurfaceScaler);
             material.SetFloat("_RandomSeed", Random.Range(0, 100));
             material.SetTexture(blitTextureID, sourceColor);
-            cmd.SetGlobalTexture(sssTextureID,SSSTexture2);
+            cmd.SetGlobalTexture(sssTextureID, SSSTexture2);
         }
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
@@ -110,12 +111,12 @@ namespace RenderFeature.SeparableSSS
             using (new ProfilingScope(buffer, blurSampler))
             {
                 CoreUtils.SetRenderTarget(buffer, SSSTexture1, sourceDepth);
-                CoreUtils.ClearRenderTarget(buffer,ClearFlag.Color,Color.grey);
+                CoreUtils.ClearRenderTarget(buffer, ClearFlag.Color, Color.grey);
                 buffer.DrawProcedural(Matrix4x4.identity, material, 0, MeshTopology.Triangles, 3);
-                Blitter.BlitCameraTexture(buffer,SSSTexture1,SSSTexture2,material,1);
+                Blitter.BlitCameraTexture(buffer, SSSTexture1, SSSTexture2, material, 1);
                 CoreUtils.SetRenderTarget(buffer, sourceColor, sourceDepth);
-                
             }
+
             context.ExecuteCommandBuffer(buffer);
             buffer.Clear();
             using (new ProfilingScope(buffer, dualLobeSampler))
@@ -127,11 +128,12 @@ namespace RenderFeature.SeparableSSS
                                                 PerObjectData.Lightmaps | PerObjectData.ShadowMask |
                                                 PerObjectData.LightProbe | PerObjectData.OcclusionProbe |
                                                 PerObjectData.LightProbeProxyVolume |
-                                                PerObjectData.OcclusionProbeProxyVolume | PerObjectData.LightIndices|
-                                                PerObjectData.LightData| PerObjectData.MotionVectors;
+                                                PerObjectData.OcclusionProbeProxyVolume | PerObjectData.LightIndices |
+                                                PerObjectData.LightData | PerObjectData.MotionVectors;
                 FilteringSettings filteringSettings = FilteringSettings.defaultValue;
                 context.DrawRenderers(cullingResults, ref drawingSettings, ref filteringSettings);
             }
+
             buffer.Clear();
             buffer.Dispose();
         }
