@@ -113,13 +113,14 @@ CUSTOM_NAMESPACE_START(BxDF)
         float a2Lobe2 = Common.Pow4(customSurfaceData.roughnessLobe2);
         
         float3 H = normalize(customLitData.V + L);
-        float NoH = max(dot(customLitData.N,H),0.01);
-        float NoV = max(dot(customLitData.N,customLitData.V),0.01);
-        float NoL = max(dot(customLitData.N,L),0.01);
-        float VoH = max(dot(customLitData.V,H),0.01);//LoH
+        float NoH = saturate(dot(customLitData.N,H));
+        float NoV = max(dot(customLitData.N,customLitData.V),0.001);
+        float NoL = saturate(dot(customLitData.N,L));
+        float VoH = saturate(dot(customLitData.V,H));//LoH
         float3 radiance = NoL * lightColor * shadow * PI;//这里给PI是为了和Unity光照系统统一
-
+    
         float3 diffuseTerm = Diffuse_Lambert(customSurfaceData.albedo);
+        
         #if defined(_SKINDIFFUSE_ON)
             return diffuseTerm*radiance;
         #endif
@@ -141,7 +142,9 @@ CUSTOM_NAMESPACE_START(BxDF)
         //SH
         float3 diffuseAO = GTAOMultiBounce(customSurfaceData.occlusion,customSurfaceData.albedo);
         float3 radianceSH = SampleSH(customLitData.N);
+        
         float3 indirectDiffuseTerm = radianceSH * customSurfaceData.albedo * diffuseAO;
+    
         #if defined(_SKINDIFFUSE_ON)
         return indirectDiffuseTerm;
         #endif
@@ -192,12 +195,12 @@ CUSTOM_NAMESPACE_START(DirectLighting)
             half shadow = light.shadowAttenuation;
             directLighting_MainLight = BxDF.StandardBRDF(customLitData,customSurfaceData,L,lightColor,shadow); 
         }
-        
+    
         //add light
         half3 directLighting_AddLight = (half3)0;
         #ifdef _ADDITIONAL_LIGHTS
-        uint pixelLightCount = GetAdditionalLightsCount();
-        for(uint lightIndex = 0; lightIndex < pixelLightCount ; lightIndex++) 
+        int pixelLightCount = GetAdditionalLightsCount();
+        for(int lightIndex = 0; lightIndex < pixelLightCount ; lightIndex++) 
         {
             Light light = GetAdditionalLight(lightIndex,positionWS,shadowMask);
             half3 L = light.direction;

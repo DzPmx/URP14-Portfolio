@@ -115,8 +115,7 @@ half4 SkinDualLobePassFragment(Varyings input) : SV_Target
     InitializeCustomSurfaceData(input, customSurfaceData);
     float2 screenUV = input.posCS.xy / _ScaledScreenParams.xy;
     half4 color = PBR.StandardLit(customLitData, customSurfaceData, input.posWS, input.shadowCoord, _EnvRotation);
-    customSurfaceData.albedo = SAMPLE_TEXTURE2D(_SSSTexture, sampler_SSSTexture, screenUV) * _BaseColor;
-    color.rgb += customSurfaceData.albedo;
+    color+=SAMPLE_TEXTURE2D(_SSSTexture, sampler_SSSTexture, screenUV);
     return color;
 }
 #endif

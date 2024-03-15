@@ -116,7 +116,7 @@ CUSTOM_NAMESPACE_START(BxDF)
     }
 
     half3 StandardBRDF(CustomLitData customLitData, CustomSurfacedata customSurfaceData, float3 L, half3 lightColor,
-                       float shadow)
+                       float shadow,float distanceAtten=1.0)
     {
         float a2Lobe1 = Common.Pow4(customSurfaceData.roughnessLobe1);
         float a2Lobe2 = Common.Pow4(customSurfaceData.roughnessLobe2);
@@ -135,7 +135,7 @@ CUSTOM_NAMESPACE_START(BxDF)
         #if  defined(_SSS_OFF)
         SSS=NoL;
         #endif
-        float3 radiance = SSS * lightColor * shadowSSS * PI; //这里给PI是为了和Unity光照系统统一
+        float3 radiance = SSS * lightColor * shadowSSS * PI*distanceAtten; //这里给PI是为了和Unity光照系统统一
 
 
         float3 diffuseTerm = Diffuse_Lambert(customSurfaceData.albedo);
@@ -227,8 +227,8 @@ CUSTOM_NAMESPACE_START(DirectLighting)
             Light light = GetAdditionalLight(lightIndex,positionWS,shadowMask);
             half3 L = light.direction;
             half3 lightColor = light.color;
-            half shadow = light.shadowAttenuation * light.distanceAttenuation;
-            directLighting_AddLight += BxDF.StandardBRDF(customLitData,customSurfaceData,L,lightColor,shadow);                                   
+            half shadow = light.shadowAttenuation;
+            directLighting_AddLight += BxDF.StandardBRDF(customLitData,customSurfaceData,L,lightColor,shadow,light.distanceAttenuation);                                   
         }
         #endif
         return directLighting_MainLight + directLighting_AddLight;

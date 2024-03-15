@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Spherical Gaussian SSS
-  m_Shader: {fileID: 4800000, guid: aed4807b74a00714cade0d7e4cce7cf1, type: 3}
+  m_Name: MyURPShader_Lit
+  m_Shader: {fileID: 4800000, guid: bc6e5d1a5c677f24ebd220eb51c9e99c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -45,23 +45,16 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Cutoff: 0.479
+    - _Cutoff: 0.5
     - _DIFFUSE_OFF: 0
-    - _DrakOffset: 0
     - _EnvRotation: 0
     - _IBL_OFF: 0
     - _Metallic: 0
     - _Normal: 1
     - _OcclusionStrength: 1
     - _Roughness: 0.5
-    - _RoughnessLobe1: 0.6
-    - _RoughnessLobe2: 0.4
     - _SH_OFF: 0
     - _SPECULAR_OFF: 0
-    - _SSSIntensity: 0.5
-    - _SSSOffset: 0
-    - _SSS_OFF: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _SkinScatterAmount: {r: 0.26415092, g: 0.12863554, b: 0.11089354, a: 1}
   m_BuildTextureStacks: []

@@ -137,7 +137,7 @@ CUSTOM_NAMESPACE_START(BxDF)
     }
 
     half3 StandardBRDF(CustomLitData customLitData, CustomSurfacedata customSurfaceData, half3 L, half3 lightColor,
-                       float shadow)
+                       float shadow,float distanceAtten=1.0)
     {
         half3 H = normalize(customLitData.V + L);
         half NoH = saturate(dot(customLitData.N, H));
@@ -155,13 +155,14 @@ CUSTOM_NAMESPACE_START(BxDF)
         SSS.g = SAMPLE_TEXTURE2D(_SkinDiffsueLut, sampler_SkinDiffsueLut, gUV).g;
         SSS.b = SAMPLE_TEXTURE2D(_SkinDiffsueLut, sampler_SkinDiffsueLut, bUV).b;
 
+       
         #if defined(_SSS_OFF)
         SSS=saturate(dot(customLitData.N,L))*shadow;
         #endif
 
         half VoH = saturate(dot(customLitData.V, H)); 
-        float3 radiance = SSS * lightColor * PI; //这里给PI是为了和Unity光照系统统一
-
+        float3 radiance = SSS * lightColor * PI*distanceAtten; //这里给PI是为了和Unity光照系统统一
+    
         float3 diffuseTerm = Diffuse_Lambert(customSurfaceData.albedo);
         #if defined(_DIFFUSE_OFF)
 		    diffuseTerm = half3(0,0,0);
@@ -173,7 +174,7 @@ CUSTOM_NAMESPACE_START(BxDF)
         #if defined(_SPECULAR_OFF)
 		    specularTerm = half3(0,0,0);
         #endif
-        return (diffuseTerm + specularTerm * shadow) * radiance;
+        return (diffuseTerm + specularTerm) * radiance;
     }
 
     half3 EnvBRDF(CustomLitData customLitData, CustomSurfacedata customSurfaceData, float envRotation,
@@ -249,8 +250,8 @@ CUSTOM_NAMESPACE_START(DirectLighting)
             Light light = GetAdditionalLight(lightIndex,positionWS,shadowMask);
             half3 L = light.direction;
             half3 lightColor = light.color;
-            half shadow = light.shadowAttenuation * light.distanceAttenuation;
-            directLighting_AddLight += BxDF.StandardBRDF(customLitData,customSurfaceData,L,lightColor,shadow);                                   
+            half shadow = light.shadowAttenuation;
+            directLighting_AddLight += BxDF.StandardBRDF(customLitData,customSurfaceData,L,lightColor,shadow,light.distanceAttenuation);                                   
         }
         #endif
         return directLighting_MainLight + directLighting_AddLight;
