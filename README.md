@@ -2,9 +2,11 @@
 
  **1. PostProcess System**
 
+[效果预览](https://www.bilibili.com/video/BV17p421U7UR/?spm_id_from=333.999.0.0)
+
 简介：使用一个Renderfeature和RenderPass统一管理所有全屏后处理效果  后处理效果的激活和调整参数汇入Volueme
 
-后处理内容：[效果预览](https://www.bilibili.com/video/BV17p421U7UR/?spm_id_from=333.999.0.0)
+后处理内容：
 
 Blur： Gaussian Blur、Box Blur、Kawase Blur、DualKawase Blur、Bokeh Blur、Tile Shift Blur、Iris Blur、Grainy Blur、Directional Blur、Radial Blur
 
