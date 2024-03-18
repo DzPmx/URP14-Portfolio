@@ -1,5 +1,5 @@
-﻿#ifndef SEPARABLE_SUBSURFACE_SCATTER
-#define SEPARABLE_SUBSURFACE_SCATTER
+﻿#ifndef SEPARABLE_SUBSURFACE_SCATTER_INCLUDED
+#define SEPARABLE_SUBSURFACE_SCATTER_INCLUDED
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
 #define DistanceToProjectionWindow 5.671281819617709             //1.0 / tan(0.5 * radians(20));

@@ -1,4 +1,4 @@
-Shader "MyURPShader/Character Rendering/LitSSS"
+Shader "MyURPShader/Character Rendering/Separable LitSSS"
 {
     Properties
     {
@@ -22,7 +22,7 @@ Shader "MyURPShader/Character Rendering/LitSSS"
         [NoScaleOffset]_OcclusionMap("OcclusionMap",2D) = "white"{}
         _OcclusionStrength("Occlusion Strength",Range(0.0,1.0)) = 1.0
         _EnvRotation("EnvRotation",Range(0.0,360.0)) = 0.0
-
+        
         [Toggle(_SKINDIFFUSE_ON)] _SKINDIFFUSE_ON("SKINDIFFUSE ON",Float) = 1.0
         [Toggle(_SKINSPECULAR_ON)] _SKINSPECULAR_ON("SKINSPECULAR ON",Float) = 1.0
     }
@@ -85,7 +85,7 @@ Shader "MyURPShader/Character Rendering/LitSSS"
         {
             // Lightmode matches the ShaderPassName set in UniversalRenderPipeline.cs. SRPDefaultUnlit and passes with
             // no LightMode tag are also rendered by Universal Render Pipeline
-            Tags{"LightMode" = "DualSpecular"}
+            Tags{"LightMode" = "Separable Dual Specular"}
 
             Cull Back
             HLSLPROGRAM

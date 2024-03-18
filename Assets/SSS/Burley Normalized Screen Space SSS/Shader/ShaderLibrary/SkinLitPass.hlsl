@@ -1,5 +1,5 @@
-#ifndef SSSS_SKIN_LIT_PASS_INCLUDED
-#define SSSS_SKIN_LIT_PASS_INCLUDED
+#ifndef SSSSS_SKIN_LIT_PASS_INCLUDED
+#define SSSSS_SKIN_LIT_PASS_INCLUDED
 
 #include "SkinCustomLitData.hlsl"
 #include "SkinCustomLighting.hlsl"
@@ -115,7 +115,7 @@ half4 SkinDualLobePassFragment(Varyings input) : SV_Target
     InitializeCustomSurfaceData(input, customSurfaceData);
     float2 screenUV = input.posCS.xy / _ScaledScreenParams.xy;
     half4 color = PBR.StandardLit(customLitData, customSurfaceData, input.posWS, input.shadowCoord, _EnvRotation);
-    color+=SAMPLE_TEXTURE2D(_SSSTexture, sampler_SSSTexture, screenUV);
+    color+=SAMPLE_TEXTURE2D(_BurleyNormalizedSSSTexture, sampler_BurleyNormalizedSSSTexture, screenUV);
     return color;
 }
 #endif

@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: LitSSS
+  m_Name: SSS Separable
   m_Shader: {fileID: 4800000, guid: 08b1bfcbbb0c45eaabd6cf74cd8814e3, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -64,6 +64,7 @@ Material:
     - _SKINSPECULAR_OFF: 0
     - _SKINSPECULAR_ON: 1
     - _SPECULAR_OFF: 1
+    - _StencilValue: 5
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

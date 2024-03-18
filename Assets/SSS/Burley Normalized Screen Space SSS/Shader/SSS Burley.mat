@@ -7,12 +7,15 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Pre-IntegratedSkin
-  m_Shader: {fileID: 4800000, guid: a75ef0b9cb11cb9428dcf806305ec105, type: 3}
+  m_Name: SSS Burley
+  m_Shader: {fileID: 4800000, guid: bd6d942704788d647842216f495e49c4, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_ValidKeywords:
+  - _SKINDIFFUSE_ON
+  - _SKINSPECULAR_ON
+  m_InvalidKeywords:
+  - _IBL_OFF
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -25,14 +28,6 @@ Material:
     m_TexEnvs:
     - _BaseMap:
         m_Texture: {fileID: 2800000, guid: 163db8200b9921647b309f6005fd9135, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Curvature:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _CurvatureMap:
-        m_Texture: {fileID: 2800000, guid: 02cc2e60497387d40baed4111f9c177b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicMap:
@@ -51,31 +46,25 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SkinDiffsueLut:
-        m_Texture: {fileID: 2800000, guid: 3517899d54e7ba647a7a7c5ed71000cb, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SkinSpecularLut:
-        m_Texture: {fileID: 2800000, guid: b27cc21d3489d774c90f6b36a2322392, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _CLEARCOAT_OFF: 0
-    - _ClearCoat: 1
-    - _ClearCoatRoughness: 1
-    - _Curvature: 0.2
     - _Cutoff: 0.5
     - _DIFFUSE_OFF: 0
     - _EnvRotation: 0
-    - _IBL_OFF: 0
+    - _IBL_OFF: 1
     - _Metallic: 0
     - _Normal: 1
     - _OcclusionStrength: 1
-    - _Roughness: 0.5
+    - _Roughness: 1
+    - _RoughnessLobe1: 0.6
+    - _RoughnessLobe2: 0.4
     - _SH_OFF: 0
-    - _SPECULAR_OFF: 0
-    - _SSS_OFF: 0
+    - _SKINDIFFUSE_OFF: 0
+    - _SKINDIFFUSE_ON: 1
+    - _SKINSPECULAR_OFF: 0
+    - _SKINSPECULAR_ON: 1
+    - _SPECULAR_OFF: 1
+    - _StencilValue: 10
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

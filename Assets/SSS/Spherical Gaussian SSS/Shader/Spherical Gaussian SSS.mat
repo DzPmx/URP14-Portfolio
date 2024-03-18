@@ -58,10 +58,10 @@ Material:
     - _RoughnessLobe2: 0.4
     - _SH_OFF: 0
     - _SPECULAR_OFF: 0
-    - _SSSIntensity: 0.5
+    - _SSSIntensity: 0.15
     - _SSSOffset: 0
     - _SSS_OFF: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _SkinScatterAmount: {r: 0.26415092, g: 0.12863554, b: 0.11089354, a: 1}
+    - _SkinScatterAmount: {r: 0.4433962, g: 0.26345047, b: 0.23215556, a: 1}
   m_BuildTextureStacks: []

@@ -17,7 +17,7 @@ CBUFFER_START(UnityPerMaterial)
     half _EnvRotation;
 CBUFFER_END
 TEXTURE2D(_BaseMap);         SAMPLER(sampler_BaseMap);
-TEXTURE2D(_SSSTexture);      SAMPLER(sampler_SSSTexture);
+TEXTURE2D(_SeparableSSSTexture);      SAMPLER(sampler_SeparableSSSTexture);
 TEXTURE2D(_MetallicMap);     SAMPLER(sampler_MetallicMap);
 TEXTURE2D(_RoughnessMap);    SAMPLER(sampler_RoughnessMap);
 TEXTURE2D(_NormalMap);       SAMPLER(sampler_NormalMap);

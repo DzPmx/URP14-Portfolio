@@ -25,6 +25,7 @@ public static class SeparableSSSLibrary
             float w0 = i > 0 ? Mathf.Abs(kernel[i].w - kernel[i - 1].w) : 0.0f;
             float w1 = i < nSamples - 1 ? Mathf.Abs(kernel[i].w - kernel[i + 1].w) : 0.0f;
             float area = (w0 + w1) / 2.0f;
+             //area = 1;
             Vector3 temp = profile(kernel[i].w, falloff);
             Vector4 tt = new Vector4(area * temp.x, area * temp.y, area * temp.z, kernel[i].w);
             kernel[i] = tt;

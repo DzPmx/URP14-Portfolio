@@ -39,7 +39,7 @@
                 float3 XBlurPlus = SeparableSubsurface(SceneColor, input.uv0, float2(SSSIntencity, 0)).rgb;
                 float3 XBlurNagteiv = SeparableSubsurface(SceneColor, input.uv0, float2(-SSSIntencity, 0)).rgb;
                 float3 XBlur = (XBlurPlus + XBlurNagteiv) / 2;
-                return float4(saturate(XBlur), SceneColor.a);
+                return float4(XBlur, SceneColor.a);
             }
             ENDHLSL
         }
@@ -60,7 +60,7 @@
                 float3 YBlurPlus = SeparableSubsurface(SceneColor, input.uv0, float2(0, SSSIntencity)).rgb;
                 float3 YBlurNagteiv = SeparableSubsurface(SceneColor, input.uv0, float2(0, -SSSIntencity)).rgb;
                 float3 YBlur = (YBlurPlus + YBlurNagteiv) / 2;
-                return float4(saturate(YBlur), SceneColor.a);
+                return float4(YBlur, SceneColor.a);
             }
             ENDHLSL
         }
