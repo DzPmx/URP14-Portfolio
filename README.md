@@ -12,7 +12,7 @@ Glitch：RGB Split、Image Block、Line Block、Tile Jitter、Scanline Jitter、
 
 文件位置：https://github.com/DzPmx/URP14-Portfolio/tree/main/Assets/RenderFeature/PostProcessSystem
 
-效果预览：null
+效果预览：https://www.bilibili.com/video/BV17p421U7UR/?spm_id_from=333.999.0.0
 
  **2. Plannar Reflection**
 
