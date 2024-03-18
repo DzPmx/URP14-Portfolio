@@ -15,7 +15,7 @@ Glitch：RGB Split、Image Block、Line Block、Tile Jitter、Scanline Jitter、
 
  **2.Reflection**
 
-Planner Reflection
+Planner Reflection：效果预览
 
 Plannar Reflection Blur：使用Renderfeature对反摄相机渲染做后处理模糊 模糊方法：Dual Kawase Blur
 
