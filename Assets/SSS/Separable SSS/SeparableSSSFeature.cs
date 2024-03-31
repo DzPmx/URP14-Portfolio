@@ -110,7 +110,7 @@ namespace SSS.Separable_SSS
             using (new ProfilingScope(buffer, blurSampler))
             {
                 CoreUtils.SetRenderTarget(buffer, SSSTexture1, sourceDepth);
-                CoreUtils.ClearRenderTarget(buffer, ClearFlag.Color, Color.grey);
+                CoreUtils.ClearRenderTarget(buffer, ClearFlag.Color, Color.black);
                 buffer.DrawProcedural(Matrix4x4.identity, material, 0, MeshTopology.Triangles, 3);
                 Blitter.BlitCameraTexture(buffer, SSSTexture1, SSSTexture2, material, 1);
                 CoreUtils.SetRenderTarget(buffer, sourceColor, sourceDepth);
