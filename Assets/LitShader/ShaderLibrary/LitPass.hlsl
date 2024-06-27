@@ -48,7 +48,8 @@ void InitializeCustomSurfaceData(Varyings input, out CustomSurfacedata customSur
     customSurfaceData.albedo = color.rgb;
     customSurfaceData.alpha = color.a;
     #if defined(_ALPHATEST_ON)
-    clip(customSurfaceData.alpha - _Cutoff);
+    half noise=InterleavedGradientNoise(input.posCS.xy,0);
+    clip(customSurfaceData.alpha - noise*_Cutoff);
     #endif
     customSurfaceData.specular = (half3)0;
 

@@ -19,7 +19,8 @@ Shader "MyURPShader/Lit"
         _OcclusionMap("OcclusionMap",2D) = "white"{}
         _OcclusionStrength("Occlusion Strength",Range(0.0,1.0)) = 1.0
         _EnvRotation("EnvRotation",Range(0.0,360.0)) = 0.0
-
+        
+        [Toggle(_ALPHATEST_ON)]_ALPHATEST_ON("_ALPHATEST_ON",Float)=0.0
         [Toggle(_DIFFUSE_OFF)] _DIFFUSE_OFF("DIFFUSE OFF",Float) = 0.0
         [Toggle(_SPECULAR_OFF)] _SPECULAR_OFF("SPECULAR OFF",Float) = 0.0
         [Toggle(_SH_OFF)] _SH_OFF("SH OFF",Float) = 0.0
@@ -73,8 +74,7 @@ Shader "MyURPShader/Lit"
 
             #pragma vertex LitPassVertex
             #pragma fragment StandardLitPassFragment
-
-            //不支持合批是因为后面的Pass用的cbuffer中的内容不一致，此处仅为了演示PBR效果故不更改
+            
             #include "ShaderLibrary/LitInput.hlsl"
             #include "ShaderLibrary/LitPass.hlsl"
 
@@ -89,7 +89,6 @@ Shader "MyURPShader/Lit"
             ZWrite On
             ZTest LEqual
             ColorMask 0
-            Cull[_Cull]
 
             HLSLPROGRAM
             #pragma exclude_renderers gles gles3 glcore
