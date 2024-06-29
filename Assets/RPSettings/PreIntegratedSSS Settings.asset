@@ -12,5 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad9ce13129dcacf489261b265274a64f, type: 3}
   m_Name: PreIntegratedSSS Settings
   m_EditorClassIdentifier: 
-  subsurfaceColor: {r: 0.6320754, g: 0.21764861, b: 0.21764861, a: 0}
-  radius: 1
+  subsurfaceColor:
+    r: 1
+    g: 1
+    b: 1
+    a: 0
+  radius: -1.64

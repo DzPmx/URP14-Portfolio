@@ -5,9 +5,9 @@
 #include "PreIntegratedSkinLighting.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
-float _Variance[6];
-float _Weight[6];
-//float4 _GaussianArray[6];
+//float _Variance[6];
+//float _Weight[6];
+float4 _GaussianArray[6];
 
 
 struct Attributes
@@ -65,11 +65,12 @@ void InitializeCustomSurfaceData(Varyings input, out CustomSurfacedata customSur
     customSurfaceData.roughness = max(saturate(roughness), 0.001f);
 
     //normalTS (tangent Space)
-    float4 normalTS = SAMPLE_TEXTURE2D_LOD(_NormalMap, sampler_NormalMap, input.uv, 0);
+    float4 normalTS=0,normalTSBlur=0;
     #if defined(_SSS_SPECIAL)
-    float4 normalTSBlur = SAMPLE_TEXTURE2D_LOD(_NormalMap, sampler_NormalMap, input.uv, mipmapLevel);
+     normalTS = SAMPLE_TEXTURE2D_LOD(_NormalMap, sampler_NormalMap, input.uv, mipmapLevel);
     #else
-    float4 normalTSBlur = SAMPLE_TEXTURE2D_LOD(_NormalMap, sampler_NormalMap, input.uv, mipmapLevel);
+     normalTS = SAMPLE_TEXTURE2D_LOD(_NormalMap, sampler_NormalMap, input.uv, 0);
+     normalTSBlur = SAMPLE_TEXTURE2D_LOD(_NormalMap, sampler_NormalMap, input.uv, 4);
     #endif
     customSurfaceData.normalTS = UnpackNormalScale(normalTS, _Normal);
     customSurfaceData.normalTSBlur = UnpackNormalScale(normalTSBlur, _Normal);
@@ -117,20 +118,4 @@ half4 PreIntegratedSSSLitPassFragment(Varyings input) : SV_Target
     return color;
 }
 
-half4 PreIntegratedSpecialSSSLitPassFragment(Varyings input) : SV_Target
-{
-    UNITY_SETUP_INSTANCE_ID(input);
-    half4 color = half4(0.0, 0.0, 0.0, 0.0);
-    CustomLitData customLitData;
-    InitializeCustomLitData(input, customLitData);
-    for (uint i = 0; i < 6; i++)
-    {
-        CustomSurfacedata customSurfaceData;
-        float mipmapLevel=(1.0-_Variance[i])*12;
-        InitializeCustomSurfaceData(input, customSurfaceData, mipmapLevel);
-        color += PBR.PreIntegratedSSSSpecialLit(customLitData, customSurfaceData, input.posWS, input.shadowCoord,
-                                                _EnvRotation)*_Weight[i];
-    };
-    return color;
-}
 #endif

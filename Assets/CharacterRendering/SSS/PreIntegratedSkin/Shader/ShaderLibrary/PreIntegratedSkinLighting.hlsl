@@ -1,6 +1,7 @@
 #ifndef PRE_INTEGRATED_SKIN_LITGHTING_INCLUDED
 #define PRE_INTEGRATED_SKIN_LITGHTING_INCLUDED
-float4 _GaussianArray[6];
+float _Variance[6];
+float _Weight[6];
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/CommonLighting.hlsl"
 
@@ -151,12 +152,12 @@ CUSTOM_NAMESPACE_START(BxDF)
         float2 gUV = float2(gNoL * shadow, customSurfaceData.curvature);
         float2 bUV = float2(bNoL * shadow, customSurfaceData.curvature);
 
-      
+
         float3 SSS = float3(0.0, 0.0, 0.0);
         SSS.r = SAMPLE_TEXTURE2D(_SkinDiffsueLut, sampler_SkinDiffsueLut, rUV).r;
         SSS.g = SAMPLE_TEXTURE2D(_SkinDiffsueLut, sampler_SkinDiffsueLut, gUV).g;
         SSS.b = SAMPLE_TEXTURE2D(_SkinDiffsueLut, sampler_SkinDiffsueLut, bUV).b;
-    
+
         #if defined(_SSS_OFF)
         SSS=saturate(dot(customLitData.N,L))*shadow;
         #endif
@@ -178,51 +179,6 @@ CUSTOM_NAMESPACE_START(BxDF)
         return (diffuseTerm + specularTerm) * radiance;
     }
 
-    half3 PreIntegratedSSSSpecialBRDF(CustomLitData customLitData, CustomSurfacedata customSurfaceData, half3 L,
-                                      half3 lightColor,
-                                      float shadow, float distanceAtten = 1.0)
-    {
-        half3 H = normalize(customLitData.V + L);
-        half NoH = saturate(dot(customLitData.N, H));
-
-        half rNoL = dot(customLitData.NB, L) * 0.5 + 0.5;
-        half bNoL = lerp(dot(customLitData.N, L) * 0.5 + 0.5, rNoL, 0.2);
-        half gNoL = lerp(rNoL, bNoL, 0.3);
-
-        float2 rUV = float2(rNoL * shadow, customSurfaceData.curvature);
-        float2 gUV = float2(gNoL * shadow, customSurfaceData.curvature);
-        float2 bUV = float2(bNoL * shadow, customSurfaceData.curvature);
-
-        float3 SSS=float3(0.0,0.0,0.0);
-        float3 LUT;
-        LUT.r = SAMPLE_TEXTURE2D(_SkinDiffsueLut, sampler_SkinDiffsueLut, rUV).r;
-        LUT.g = SAMPLE_TEXTURE2D(_SkinDiffsueLut, sampler_SkinDiffsueLut, gUV).g;
-        LUT.b = SAMPLE_TEXTURE2D(_SkinDiffsueLut, sampler_SkinDiffsueLut, bUV).b;
-
-        for (int i = 0; i < 6; ++i)
-        {
-         SSS=LUT;   
-        }
-        #if defined(_SSS_OFF)
-    SSS=saturate(dot(customLitData.N,L))*shadow;
-        #endif
-
-        half VoH = saturate(dot(customLitData.V, H));
-        float3 radiance = SSS * lightColor * PI * distanceAtten; //这里给PI是为了和Unity光照系统统一
-
-        float3 diffuseTerm = Diffuse_Lambert(customSurfaceData.albedo);
-        #if defined(_DIFFUSE_OFF)
-    diffuseTerm = half3(0,0,0);
-        #endif
-
-        //float3 specularTerm = SpecularGGX(a2, customSurfaceData.specular, NoH, NoV, SSS, VoH);
-        float3 specularTerm =
-            SpecularBeckmannLut(customSurfaceData.roughness, VoH, NoH, H);;
-        #if defined(_SPECULAR_OFF)
-    specularTerm = half3(0,0,0);
-        #endif
-        return (diffuseTerm + specularTerm) * radiance;
-    }
 
     half3 EnvBRDF(CustomLitData customLitData, CustomSurfacedata customSurfaceData, float envRotation,
                   float3 positionWS)
@@ -304,53 +260,6 @@ CUSTOM_NAMESPACE_START(DirectLighting)
         #endif
         return directLighting_MainLight + directLighting_AddLight;
     }
-
-    half3 PreIntegratedSpecialSSSShading(CustomLitData customLitData, CustomSurfacedata customSurfaceData,
-                                         float3 positionWS,
-                                         float4 shadowCoord)
-    {
-        half3 directLighting = (half3)0;
-        #if defined(_MAIN_LIGHT_SHADOWS_SCREEN) && !defined(_SURFACE_TYPE_TRANSPARENT)
-        	float4 positionCS = TransformWorldToHClip(positionWS);
-            shadowCoord = ComputeScreenPos(positionCS);
-        #else
-        shadowCoord = TransformWorldToShadowCoord(positionWS);
-        #endif
-        //urp shadowMask是用来考虑烘焙阴影的,因为这里不考虑烘焙阴影所以直接给1
-        half4 shadowMask = (half4)1.0;
-
-        //main light
-        half3 directLighting_MainLight = (half3)0;
-        {
-            Light light = GetMainLight(shadowCoord, positionWS, shadowMask);
-            half3 L = light.direction;
-            half3 lightColor = light.color;
-            //SSAO
-            #if defined(_SCREEN_SPACE_OCCLUSION)
-                AmbientOcclusionFactor aoFactor = GetScreenSpaceAmbientOcclusion(customLitData.ScreenUV);
-                lightColor *= aoFactor.directAmbientOcclusion;
-            #endif
-            half shadow = light.shadowAttenuation;
-            directLighting_MainLight = BxDF.PreIntegratedSSSSpecialBRDF(customLitData, customSurfaceData, L, lightColor,
-                                                                        shadow);
-        }
-
-        //add light
-        half3 directLighting_AddLight = (half3)0;
-        #ifdef _ADDITIONAL_LIGHTS
-        uint pixelLightCount = GetAdditionalLightsCount();
-        for(uint lightIndex = 0; lightIndex < pixelLightCount ; lightIndex++) 
-        {
-            Light light = GetAdditionalLight(lightIndex,positionWS,shadowMask);
-            half3 L = light.direction;
-            half3 lightColor = light.color;
-            half shadow = light.shadowAttenuation;
-            directLighting_AddLight += BxDF.PreIntegratedSSSSpecialBRDF(customLitData,customSurfaceData,L,lightColor,shadow,light.distanceAttenuation);                                   
-        }
-        #endif
-        return directLighting_MainLight + directLighting_AddLight;
-    }
-
 CUSTOM_NAMESPACE_CLOSE(DirectLighting)
 
 CUSTOM_NAMESPACE_START(InDirectLighting)
@@ -392,31 +301,6 @@ CUSTOM_NAMESPACE_START(PBR)
         return half4(directLighting + inDirectLighting, 1);
     }
 
-    half4 PreIntegratedSSSSpecialLit(CustomLitData customLitData, CustomSurfacedata customSurfaceData,
-                                     float3 positionWS,
-                                     float4 shadowCoord, float envRotation)
-    {
-        float3 albedo = customSurfaceData.albedo;
-        customSurfaceData.albedo = lerp(customSurfaceData.albedo, float3(0.0, 0.0, 0.0), customSurfaceData.metallic);
-        customSurfaceData.specular = lerp(float3(0.04, 0.04, 0.04), albedo, customSurfaceData.metallic);
-        half3x3 TBN = half3x3(customLitData.T, customLitData.B, customLitData.N);
-        customLitData.N = normalize(mul(customSurfaceData.normalTS, TBN));
-        customLitData.NB = normalize(mul(customSurfaceData.normalTSBlur, TBN));
-
-        //SSAO
-        #if defined(_SCREEN_SPACE_OCCLUSION)
-    AmbientOcclusionFactor aoFactor = GetScreenSpaceAmbientOcclusion(customLitData.ScreenUV);
-    customSurfaceData.occlusion = min(customSurfaceData.occlusion,aoFactor.indirectAmbientOcclusion);
-        #endif
-
-        //DirectLighting
-        half3 directLighting = DirectLighting.
-            PreIntegratedSpecialSSSShading(customLitData, customSurfaceData, positionWS, shadowCoord);
-
-        //IndirectLighting
-        half3 inDirectLighting = InDirectLighting.EnvShading(customLitData, customSurfaceData, envRotation, positionWS);
-        return half4(directLighting + inDirectLighting, 1);
-    }
 
 CUSTOM_NAMESPACE_CLOSE(PBR)
 
