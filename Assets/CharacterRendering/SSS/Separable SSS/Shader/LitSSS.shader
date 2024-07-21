@@ -16,6 +16,8 @@ Shader "MyURPShader/Character Rendering/Separable LitSSS"
         _RoughnessLobe1("RoughnessLobe1", Range(0.0, 1.0)) = 0.5
         _RoughnessLobe2("RoughnessLobe2", Range(0.0, 1.0)) = 0.5
         
+        [NoScaleOffset]_ReflectionMap("Reflection Map", 2D) = "white"{}
+        
         [NoScaleOffset]_NormalMap("Normal Map",2D) = "bump"{}
         _Normal("Normal",float) = 1.0
 

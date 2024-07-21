@@ -12,6 +12,8 @@ Shader "MyURPShader/Character Rendering/Pre-Integrated Skin"
 
         [NoScaleOffset]_RoughnessMap("Roughness Map", 2D) = "white"{}
         _Roughness("Roughness", Range(0.0, 1.0)) = 0.5
+        
+        [NoScaleOffset]_ReflectionMap("Reflection Map", 2D) = "white"{}
 
         [NoScaleOffset]_NormalMap("Normal Map",2D) = "bump"{}
         _Normal("Normal",float) = 1.0
@@ -20,8 +22,9 @@ Shader "MyURPShader/Character Rendering/Pre-Integrated Skin"
         _OcclusionStrength("Occlusion Strength",Range(0.0,1.0)) = 1.0
         _EnvRotation("EnvRotation",Range(0.0,360.0)) = 0.0
 
+        [NoScaleOffset]_CurvatureMap("Curvature",2D) = "white"{}
         _Curvature("Curvature",Range(0.01,1)) = 0.25
-        [NoScaleOffset]_SkinDiffsueLut("Diffuse Lut",2D) = "white"{}
+        [NoScaleOffset]_SkinDiffuseLut("Diffuse Lut",2D) = "white"{}
         [NoScaleOffset]_SkinSpecularLut("Specular Lut",2D) = "white"{}
 
         [Toggle(_SSS_OFF)] _SSS_OFF("SSS OFF",Float) = 0.0

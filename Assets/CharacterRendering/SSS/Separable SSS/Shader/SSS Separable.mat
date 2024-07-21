@@ -42,8 +42,12 @@ Material:
         m_Texture: {fileID: 2800000, guid: 96435199585ae4048b29fe1f9a81cefd, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ReflectionMap:
+        m_Texture: {fileID: 2800000, guid: 917ec238b93b9f74386214d1aaed6742, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _RoughnessMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 209d09800ea9fc14bbd1f09294d53b07, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -56,8 +60,8 @@ Material:
     - _Normal: 1
     - _OcclusionStrength: 1
     - _Roughness: 1
-    - _RoughnessLobe1: 0.6
-    - _RoughnessLobe2: 0.4
+    - _RoughnessLobe1: 1
+    - _RoughnessLobe2: 0.6
     - _SH_OFF: 0
     - _SKINDIFFUSE_OFF: 0
     - _SKINDIFFUSE_ON: 1

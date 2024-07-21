@@ -133,7 +133,7 @@ CUSTOM_NAMESPACE_START(BxDF)
         #endif
         float3 specularTermLobe1 = SpecularGGX(a2Lobe1, customSurfaceData.specular, NoH, NoV, NoL, VoH);
         float3 specularTermLobe2 = SpecularGGX(a2Lobe2, customSurfaceData.specular, NoH, NoV, NoL, VoH);
-        float3 specularTerm = lerp(specularTermLobe1, specularTermLobe2, 0.5);
+        float3 specularTerm = lerp(specularTermLobe1, specularTermLobe2, 0.5)*customSurfaceData.reflection;
         #if defined(_SKINSPECULAR_ON)
 		    return specularTerm*radiance;
         #endif
@@ -162,7 +162,7 @@ CUSTOM_NAMESPACE_START(BxDF)
         //The Split Sum: 1nd Stage
         half3 specularLD = GlossyEnvironmentReflection(R, positionWS, roughness, customSurfaceData.occlusion);
         //The Split Sum: 2nd Stage
-        half3 specularDFG = EnvBRDFApprox(customSurfaceData.specular, roughness, NoV);
+        half3 specularDFG = EnvBRDFApprox(customSurfaceData.specular, roughness, NoV) * customSurfaceData.reflection;
         //AO 处理漏光
         float specularOcclusion = GetSpecularOcclusionFromAmbientOcclusion(NoV, customSurfaceData.occlusion, roughness);
         float3 specularAO = GTAOMultiBounce(specularOcclusion, customSurfaceData.specular);
@@ -243,7 +243,7 @@ CUSTOM_NAMESPACE_START(PBR)
     {
         float3 albedo = customSurfaceData.albedo;
         customSurfaceData.albedo = lerp(customSurfaceData.albedo, float3(0.0, 0.0, 0.0), customSurfaceData.metallic);
-        customSurfaceData.specular = lerp(float3(0.04, 0.04, 0.04), albedo, customSurfaceData.metallic);
+        customSurfaceData.specular = lerp(float3(0.028, 0.028, 0.028), albedo, customSurfaceData.metallic);
         half3x3 TBN = half3x3(customLitData.T, customLitData.B, customLitData.N);
         customLitData.N = normalize(mul(customSurfaceData.normalTS, TBN));
 
@@ -256,7 +256,6 @@ CUSTOM_NAMESPACE_START(PBR)
         //DirectLighting
         half3 directLighting = DirectLighting.
             StandardShading(customLitData, customSurfaceData, positionWS, shadowCoord);
-
         //IndirectLighting
         half3 inDirectLighting = InDirectLighting.EnvShading(customLitData, customSurfaceData, envRotation, positionWS);
         return half4(directLighting + inDirectLighting, 1);

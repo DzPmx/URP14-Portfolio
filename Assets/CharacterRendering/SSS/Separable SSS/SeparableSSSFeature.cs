@@ -82,8 +82,7 @@ namespace SSS.Separable_SSS
             {
                 material = CoreUtils.CreateEngineMaterial(shaderName);
             }
-
-            material.SetTexture(noiseID, settings.blueNoise);
+            
             material.SetVector(noiseSizeID, new Vector2(64, 64));
             Vector3 SSSC = Vector3.Normalize(new Vector3(settings.subsurfaceColor.r, settings.subsurfaceColor.g,
                 settings.subsurfaceColor.b));

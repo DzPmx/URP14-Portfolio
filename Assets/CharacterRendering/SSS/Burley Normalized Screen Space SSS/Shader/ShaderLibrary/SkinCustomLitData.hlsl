@@ -21,6 +21,7 @@ struct CustomSurfacedata
     half  roughnessLobe2;
     half  occlusion;
     half  alpha;
+    half reflection;
 };
 
 struct CustomDualLobeSkinSurfacedata

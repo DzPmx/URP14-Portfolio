@@ -66,6 +66,8 @@ namespace PreIntegratedSkin.Editor
         {
             SkinDiffsue,
             SkinDiffuseSpecialEdition,
+            SkinDiffuseNvidiaFaceWorks,
+            SkinShadowNvidiaFaceWorks,
             SkinSpecular,
         }
 
@@ -96,7 +98,8 @@ namespace PreIntegratedSkin.Editor
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
             EditorGUI.BeginChangeCheck();
             textureType = (TextureType)EditorGUILayout.EnumPopup("纹理类型", textureType);
-            if (textureType == TextureType.SkinDiffsue || textureType == TextureType.SkinDiffuseSpecialEdition)
+            if (textureType == TextureType.SkinDiffsue ||
+                textureType == TextureType.SkinDiffuseSpecialEdition)
             {
                 interval = (IntegralInterval)EditorGUILayout.EnumPopup("积分区间", interval);
             }
@@ -115,28 +118,30 @@ namespace PreIntegratedSkin.Editor
             EditorGUILayout.LabelField("预览与存储:", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
             EditorGUI.indentLevel++;
-            EditorGUILayout.LabelField("(注)为了解决纹理Binding的问题,预览图会比存储的图片颜色浅,这是正常的");
+            EditorGUILayout.LabelField("(注)为了解决纹理Banding的问题,预览图会比存储的图片颜色浅,这是正常的");
             EditorGUI.indentLevel--;
             EditorGUI.indentLevel--;
             EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
             if (GUILayout.Button("烘培纹理"))
             {
-                if (textureType == TextureType.SkinDiffsue)
+                SetupLut();
+                switch (textureType)
                 {
-                    SetupLut();
-                    BakeDiffuse();
-                }
-
-                if (textureType == TextureType.SkinDiffuseSpecialEdition)
-                {
-                    SetupLut();
-                    BakeDiffuseSpecialEdition();
-                }
-
-                if (textureType == TextureType.SkinSpecular)
-                {
-                    SetupLut();
-                    BakeSpecular();
+                    case TextureType.SkinDiffsue:
+                        BakeDiffuse();
+                        break;
+                    case TextureType.SkinDiffuseSpecialEdition:
+                        BakeDiffuseSpecialEdition();
+                        break;
+                    case TextureType.SkinDiffuseNvidiaFaceWorks:
+                        BakeDiffuseNvidiaFaceWorks();
+                        break;
+                    case TextureType.SkinShadowNvidiaFaceWorks:
+                        BakeShadowNvidiaFaceWorks();
+                        break;
+                    case TextureType.SkinSpecular:
+                        BakeSpecular();
+                        break;
                 }
             }
 
@@ -180,6 +185,24 @@ namespace PreIntegratedSkin.Editor
         private void BakeDiffuseSpecialEdition()
         {
             int kernelIndex = lutCompute.FindKernel("CSDiffuseSpecial");
+            lutCompute.SetTexture(kernelIndex, lutID, lut);
+            lutCompute.SetFloat(integralIntervalID, (float)interval);
+            lutCompute.SetFloat(lutSizeID, (float)lutSize);
+            lutCompute.Dispatch(kernelIndex, 512, 512, 1);
+        }
+
+        private void BakeDiffuseNvidiaFaceWorks()
+        {
+            int kernelIndex = lutCompute.FindKernel("CSDiffuseNvidiaFaceWorks");
+            lutCompute.SetTexture(kernelIndex, lutID, lut);
+            lutCompute.SetFloat(integralIntervalID, (float)interval);
+            lutCompute.SetFloat(lutSizeID, (float)lutSize);
+            lutCompute.Dispatch(kernelIndex, 512, 512, 1);
+        }
+
+        private void BakeShadowNvidiaFaceWorks()
+        {
+            int kernelIndex = lutCompute.FindKernel("CSShadowNvidiaFaceWorks");
             lutCompute.SetTexture(kernelIndex, lutID, lut);
             lutCompute.SetFloat(integralIntervalID, (float)interval);
             lutCompute.SetFloat(lutSizeID, (float)lutSize);

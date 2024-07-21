@@ -51,6 +51,7 @@ void InitializeCustomSurfaceData(Varyings input, out CustomSurfacedata customSur
     clip(customSurfaceData.alpha - _Cutoff);
     #endif
     customSurfaceData.specular = (half3)0;
+    customSurfaceData.reflection = SAMPLE_TEXTURE2D(_ReflectionMap, sampler_ReflectionMap, input.uv);
 
     //metallic & roughness
     half metallic = SAMPLE_TEXTURE2D(_MetallicMap, sampler_MetallicMap, input.uv).r * _Metallic;
@@ -115,7 +116,7 @@ half4 SkinDualLobePassFragment(Varyings input) : SV_Target
     InitializeCustomSurfaceData(input, customSurfaceData);
     float2 screenUV = input.posCS.xy / _ScaledScreenParams.xy;
     half4 color = PBR.StandardLit(customLitData, customSurfaceData, input.posWS, input.shadowCoord, _EnvRotation);
-    color+=SAMPLE_TEXTURE2D(_SeparableSSSTexture, sampler_SeparableSSSTexture, screenUV);
+    color += SAMPLE_TEXTURE2D(_SeparableSSSTexture, sampler_SeparableSSSTexture, screenUV);
     return color;
 }
 #endif

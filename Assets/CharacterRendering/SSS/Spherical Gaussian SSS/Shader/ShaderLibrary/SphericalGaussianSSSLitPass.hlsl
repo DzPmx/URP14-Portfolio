@@ -33,6 +33,7 @@ void InitializeCustomLitData(Varyings input, out CustomLitData customLitData)
     customLitData.positionWS = input.posWS;
     customLitData.V = GetWorldSpaceNormalizeViewDir(input.posWS);
     customLitData.NGeometry = normalize(input.nDirWS);
+    customLitData.NMap=SAMPLE_TEXTURE2D(_NormalMap,sampler_NormalMap,input.uv);
     customLitData.T = normalize(input.tDirWS.xyz);
     customLitData.B = normalize(cross(customLitData.NGeometry, customLitData.T) * input.tDirWS.w);
     customLitData.ScreenUV = GetNormalizedScreenSpaceUV(input.posCS);
@@ -52,8 +53,10 @@ void InitializeCustomSurfaceData(Varyings input, out CustomSurfacedata customSur
     clip(customSurfaceData.alpha - _Cutoff);
     #endif
     customSurfaceData.specular = (half3)0;
+    customSurfaceData.reflection=SAMPLE_TEXTURE2D(_ReflectionMap,sampler_ReflectionMap,input.uv);
 
-    //metallic & roughness
+        //metallic & roughness
+    
     half metallic = SAMPLE_TEXTURE2D(_MetallicMap, sampler_MetallicMap, input.uv).r * _Metallic;
     customSurfaceData.metallic = saturate(metallic);
     half var_roughness = SAMPLE_TEXTURE2D(_RoughnessMap, sampler_RoughnessMap, input.uv).r;
@@ -99,7 +102,7 @@ half4 StandardLitPassFragment(Varyings input) : SV_Target
 
     CustomLitData customLitData;
     InitializeCustomLitData(input, customLitData);
-
+   
     CustomSurfacedata customSurfaceData;
     InitializeCustomSurfaceData(input, customSurfaceData);
     half4 color = PBR.StandardLit(customLitData, customSurfaceData, input.posWS, input.shadowCoord, _EnvRotation);

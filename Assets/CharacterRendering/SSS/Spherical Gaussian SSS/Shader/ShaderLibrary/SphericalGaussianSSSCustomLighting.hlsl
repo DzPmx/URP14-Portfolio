@@ -126,12 +126,13 @@ CUSTOM_NAMESPACE_START(BxDF)
         half NoL = saturate(dot(customLitData.NMap, L));
         half VoH = saturate(dot(customLitData.V, H)); //LoH
 
-        half3 rN = customLitData.NGeometry;
-        half3 gN = lerp(customLitData.NGeometry, customLitData.NMap, 0.3);
-        half3 bN = lerp(customLitData.NGeometry, customLitData.NMap, 0.6);
+        half3 rN = lerp(customLitData.NGeometry, customLitData.NMap, 0.3);
+        half3 gN = lerp(customLitData.NGeometry, customLitData.NMap, 0.5);
+        half3 bN = lerp(customLitData.NGeometry, customLitData.NMap, 1.0);
         float3 SSS;
-        float3 shadowSSS = SGShadow(shadow * 2 - 1, _SkinScatterAmount * _SSSIntensity);
-        SSS = SGDiffuseLighting(rN, gN, bN, L, _SkinScatterAmount * 1.25 * _SSSIntensity);
+        
+        float3 shadowSSS = SGShadow(shadow * 2 - 1, _SkinScatterAmount * 2.5 * _SSSIntensity);
+        SSS = SGDiffuseLighting(rN, gN, bN, L, _SkinScatterAmount * _SSSIntensity);
         #if  defined(_SSS_OFF)
         SSS=NoL;
         #endif
@@ -146,7 +147,7 @@ CUSTOM_NAMESPACE_START(BxDF)
 
         float3 specularTermLobe1 = SpecularGGX(a2Lobe1, customSurfaceData.specular, NoH, NoV, NoL, VoH);
         float3 specularTermLobe2 = SpecularGGX(a2Lobe2, customSurfaceData.specular, NoH, NoV, NoL, VoH);
-        float3 specularTerm = lerp(specularTermLobe1, specularTermLobe2, 0.5);
+        float3 specularTerm = lerp(specularTermLobe1, specularTermLobe2, 0.5) * customSurfaceData.reflection;
         #if defined(_SPECULAR_OFF)
 		    specularTerm = half3(0,0,0);
         #endif
@@ -174,7 +175,7 @@ CUSTOM_NAMESPACE_START(BxDF)
         half3 specularLD = GlossyEnvironmentReflection(R, positionWS, roughness,
                                                        customSurfaceData.occlusion);
         //The Split Sum: 2nd Stage
-        half3 specularDFG = EnvBRDFApprox(customSurfaceData.specular, roughness, NoV);
+        half3 specularDFG = EnvBRDFApprox(customSurfaceData.specular, roughness, NoV) * customSurfaceData.reflection;
         //AO 处理漏光
         float specularOcclusion = GetSpecularOcclusionFromAmbientOcclusion(
             NoV, customSurfaceData.occlusion, roughness);
@@ -255,7 +256,7 @@ CUSTOM_NAMESPACE_START(PBR)
     {
         float3 albedo = customSurfaceData.albedo;
         customSurfaceData.albedo = lerp(customSurfaceData.albedo, float3(0.0, 0.0, 0.0), customSurfaceData.metallic);
-        customSurfaceData.specular = lerp(float3(0.04, 0.04, 0.04), albedo, customSurfaceData.metallic);
+        customSurfaceData.specular = lerp(float3(0.028, 0.028, 0.028), albedo, customSurfaceData.metallic);
         half3x3 TBN = half3x3(customLitData.T, customLitData.B, customLitData.NGeometry);
         customLitData.NMap = normalize(mul(customSurfaceData.normalTS, TBN));
 

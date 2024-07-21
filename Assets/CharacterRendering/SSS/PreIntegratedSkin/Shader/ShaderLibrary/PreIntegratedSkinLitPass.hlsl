@@ -7,7 +7,7 @@
 
 //float _Variance[6];
 //float _Weight[6];
-float4 _GaussianArray[6];
+//float4 _GaussianArray[6];
 
 
 struct Attributes
@@ -55,7 +55,8 @@ void InitializeCustomSurfaceData(Varyings input, out CustomSurfacedata customSur
     #if defined(_ALPHATEST_ON)
     clip(customSurfaceData.alpha - _Cutoff);
     #endif
-    customSurfaceData.specular = (half3)0;
+    customSurfaceData.specular = half3(0.0, 0.0, 0.0);
+    customSurfaceData.reflection = SAMPLE_TEXTURE2D(_ReflectionMap, sampler_ReflectionMap, input.uv);
 
     //metallic & roughness
     half metallic = SAMPLE_TEXTURE2D(_MetallicMap, sampler_MetallicMap, input.uv).r * _Metallic;
@@ -65,17 +66,17 @@ void InitializeCustomSurfaceData(Varyings input, out CustomSurfacedata customSur
     customSurfaceData.roughness = max(saturate(roughness), 0.001f);
 
     //normalTS (tangent Space)
-    float4 normalTS=0,normalTSBlur=0;
+    float4 normalTS = 0, normalTSBlur = 0;
     #if defined(_SSS_SPECIAL)
      normalTS = SAMPLE_TEXTURE2D_LOD(_NormalMap, sampler_NormalMap, input.uv, mipmapLevel);
     #else
-     normalTS = SAMPLE_TEXTURE2D_LOD(_NormalMap, sampler_NormalMap, input.uv, 0);
-     normalTSBlur = SAMPLE_TEXTURE2D_LOD(_NormalMap, sampler_NormalMap, input.uv, 4);
+    normalTS = SAMPLE_TEXTURE2D_LOD(_NormalMap, sampler_NormalMap, input.uv, 0);
+    normalTSBlur = SAMPLE_TEXTURE2D_LOD(_NormalMap, sampler_NormalMap, input.uv, 4);
     #endif
     customSurfaceData.normalTS = UnpackNormalScale(normalTS, _Normal);
     customSurfaceData.normalTSBlur = UnpackNormalScale(normalTSBlur, _Normal);
-
-    customSurfaceData.curvature = _Curvature;
+    float curvature = SAMPLE_TEXTURE2D(_CurvatureMap, sampler_CurvatureMap, input.uv);
+    customSurfaceData.curvature = _Curvature * curvature;
     //occlusion
     half occlusion = SAMPLE_TEXTURE2D(_OcclusionMap, sampler_OcclusionMap, input.uv).r;
     customSurfaceData.occlusion = lerp(1.0, occlusion, _OcclusionStrength);
@@ -115,6 +116,20 @@ half4 PreIntegratedSSSLitPassFragment(Varyings input) : SV_Target
     InitializeCustomSurfaceData(input, customSurfaceData);
     half4 color = PBR.PreIntegratedSSSLit(customLitData, customSurfaceData, input.posWS, input.shadowCoord,
                                           _EnvRotation);
+    return color;
+}
+
+half4 PreIntegratedSSSLitPassNVFaceWorksFragment(Varyings input) : SV_Target
+{
+    UNITY_SETUP_INSTANCE_ID(input);
+
+    CustomLitData customLitData;
+    InitializeCustomLitData(input, customLitData);
+
+    CustomSurfacedata customSurfaceData;
+    InitializeCustomSurfaceData(input, customSurfaceData);
+    half4 color = PBR.PreIntegratedNVFaceWorksSSSLit(customLitData, customSurfaceData, input.posWS, input.shadowCoord,
+                                                     _EnvRotation);
     return color;
 }
 

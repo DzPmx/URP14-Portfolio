@@ -39,13 +39,17 @@ Material:
         m_Texture: {fileID: 2800000, guid: 96435199585ae4048b29fe1f9a81cefd, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ReflectionMap:
+        m_Texture: {fileID: 2800000, guid: 917ec238b93b9f74386214d1aaed6742, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _RoughnessMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 209d09800ea9fc14bbd1f09294d53b07, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Cutoff: 0.479
+    - _Cutoff: 0.439
     - _DIFFUSE_OFF: 0
     - _DrakOffset: 0
     - _EnvRotation: 0
@@ -54,14 +58,14 @@ Material:
     - _Normal: 1
     - _OcclusionStrength: 1
     - _Roughness: 0.5
-    - _RoughnessLobe1: 0.6
-    - _RoughnessLobe2: 0.4
+    - _RoughnessLobe1: 0.8
+    - _RoughnessLobe2: 1
     - _SH_OFF: 0
     - _SPECULAR_OFF: 0
-    - _SSSIntensity: 0.15
+    - _SSSIntensity: 1
     - _SSSOffset: 0
     - _SSS_OFF: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _SkinScatterAmount: {r: 0.4433962, g: 0.26345047, b: 0.23215556, a: 1}
+    - _SkinScatterAmount: {r: 0.11320752, g: 0.05635081, b: 0.049661785, a: 1}
   m_BuildTextureStacks: []

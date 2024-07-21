@@ -16,6 +16,7 @@ struct CustomSurfacedata
 {
     half3 albedo;
     half3 specular;
+    half3 reflection;
     half3 normalTS;
     half3 normalTSBlur;
     half  curvature;

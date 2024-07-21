@@ -32,7 +32,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _CurvatureMap:
-        m_Texture: {fileID: 2800000, guid: 02cc2e60497387d40baed4111f9c177b, type: 3}
+        m_Texture: {fileID: 2800000, guid: 3d43232781bcc004bbfffe0a67fc2013, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicMap:
@@ -47,11 +47,19 @@ Material:
         m_Texture: {fileID: 2800000, guid: 96435199585ae4048b29fe1f9a81cefd, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ReflectionMap:
+        m_Texture: {fileID: 2800000, guid: 917ec238b93b9f74386214d1aaed6742, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _RoughnessMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 209d09800ea9fc14bbd1f09294d53b07, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SkinDiffsueLut:
+        m_Texture: {fileID: 2800000, guid: 8ccdc90dd7be98d428fb51149144e13e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SkinDiffuseLut:
         m_Texture: {fileID: 2800000, guid: 8ccdc90dd7be98d428fb51149144e13e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -59,20 +67,28 @@ Material:
         m_Texture: {fileID: 2800000, guid: c7a1fbd3ac7607e499ac3779a8b9a497, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SpecularMap:
+        m_Texture: {fileID: 2800000, guid: 917ec238b93b9f74386214d1aaed6742, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecularMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _CLEARCOAT_OFF: 0
     - _ClearCoat: 1
     - _ClearCoatRoughness: 1
-    - _Curvature: 0.15
+    - _Curvature: 0.374
     - _Cutoff: 0.5
     - _DIFFUSE_OFF: 0
-    - _EnvRotation: 0
+    - _EnvRotation: 360
     - _IBL_OFF: 0
     - _Metallic: 0
-    - _Normal: 1
+    - _Normal: 1.5
     - _OcclusionStrength: 1
-    - _Roughness: 0.5
+    - _Roughness: 0.8
     - _SH_OFF: 0
     - _SPECULAR_OFF: 0
     - _SSS_OFF: 0
