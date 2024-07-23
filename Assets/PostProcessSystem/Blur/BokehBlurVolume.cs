@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using PostProcessSystem.SystemCore;
+using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 namespace RenderFeature.PostProcessSystem.Blur
 {
     [VolumeComponentMenu("DZ Post Processing/Blur/Bokeh Blur")]
-    public class BokehBlur : global::PostProcessSystem
+    public class BokehBlur : global::PostProcessSystem.SystemCore.PostProcessSystem
     {
         public BoolParameter enableEffect = new BoolParameter(false);
         public ClampedIntParameter downScale = new ClampedIntParameter(10, 1, 10);

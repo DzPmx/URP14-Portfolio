@@ -115,7 +115,7 @@ CUSTOM_NAMESPACE_START(BxDF)
         return (D * Vis) * F;
     }
 
-    half3 StandardBRDF(CustomLitData customLitData, CustomSurfacedata customSurfaceData, float3 L, half3 lightColor,
+    half3 StandardBRDF(HairLitData customLitData, CustomSurfacedata customSurfaceData, float3 L, half3 lightColor,
                        float shadow, float distanceAtten = 1.0)
     {
         float a2Lobe1 = Common.Pow4(customSurfaceData.roughnessLobe1);
@@ -154,7 +154,7 @@ CUSTOM_NAMESPACE_START(BxDF)
         return (diffuseTerm + specularTerm) * radiance;
     }
 
-    half3 EnvBRDF(CustomLitData customLitData, CustomSurfacedata customSurfaceData, float envRotation,
+    half3 EnvBRDF(HairLitData customLitData, CustomSurfacedata customSurfaceData, float envRotation,
                   float3 positionWS)
     {
         half NoV = saturate(abs(dot(customLitData.NMap, customLitData.V)) + 1e-5); //区分正反面
@@ -191,7 +191,7 @@ CUSTOM_NAMESPACE_START(BxDF)
 CUSTOM_NAMESPACE_CLOSE(BxDF)
 
 CUSTOM_NAMESPACE_START(DirectLighting)
-    half3 StandardShading(CustomLitData customLitData, CustomSurfacedata customSurfaceData, float3 positionWS,
+    half3 StandardShading(HairLitData customLitData, CustomSurfacedata customSurfaceData, float3 positionWS,
                           float4 shadowCoord)
     {
         half3 directLighting = (half3)0;
@@ -238,7 +238,7 @@ CUSTOM_NAMESPACE_START(DirectLighting)
 CUSTOM_NAMESPACE_CLOSE(DirectLighting)
 
 CUSTOM_NAMESPACE_START(InDirectLighting)
-    half3 EnvShading(CustomLitData customLitData, CustomSurfacedata customSurfaceData, float envRotation,
+    half3 EnvShading(HairLitData customLitData, CustomSurfacedata customSurfaceData, float envRotation,
                      float3 positionWS)
     {
         half3 inDirectLighting = (half3)0;
@@ -251,7 +251,7 @@ CUSTOM_NAMESPACE_START(InDirectLighting)
 CUSTOM_NAMESPACE_CLOSE(InDirectLighting)
 
 CUSTOM_NAMESPACE_START(PBR)
-    half4 StandardLit(CustomLitData customLitData, CustomSurfacedata customSurfaceData, float3 positionWS,
+    half4 StandardLit(HairLitData customLitData, CustomSurfacedata customSurfaceData, float3 positionWS,
                       float4 shadowCoord, float envRotation)
     {
         float3 albedo = customSurfaceData.albedo;

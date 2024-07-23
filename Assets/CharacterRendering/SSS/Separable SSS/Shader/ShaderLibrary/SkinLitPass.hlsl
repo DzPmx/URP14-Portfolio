@@ -1,5 +1,5 @@
-#ifndef SSSS_SKIN_LIT_PASS_INCLUDED
-#define SSSS_SKIN_LIT_PASS_INCLUDED
+#ifndef SSSS_LIT_PASS_INCLUDED
+#define SSSS_LIT_PASS_INCLUDED
 
 #include "SkinCustomLitData.hlsl"
 #include "SkinCustomLighting.hlsl"
@@ -25,9 +25,9 @@ struct Varyings
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
-void InitializeCustomLitData(Varyings input, out CustomLitData customLitData)
+void InitializeCustomLitData(Varyings input, out HairLitData customLitData)
 {
-    customLitData = (CustomLitData)0;
+    customLitData = (HairLitData)0;
 
     customLitData.positionWS = input.posWS;
     customLitData.V = GetWorldSpaceNormalizeViewDir(input.posWS);
@@ -47,9 +47,9 @@ void InitializeCustomSurfaceData(Varyings input, out CustomSurfacedata customSur
     //albedo & alpha & specular
     customSurfaceData.albedo = color.rgb;
     customSurfaceData.alpha = color.a;
-    #if defined(_ALPHATEST_ON)
+#if defined(_ALPHATEST_ON)
     clip(customSurfaceData.alpha - _Cutoff);
-    #endif
+#endif
     customSurfaceData.specular = (half3)0;
     customSurfaceData.reflection = SAMPLE_TEXTURE2D(_ReflectionMap, sampler_ReflectionMap, input.uv);
 
@@ -95,7 +95,7 @@ half4 SkinDiffusePassFragment(Varyings input) : SV_Target
 {
     UNITY_SETUP_INSTANCE_ID(input);
 
-    CustomLitData customLitData;
+    HairLitData customLitData;
     InitializeCustomLitData(input, customLitData);
 
     CustomSurfacedata customSurfaceData;
@@ -109,7 +109,7 @@ half4 SkinDualLobePassFragment(Varyings input) : SV_Target
 {
     UNITY_SETUP_INSTANCE_ID(input);
 
-    CustomLitData customLitData;
+    HairLitData customLitData;
     InitializeCustomLitData(input, customLitData);
 
     CustomSurfacedata customSurfaceData;

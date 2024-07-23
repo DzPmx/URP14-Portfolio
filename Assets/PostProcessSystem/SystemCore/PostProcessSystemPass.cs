@@ -8,7 +8,7 @@ namespace RenderFeature.RenderPass
 {
     public class PostProcessSystemPass : ScriptableRenderPass
     {
-        private List<global::PostProcessSystem> myPostProcessings;
+        private List<global::PostProcessSystem.SystemCore.PostProcessSystem> myPostProcessings;
         private List<int> mActiveCustomPostProcessingIndex;
         private string mProfilerTag;
         private List<ProfilingSampler> mProfilingSamplers;
@@ -21,7 +21,7 @@ namespace RenderFeature.RenderPass
         private const string mTempRT0Name = "_TemporaryRenderTexture0";
         private const string mTempRT1Name = "_TemporaryRenderTexture1";
 
-        public void Setup(string profilerTag, List<global::PostProcessSystem> myPostProcessings)
+        public void Setup(string profilerTag, List<global::PostProcessSystem.SystemCore.PostProcessSystem> myPostProcessings)
         {
             mProfilerTag = profilerTag;
             this.myPostProcessings = myPostProcessings;

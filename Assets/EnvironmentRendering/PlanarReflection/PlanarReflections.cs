@@ -1,8 +1,12 @@
 ﻿using System;
-using UnityEngine.Experimental.Rendering;
 using Unity.Mathematics;
+using UnityEngine;
+using UnityEngine.Experimental.Rendering;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+using Object = UnityEngine.Object;
 
-namespace UnityEngine.Rendering.Universal
+namespace EnvironmentRendering.PlanarReflection
 {
     [ExecuteInEditMode]
     public class PlanarReflections : MonoBehaviour
@@ -188,6 +192,8 @@ namespace UnityEngine.Rendering.Universal
                 RenderTextureFormat hdrFormat = useHdr10 ? RenderTextureFormat.RGB111110Float : RenderTextureFormat.DefaultHDR;
                 _reflectionTexture = RenderTexture.GetTemporary(res.x, res.y, 16,
                     GraphicsFormatUtility.GetGraphicsFormat(hdrFormat, true));
+                _reflectionTexture.useMipMap = true;
+                _reflectionTexture.autoGenerateMips = true;
             }
             _reflectionCamera.targetTexture =  _reflectionTexture;
         }

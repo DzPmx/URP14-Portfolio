@@ -4,6 +4,7 @@ using UnityEngine.Rendering.Universal;
 
 namespace SSS.Burley_Normalized_Screen_Space_SSS
 {
+    [DisallowMultipleRendererFeature]
     public class BurleyNormalizedSSSFeature : ScriptableRendererFeature
     {
         BurleyNormalizedSSSPass burleyNormalizedSss;

@@ -377,7 +377,7 @@ MonoBehaviour:
     m_Value: 2
   blurRadius:
     m_OverrideState: 1
-    m_Value: 0.6
+    m_Value: 1
 --- !u!114 &-2096004052535733055
 MonoBehaviour:
   m_ObjectHideFlags: 3

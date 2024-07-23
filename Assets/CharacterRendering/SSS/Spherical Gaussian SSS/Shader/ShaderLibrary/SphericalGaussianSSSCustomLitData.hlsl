@@ -1,7 +1,7 @@
 #ifndef SPHERICAL_GAUSSIAN_SSS_LIT_DATA_INCLUDED
 #define SPHERICAL_GAUSSIAN_SSS_LIT_DATA_INCLUDED
 
-struct CustomLitData
+struct HairLitData
 {
     float3 positionWS;
     half3  V; //ViewDirWS

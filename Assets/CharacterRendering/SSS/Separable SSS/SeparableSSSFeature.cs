@@ -5,6 +5,7 @@ using UnityEngine.Rendering.Universal;
 
 namespace SSS.Separable_SSS
 {
+    [DisallowMultipleRendererFeature]
     public class SeparableSSSFeature : ScriptableRendererFeature
     {
         public SeparableSSSSettings settings;

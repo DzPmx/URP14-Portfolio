@@ -1,7 +1,8 @@
-#ifndef DEPTHONLY_INCLUDED
-#define DEPTHONLY_INCLUDED
+#ifndef HAIRSHADING_INCLUDED
+#define HAIRSHADING_INCLUDED
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/CommonLighting.hlsl"
+
 
 real Pow2(real x)
 {
@@ -27,6 +28,27 @@ struct HairData
     float n_prime;
 };
 
+struct HairSurfaceData
+{
+    half3 baseColor;
+    half id;
+    half root;
+    half ao;
+    half roughness;
+    half specular;
+    half alpha;
+};
+
+struct HairLitData
+{
+    float3 positionWS;
+    half3 V; //ViewDirWS
+    half3 N; //NormalWS
+    half3 B; //BinormalWS
+    half3 T; //TangentWS
+    float2 ScreenUV;
+};
+
 float Hair_g(float B, float Theta)
 {
     return exp(-0.5 * Pow2(Theta) / (B * B)) / (sqrt(2 * PI) * B);
@@ -39,10 +61,10 @@ float Hair_F(float CosTheta)
     return F0 + (1 - F0) * Pow5(1 - CosTheta);
 }
 
-void HairBaseDataCal(out HairData hairData, float3 B, float3 V, float3 L, float roughness)
+void InitalHairData(out HairData hairData, float3 B, float3 V, float3 L, float roughness)
 {
     const float Shift = 0.035;
-    hairData.Alpha[0]= -Shift * 2; //R_shift
+    hairData.Alpha[0] = -Shift * 2; //R_shift
     hairData.Alpha[1] = Shift; //TT_shift
     hairData.Alpha[2] = Shift * 4; //TRT_shift
 
@@ -65,8 +87,9 @@ void HairBaseDataCal(out HairData hairData, float3 B, float3 V, float3 L, float 
     hairData.n_prime = 1.19 / hairData.CosThetaD + 0.36 * hairData.CosThetaD;
 }
 
+
 //--------------------漫反射项计算--------------------
-half3 KajiyaKayDiffuseAttenuation(float3 albedo, half atten, float3 L, float3 V, half3 B)
+half3 KajiyaKayDiffuseAttenuation(float3 albedo, half scatter, float3 L, float3 V, half3 B)
 {
     // Use soft Kajiya Kay diffuse attenuation
     float KajiyaDiffuse = 1 - abs(dot(B, L));
@@ -77,9 +100,9 @@ half3 KajiyaKayDiffuseAttenuation(float3 albedo, half atten, float3 L, float3 V,
     // Hack approximation for multiple scattering.
     float Wrap = 1;
     float BdotL = saturate((dot(B, L) + Wrap) / Pow2(1 + Wrap));
-    float DiffuseScatter = (1 / PI) * lerp(BdotL, KajiyaDiffuse, 0.33);
+    float DiffuseScatter = (1 / PI) * lerp(BdotL, KajiyaDiffuse, 0.33) * scatter;
     float Luma = Luminance(albedo);
-    float3 ScatterTint = pow(albedo / Luma, 1 - (atten + 1) * 0.5);
+    float3 ScatterTint = pow(albedo / Luma, 1 - (scatter + 1) * 0.5);
     return sqrt(albedo) * DiffuseScatter * ScatterTint;
 }
 
@@ -88,9 +111,9 @@ float3 Diffuse_Lambert(float3 albedo)
     return albedo * (1 / PI);
 }
 
-half3 HairKajiyaDiffuseTerm(Light Light, half atten, float3 albedo, float3 L, float3 V, half3 B)
+half3 HairKajiyaDiffuseTerm(half scatter, float3 albedo, float3 L, float3 V, half3 B)
 {
-    half3 kkDiffuseAtten = max(KajiyaKayDiffuseAttenuation(albedo, atten, L, V, B), 0.0);
+    half3 kkDiffuseAtten = max(KajiyaKayDiffuseAttenuation(albedo, scatter, L, V, B), 0.0);
     return kkDiffuseAtten;
 }
 
@@ -135,11 +158,41 @@ half3 TRT_Function(HairData hairData, float3 BaseColor)
     return Mp * Np * Fp * Tp;
 }
 
-half3 MachsnerHairSpecularTerm(HairData hairData, Light Light, half3 BaseColor, float Specular)
+half3 shiftTangent(half3 T, half3 N, half shift)
 {
-    half3 R = R_Function(hairData, Specular) ;
+    return normalize(T + shift * N);
+}
+
+float KajiyaSpecualr(half3 T, half3 V, half3 L, half specPower, half specularWidth, half specualrScale)
+{
+    half3 H = normalize(V + L);
+
+    float HdotT = dot(T, H);
+    float sinTH = sqrt(1 - HdotT * HdotT);
+    float dirAtten = smoothstep(-specularWidth, 0, HdotT);
+
+    return dirAtten * saturate(pow(sinTH, specPower)) * specualrScale;
+}
+
+half3 KajiyaKaySpecularTerm(HairLitData hairLitData, Light light, half3 primaryColor, float primaryShift,
+                            half3 secondaryColor, float secondaryShift,half specPower,half specularWidth,half specualrScale)
+{
+    half3 t1 = shiftTangent(hairLitData.B, hairLitData.N, primaryShift);
+    half3 t2 = shiftTangent(hairLitData.B, hairLitData.N, secondaryShift);
+
+    half3 specular = half3(0.0, 0.0, 0.0);
+    half VoL=saturate(dot(-hairLitData.V,light.direction));
+    specular += primaryColor * KajiyaSpecualr(t1, hairLitData.V, light.direction, specPower,specularWidth,specualrScale) ;
+    specular += secondaryColor * KajiyaSpecualr(t2, hairLitData.V, light.direction, specPower,specularWidth,specualrScale)*VoL;
+
+    return specular;
+}
+
+half3 MachsnerHairSpecularTerm(HairData hairData, half3 BaseColor, float Specular)
+{
+    half3 R = R_Function(hairData, Specular);
     half3 TT = TT_Function(hairData, BaseColor);
     half3 TRT = TRT_Function(hairData, BaseColor);
-    return (R + TT + TRT) ;
+    return (R + TT + TRT);
 }
 #endif

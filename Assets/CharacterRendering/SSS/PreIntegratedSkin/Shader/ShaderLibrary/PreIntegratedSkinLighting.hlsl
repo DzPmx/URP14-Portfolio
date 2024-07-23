@@ -137,7 +137,7 @@ CUSTOM_NAMESPACE_START(BxDF)
         return (D * Vis) * F;
     }
 
-    half3 PreIntegratedNVFaceWorksSSSBRDF(CustomLitData customLitData, CustomSurfacedata customSurfaceData, half3 L,
+    half3 PreIntegratedNVFaceWorksSSSBRDF(HairLitData customLitData, CustomSurfacedata customSurfaceData, half3 L,
                                           half3 lightColor,
                                           float shadow, float distanceAtten = 1.0)
     {
@@ -185,7 +185,7 @@ CUSTOM_NAMESPACE_START(BxDF)
     
     }
 
-    half3 PreIntegratedSSSBRDF(CustomLitData customLitData, CustomSurfacedata customSurfaceData, half3 L,
+    half3 PreIntegratedSSSBRDF(HairLitData customLitData, CustomSurfacedata customSurfaceData, half3 L,
                                half3 lightColor,
                                float shadow, float distanceAtten = 1.0)
     {
@@ -228,7 +228,7 @@ CUSTOM_NAMESPACE_START(BxDF)
     }
 
 
-    half3 EnvBRDF(CustomLitData customLitData, CustomSurfacedata customSurfaceData, float envRotation,
+    half3 EnvBRDF(HairLitData customLitData, CustomSurfacedata customSurfaceData, float envRotation,
                   float3 positionWS)
     {
         half NoV = saturate(abs(dot(customLitData.N, customLitData.V)) + 1e-5); //区分正反面
@@ -264,7 +264,7 @@ CUSTOM_NAMESPACE_START(BxDF)
 CUSTOM_NAMESPACE_CLOSE(BxDF)
 
 CUSTOM_NAMESPACE_START(DirectLighting)
-    half3 PreIntegratedSSSShading(CustomLitData customLitData, CustomSurfacedata customSurfaceData, float3 positionWS,
+    half3 PreIntegratedSSSShading(HairLitData customLitData, CustomSurfacedata customSurfaceData, float3 positionWS,
                                   float4 shadowCoord)
     {
         half3 directLighting = (half3)0;
@@ -309,7 +309,7 @@ CUSTOM_NAMESPACE_START(DirectLighting)
         return directLighting_MainLight + directLighting_AddLight;
     }
 
-    half3 PreIntegratedSSSNVFaceWorksShading(CustomLitData customLitData, CustomSurfacedata customSurfaceData,
+    half3 PreIntegratedSSSNVFaceWorksShading(HairLitData customLitData, CustomSurfacedata customSurfaceData,
                                              float3 positionWS,
                                              float4 shadowCoord)
     {
@@ -359,7 +359,7 @@ CUSTOM_NAMESPACE_START(DirectLighting)
 CUSTOM_NAMESPACE_CLOSE(DirectLighting)
 
 CUSTOM_NAMESPACE_START(InDirectLighting)
-    half3 EnvShading(CustomLitData customLitData, CustomSurfacedata customSurfaceData, float envRotation,
+    half3 EnvShading(HairLitData customLitData, CustomSurfacedata customSurfaceData, float envRotation,
                      float3 positionWS)
     {
         half3 inDirectLighting = (half3)0;
@@ -372,7 +372,7 @@ CUSTOM_NAMESPACE_START(InDirectLighting)
 CUSTOM_NAMESPACE_CLOSE(InDirectLighting)
 
 CUSTOM_NAMESPACE_START(PBR)
-    half4 PreIntegratedSSSLit(CustomLitData customLitData, CustomSurfacedata customSurfaceData, float3 positionWS,
+    half4 PreIntegratedSSSLit(HairLitData customLitData, CustomSurfacedata customSurfaceData, float3 positionWS,
                               float4 shadowCoord, float envRotation)
     {
         float3 albedo = customSurfaceData.albedo;
@@ -397,7 +397,7 @@ CUSTOM_NAMESPACE_START(PBR)
         return half4(directLighting + inDirectLighting, 1);
     }
 
-    half4 PreIntegratedNVFaceWorksSSSLit(CustomLitData customLitData, CustomSurfacedata customSurfaceData,
+    half4 PreIntegratedNVFaceWorksSSSLit(HairLitData customLitData, CustomSurfacedata customSurfaceData,
                                          float3 positionWS,
                                          float4 shadowCoord, float envRotation)
     {

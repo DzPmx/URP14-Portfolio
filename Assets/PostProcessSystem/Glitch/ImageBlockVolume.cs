@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using PostProcessSystem.SystemCore;
+using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 namespace RenderFeature.PostProcessSystem.Glitch
 {
     [VolumeComponentMenu("DZ Post Processing/Glitch/Image Block")]
-    public class ImageBlock : global::PostProcessSystem
+    public class ImageBlock : global::PostProcessSystem.SystemCore.PostProcessSystem
     {
         public BoolParameter enableEffect = new BoolParameter(false);
         public ClampedFloatParameter speed = new ClampedFloatParameter(10, 0, 50f);

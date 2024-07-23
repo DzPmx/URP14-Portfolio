@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using PostProcessSystem.SystemCore;
+using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Serialization;
@@ -6,7 +7,7 @@ using UnityEngine.Serialization;
 namespace RenderFeature.PostProcessSystem.Glitch
 {
     [VolumeComponentMenu("DZ Post Processing/Glitch/Analog Noise")]
-    public class AnalogNoise : global::PostProcessSystem
+    public class AnalogNoise : global::PostProcessSystem.SystemCore.PostProcessSystem
     {
         public BoolParameter enableEffect = new BoolParameter(false);
         public ClampedFloatParameter noiseSpeed = new ClampedFloatParameter(0.05f, 0f, 1f);

@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using PostProcessSystem.SystemCore;
+using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 namespace RenderFeature.PostProcessSystem.Glitch
 {
     [VolumeComponentMenu("DZ Post Processing/Glitch/RGB Split")]
-    public class RGBSplit : global::PostProcessSystem
+    public class RGBSplit : global::PostProcessSystem.SystemCore.PostProcessSystem
     {
         public BoolParameter enableEffect = new BoolParameter(false);
         public VolumeParameter<SplitMode> mode = new VolumeParameter<SplitMode>();

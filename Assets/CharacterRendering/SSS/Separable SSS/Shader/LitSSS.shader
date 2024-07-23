@@ -11,27 +11,30 @@ Shader "MyURPShader/Character Rendering/Separable LitSSS"
         _Metallic("Metallic", Range(0.0, 1.0)) = 0.0
 
         [NoScaleOffset]_RoughnessMap("Roughness Map", 2D) = "white"{}
-        
+
         //_Roughness("Roughness", Range(0.0, 1.0)) = 0.5
         _RoughnessLobe1("RoughnessLobe1", Range(0.0, 1.0)) = 0.5
         _RoughnessLobe2("RoughnessLobe2", Range(0.0, 1.0)) = 0.5
-        
+
         [NoScaleOffset]_ReflectionMap("Reflection Map", 2D) = "white"{}
-        
+
         [NoScaleOffset]_NormalMap("Normal Map",2D) = "bump"{}
         _Normal("Normal",float) = 1.0
 
         [NoScaleOffset]_OcclusionMap("OcclusionMap",2D) = "white"{}
         _OcclusionStrength("Occlusion Strength",Range(0.0,1.0)) = 1.0
         _EnvRotation("EnvRotation",Range(0.0,360.0)) = 0.0
-        
+
         [Toggle(_SKINDIFFUSE_ON)] _SKINDIFFUSE_ON("SKINDIFFUSE ON",Float) = 1.0
         [Toggle(_SKINSPECULAR_ON)] _SKINSPECULAR_ON("SKINSPECULAR ON",Float) = 1.0
     }
 
     SubShader
     {
-        Tags{"RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "UniversalMaterialType" = "Lit" "IgnoreProjector" = "True" "ShaderModel"="4.5"}
+        Tags
+        {
+            "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "UniversalMaterialType" = "Lit" "IgnoreProjector" = "True" "ShaderModel"="4.5"
+        }
         LOD 300
 
         // ------------------------------------------------------------------
@@ -40,16 +43,19 @@ Shader "MyURPShader/Character Rendering/Separable LitSSS"
         {
             // Lightmode matches the ShaderPassName set in UniversalRenderPipeline.cs. SRPDefaultUnlit and passes with
             // no LightMode tag are also rendered by Universal Render Pipeline
-            Tags{"LightMode" = "UniversalForward"}
+            Tags
+            {
+                "LightMode" = "UniversalForward"
+            }
 
-            
+
             Cull Back
             Stencil
             {
                 ref 5
                 comp always
                 pass replace
-                }
+            }
             HLSLPROGRAM
             #pragma exclude_renderers gles gles3 glcore
             #pragma target 4.5
@@ -79,15 +85,17 @@ Shader "MyURPShader/Character Rendering/Separable LitSSS"
             //不支持合批是因为后面的Pass用的cbuffer中的内容不一致，此处仅为了演示PBR效果故不更改
             #include "ShaderLibrary/SkinLitInput.hlsl"
             #include "ShaderLibrary/SkinLitPass.hlsl"
-
             ENDHLSL
         }
-        
-                Pass
+
+        Pass
         {
             // Lightmode matches the ShaderPassName set in UniversalRenderPipeline.cs. SRPDefaultUnlit and passes with
             // no LightMode tag are also rendered by Universal Render Pipeline
-            Tags{"LightMode" = "Separable Dual Specular"}
+            Tags
+            {
+                "LightMode" = "Separable Dual Specular"
+            }
 
             Cull Back
             HLSLPROGRAM
@@ -120,14 +128,16 @@ Shader "MyURPShader/Character Rendering/Separable LitSSS"
             //不支持合批是因为后面的Pass用的cbuffer中的内容不一致，此处仅为了演示PBR效果故不更改
             #include "ShaderLibrary/SkinLitInput.hlsl"
             #include "ShaderLibrary/SkinLitPass.hlsl"
-
             ENDHLSL
         }
 
         Pass
         {
             Name "ShadowCaster"
-            Tags{"LightMode" = "ShadowCaster"}
+            Tags
+            {
+                "LightMode" = "ShadowCaster"
+            }
 
             ZWrite On
             ZTest LEqual
@@ -165,7 +175,10 @@ Shader "MyURPShader/Character Rendering/Separable LitSSS"
         Pass
         {
             Name "DepthOnly"
-            Tags{"LightMode" = "DepthOnly"}
+            Tags
+            {
+                "LightMode" = "DepthOnly"
+            }
 
             ZWrite On
             ColorMask 0
@@ -197,7 +210,10 @@ Shader "MyURPShader/Character Rendering/Separable LitSSS"
         Pass
         {
             Name "DepthNormals"
-            Tags{"LightMode" = "DepthNormals"}
+            Tags
+            {
+                "LightMode" = "DepthNormals"
+            }
 
             ZWrite On
             Cull[_Cull]

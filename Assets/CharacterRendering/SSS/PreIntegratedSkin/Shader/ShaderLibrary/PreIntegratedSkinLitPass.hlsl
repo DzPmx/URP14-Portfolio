@@ -30,9 +30,9 @@ struct Varyings
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
-void InitializeCustomLitData(Varyings input, out CustomLitData customLitData)
+void InitializeCustomLitData(Varyings input, out HairLitData customLitData)
 {
-    customLitData = (CustomLitData)0;
+    customLitData = (HairLitData)0;
 
     customLitData.positionWS = input.posWS;
     customLitData.V = GetWorldSpaceNormalizeViewDir(input.posWS);
@@ -109,7 +109,7 @@ half4 PreIntegratedSSSLitPassFragment(Varyings input) : SV_Target
 {
     UNITY_SETUP_INSTANCE_ID(input);
 
-    CustomLitData customLitData;
+    HairLitData customLitData;
     InitializeCustomLitData(input, customLitData);
 
     CustomSurfacedata customSurfaceData;
@@ -123,7 +123,7 @@ half4 PreIntegratedSSSLitPassNVFaceWorksFragment(Varyings input) : SV_Target
 {
     UNITY_SETUP_INSTANCE_ID(input);
 
-    CustomLitData customLitData;
+    HairLitData customLitData;
     InitializeCustomLitData(input, customLitData);
 
     CustomSurfacedata customSurfaceData;

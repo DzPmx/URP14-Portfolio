@@ -1,7 +1,7 @@
-#ifndef SSSS_SKIN_LIT_DATA_INCLUDED
-#define SSSS_SKIN_LIT_DATA_INCLUDED
+#ifndef SSS_LIT_DATA_INCLUDED
+#define SSS_LIT_DATA_INCLUDED
 
-struct CustomLitData
+struct HairLitData
 {
     float3 positionWS;
     half3  V; //ViewDirWS
