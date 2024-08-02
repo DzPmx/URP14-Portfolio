@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ed9004444b0f2e4480fb997ca05798e, type: 3}
   m_Name: SeparableSSS Settings
   m_EditorClassIdentifier: 
-  blueNoise: {fileID: 2800000, guid: 03c7e0268d0f57a46abc56da6510f277, type: 3}
-  subsurfaceScaler: 2
+  subsurfaceScaler: 1
   subsurfaceColor: {r: 0.8490566, g: 0.19977804, b: 0.06808474, a: 0}
   subsurfaceFalloff: {r: 0.09433961, g: 0.09433961, b: 0.09433961, a: 0}

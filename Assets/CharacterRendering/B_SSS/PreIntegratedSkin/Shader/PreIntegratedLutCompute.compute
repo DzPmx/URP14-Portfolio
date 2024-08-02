@@ -1,0 +1,217 @@
+﻿#pragma kernel CSDiffuse
+#pragma kernel CSDiffuseSpecial
+#pragma kernel CSDiffuseNvidiaFaceWorks
+#pragma kernel CSShadowNvidiaFaceWorks
+#pragma kernel CSSpecular
+
+RWTexture2D<float4> _LUT;
+
+#define PI 3.14159265
+float _IntegralInterval;
+float _LutSize;
+
+static const float diffusionSigmas[] = {0.080f, 0.220f, 0.432f, 0.753f, 1.411f, 2.722f};
+static const float diffusionWeightsR[] = {0.233f, 0.100f, 0.118f, 0.113f, 0.358f, 0.078f};
+static const float diffusionWeightsG[] = {0.455f, 0.336f, 0.198f, 0.007f, 0.004f, 0.000f};
+static const float diffusionWeightsB[] = {0.649f, 0.344f, 0.000f, 0.007f, 0.000f, 0.000f};
+
+float3 EvaluateDiffusionProfile(float x, float3 color) // x in millimeters
+{
+    float3 rgb = float3(0.0, 0.0, 0.0);
+
+    for (int i = 0; i < 6; ++i)
+    {
+        static const float rsqrtTwoPi = 0.39894228f;
+        float sigma = diffusionSigmas[i];
+        float gaussian = (rsqrtTwoPi / sigma) * exp(-0.5f * (x * x) / (sigma * sigma));
+
+        rgb.x += diffusionWeightsR[i] * gaussian;
+        rgb.y += diffusionWeightsG[i] * gaussian;
+        rgb.z += diffusionWeightsB[i] * gaussian;
+    }
+    return rgb;
+}
+
+float3 Gaussian(float v, float r)
+{
+    return 1.0 / sqrt(2.0 * PI * v) * exp(-(r * r) / (2.0 * v));
+}
+
+float3 GaussianSpecialEdition(float r)
+{
+    return 1.0 / sqrt(2.0 * PI) * exp(-(r * r));
+}
+
+float3 NvidiaDiffusionProfile(float r)
+{
+    return float3(0.0, 0.0, 0.0)
+        + Gaussian(0.0064, r) * float3(0.233, 0.455, 0.649)
+        + Gaussian(0.0484, r) * float3(0.100, 0.336, 0.344)
+        + Gaussian(0.187, r) * float3(0.118, 0.198, 0.0)
+        + Gaussian(0.567, r) * float3(0.113, 0.007, 0.007)
+        + Gaussian(1.99, r) * float3(0.358, 0.004, 0.0)
+        + Gaussian(7.41, r) * float3(0.078, 0.0, 0.0);
+}
+
+float3 DiffusionProfileSpecialEdition(float r)
+{
+    return GaussianSpecialEdition(r);
+}
+
+float3 BakeSkinDiffuseLUT(float2 uv)
+{
+    //ring integrate
+    float NoL = uv.x;
+    float INV_R = uv.y;
+
+    float theta = acos(NoL * 2.0 - 1.0);
+    float R = 1.0 / INV_R;
+
+    float3 scatteringFactor = float3(0.0, 0.0, 0.0);
+    float3 normalizationFactor = float3(0.0, 0.0, 0.0);
+
+    for (float x = -PI * _IntegralInterval / 2; x < PI * _IntegralInterval / 2; x += PI * 0.0001)
+    {
+        float dis = 2.0 * R * sin(x / 2);
+        scatteringFactor += saturate(cos(x + theta)) * NvidiaDiffusionProfile(dis);
+        normalizationFactor += NvidiaDiffusionProfile(dis);
+    }
+
+    float3 result = scatteringFactor / normalizationFactor;
+    result = pow(abs(result), 1 / 2.2);
+    return result;
+}
+
+float3 BakeSkinDiffuseLUTNVidiaFaceWorks(float2 uv)
+{
+    //ring integrate
+    float NoL = uv.x * 2.0 - 1.0;;
+    float Curvature = 1.0 - uv.y;
+
+    float theta = acos(NoL);
+    float R = 1.0 / Curvature;
+
+    const int cIter = 200;
+    float3 rgb = float3(0.0, 0.0, 0.0);
+    float lowerBound = max(-PI * R, -10.0f);
+    float upperBound = min(PI * R, 10.0f);
+    float iterScale = (upperBound - lowerBound) / float(cIter);
+    float iterBias = lowerBound + 0.5f * iterScale;
+    for (int iIter = 0; iIter < cIter; ++iIter)
+    {
+        float delta = float(iIter) * iterScale + iterBias;
+        float3 rgbDiffusion = EvaluateDiffusionProfile(delta, rgbDiffusion);
+
+        float NdotLDelta = max(0.0f, cos(theta - delta * Curvature));
+        rgb.x += NdotLDelta * rgbDiffusion.x;
+        rgb.y += NdotLDelta * rgbDiffusion.y;
+        rgb.z += NdotLDelta * rgbDiffusion.z;
+    }
+    float scale = (upperBound - lowerBound) / float(cIter);
+    rgb *= scale;
+    // Calculate delta from standard diffuse lighting (saturate(N.L)) to
+    // scattered result, remapped from [-.25, .25] to [0, 1].
+    float rgbAdjust = -max(0.0f, NoL) * 2.0f + 0.5f;
+    rgb = rgb * 2.0f + rgbAdjust;
+    float3 result = saturate(rgb);
+    return result;
+}
+
+
+float3 BakeSkinShadowLUT(float2 uv)
+{
+    //ring integrate
+    float NoL = uv.x;
+    float INV_R = uv.y;
+
+    float theta = acos(NoL * 2.0 - 1.0);
+    float R = 1.0 / INV_R;
+
+    float3 scatteringFactor = float3(0.0, 0.0, 0.0);
+    float3 normalizationFactor = float3(0.0, 0.0, 0.0);
+
+    for (float x = -PI; x < PI; x += PI * 0.0001)
+    {
+        float dis = 2.0 * R * sin(x / 2) *1;
+        scatteringFactor += saturate(cos(x + theta) *3) * NvidiaDiffusionProfile(dis);
+        normalizationFactor += NvidiaDiffusionProfile(dis);
+    }
+    float scale;
+    if ((1.0-uv.x) * 5 < 1024)
+    {
+        scale = saturate(min(float(uv.x) / 1, 1.0f) * 5);
+    }
+    float3 result = scatteringFactor / normalizationFactor * scale;
+    result = pow(abs(result), 1 / 2.2);
+    return result;
+}
+
+float3 BakeSkinDiffuseLutSpecial(float2 uv)
+{
+    //ring integrate
+    float NoL = uv.x;
+    float INV_R = uv.y;
+
+    float theta = acos(NoL * 2.0 - 1.0);
+    float R = 1.0 / INV_R;
+
+    float3 scatteringFactor = float3(0.0, 0.0, 0.0);
+    float3 normalizationFactor = float3(0.0, 0.0, 0.0);
+
+    for (float x = -PI * _IntegralInterval / 2; x < PI * _IntegralInterval / 2; x += PI * 0.0001)
+    {
+        float dis = 2.0 * R * sin(x / 2);
+        scatteringFactor += saturate(cos(x + theta)) * DiffusionProfileSpecialEdition(dis);
+        normalizationFactor += DiffusionProfileSpecialEdition(dis);
+    }
+
+    float3 result = scatteringFactor / normalizationFactor;
+    result = pow(abs(result), 1 / 2.2);
+    return result;
+}
+
+float PHBeckMann(float ndoth, float m)
+{
+    float alpha = acos(ndoth);
+    float ta = tan(alpha);
+    float val = 1.0 / (m * m * pow(ndoth, 4.0)) * exp(-(ta * ta) / (m * m));
+    return val;
+}
+
+float BakeSkinSpecularLUT(float2 uv)
+{
+    return 0.5 * pow(PHBeckMann(uv.x, uv.y), 0.1);
+}
+
+[numthreads(8,8,1)]
+void CSDiffuse(uint3 id : SV_DispatchThreadID)
+{
+    _LUT[id.xy] = float4(BakeSkinDiffuseLUT(id.xy / _LutSize).rgb, 1.0);
+}
+
+
+[numthreads(8,8,1)]
+void CSDiffuseSpecial(uint3 id : SV_DispatchThreadID)
+{
+    _LUT[id.xy] = float4(BakeSkinDiffuseLutSpecial(id.xy / _LutSize).rgb, 1.0);
+}
+
+
+[numthreads(8,8,1)]
+void CSDiffuseNvidiaFaceWorks(uint3 id : SV_DispatchThreadID)
+{
+    _LUT[id.xy] = float4(BakeSkinDiffuseLUTNVidiaFaceWorks(id.xy / _LutSize).rgb, 1.0);
+}
+
+[numthreads(8,8,1)]
+void CSShadowNvidiaFaceWorks(uint3 id : SV_DispatchThreadID)
+{
+    _LUT[id.xy] = float4(BakeSkinShadowLUT(id.xy / _LutSize).rgb, 1.0);
+}
+
+[numthreads(8,8,1)]
+void CSSpecular(uint3 id : SV_DispatchThreadID)
+{
+    float result = BakeSkinSpecularLUT(id.xy / _LutSize);
+    _LUT[id.xy] = float4(result, result, result, 1.0);
+}

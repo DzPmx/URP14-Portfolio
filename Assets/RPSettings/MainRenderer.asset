@@ -1,0 +1,290 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7414869766205900350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c14d215bd4f34c741bbc0cfaee36ff3f, type: 3}
+  m_Name: DepthReconstructWorld
+  m_EditorClassIdentifier: 
+  m_Active: 1
+--- !u!114 &-6136475045793877372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b813584b4d4502b41a72dcc433ad68e6, type: 3}
+  m_Name: PlannarReflectionBlur
+  m_EditorClassIdentifier: 
+  m_Active: 1
+--- !u!114 &-3921115351154897316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9b4fd65f27f5194bad37b9141885cef, type: 3}
+  m_Name: erFeatureShadowResolveRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  perObjectShadowResolveSettings:
+    renderPassEvent: 450
+    resolveMat: {fileID: 2100000, guid: 64309be30c1ec2345ac5c3ff6bde3a83, type: 2}
+    resolveToRenderTexture: 0
+    renderTextureFormat: 16
+--- !u!114 &-3795909561345962639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaf61419d4359c045ad1a25262d55641, type: 3}
+  m_Name: PerObjectShadowRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  renderPassEvent: 100
+  perObjectShadowSettings:
+    maxObjects: 4
+    sliceMaxResolution: 512
+    sliceMinResolution: 256
+    objectToDraw: 1
+    tag: PerObjectShadow
+    layer: 
+    updateMethod: 2
+    lightDirectionFrom: 1
+    eulerAngles: {x: 50, y: -30, z: 0}
+    frustumExtend: 2
+    usePass: 3
+    globalResScaleFactor: 1
+    frustumCulling: 1
+    adaptiveRes: 1
+    padding: 0.01
+    adaptiveResRemapFactor: 3
+--- !u!114 &-1772737563192090090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14a47a04183a8fb469cf73d988e46b91, type: 3}
+  m_Name: Burley Normalized SSS
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings: {fileID: 11400000, guid: 40fa72f0c9bae1a4eac60fde5802193a, type: 2}
+--- !u!114 &-109192733445042888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9b4fd65f27f5194bad37b9141885cef, type: 3}
+  m_Name: PerObjectShadowResolveRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  perObjectShadowResolveSettings:
+    renderPassEvent: 300
+    resolveMat: {fileID: 2100000, guid: ca88230cc0101a044b2d3624acea35fc, type: 2}
+    resolveToRenderTexture: 0
+    renderTextureFormat: 16
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de640fe3d0db1804a85f9fc8f5cadab6, type: 3}
+  m_Name: MainRenderer
+  m_EditorClassIdentifier: 
+  debugShaders:
+    debugReplacementPS: {fileID: 4800000, guid: cf852408f2e174538bcd9b7fda1c5ae7, type: 3}
+    hdrDebugViewPS: {fileID: 4800000, guid: 573620ae32aec764abd4d728906d2587, type: 3}
+  m_RendererFeatures:
+  - {fileID: 1495735457369869389}
+  - {fileID: -6136475045793877372}
+  - {fileID: 6692268895707860768}
+  - {fileID: -1772737563192090090}
+  - {fileID: 2220389678724525350}
+  - {fileID: -7414869766205900350}
+  - {fileID: 1557850565104172020}
+  - {fileID: -109192733445042888}
+  m_RendererFeatureMap: 4dcc7c4679ebc1148432685275dcd6aa200f107e1ab7df5c16a2f12194f865e726ad510fa668d01ec27983b93b171999f4fb2ccad5989e15384df496c9117cfe
+  m_UseNativeRenderPass: 0
+  postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
+  xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
+  shaders:
+    blitPS: {fileID: 4800000, guid: c17132b1f77d20942aa75f8429c0f8bc, type: 3}
+    copyDepthPS: {fileID: 4800000, guid: d6dae50ee9e1bfa4db75f19f99355220, type: 3}
+    screenSpaceShadowPS: {fileID: 0}
+    samplingPS: {fileID: 4800000, guid: 04c410c9937594faa893a11dceb85f7e, type: 3}
+    stencilDeferredPS: {fileID: 4800000, guid: e9155b26e1bc55942a41e518703fe304, type: 3}
+    fallbackErrorPS: {fileID: 4800000, guid: e6e9a19c3678ded42a3bc431ebef7dbd, type: 3}
+    fallbackLoadingPS: {fileID: 4800000, guid: 7f888aff2ac86494babad1c2c5daeee2, type: 3}
+    materialErrorPS: {fileID: 4800000, guid: 5fd9a8feb75a4b5894c241777f519d4e, type: 3}
+    coreBlitPS: {fileID: 4800000, guid: 93446b5c5339d4f00b85c159e1159b7c, type: 3}
+    coreBlitColorAndDepthPS: {fileID: 4800000, guid: d104b2fc1ca6445babb8e90b0758136b, type: 3}
+    blitHDROverlay: {fileID: 4800000, guid: a89bee29cffa951418fc1e2da94d1959, type: 3}
+    cameraMotionVector: {fileID: 4800000, guid: c56b7e0d4c7cb484e959caeeedae9bbf, type: 3}
+    objectMotionVector: {fileID: 4800000, guid: 7b3ede40266cd49a395def176e1bc486, type: 3}
+    dataDrivenLensFlare: {fileID: 4800000, guid: 6cda457ac28612740adb23da5d39ea92, type: 3}
+  m_AssetVersion: 2
+  m_OpaqueLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_TransparentLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_DefaultStencilState:
+    overrideStencilState: 0
+    stencilReference: 0
+    stencilCompareFunction: 8
+    passOperation: 2
+    failOperation: 0
+    zFailOperation: 0
+  m_ShadowTransparentReceive: 1
+  m_RenderingMode: 0
+  m_DepthPrimingMode: 0
+  m_CopyDepthMode: 0
+  m_AccurateGbufferNormals: 0
+  m_IntermediateTextureMode: 1
+--- !u!114 &1495735457369869389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e54a84002479402885ffc2fc44a1c5dc, type: 3}
+  m_Name: Post Process System
+  m_EditorClassIdentifier: 
+  m_Active: 1
+--- !u!114 &1557850565104172020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaf61419d4359c045ad1a25262d55641, type: 3}
+  m_Name: PerObjectShadowRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  renderPassEvent: 50
+  perObjectShadowSettings:
+    maxObjects: 16
+    sliceMaxResolution: 512
+    sliceMinResolution: 128
+    objectToDraw: 1
+    tag: PerObjectShadow
+    layer: 
+    updateMethod: 2
+    lightDirectionFrom: 1
+    eulerAngles: {x: 50, y: -30, z: 0}
+    frustumExtend: 20
+    usePass: 2
+    globalResScaleFactor: 1
+    frustumCulling: 1
+    adaptiveRes: 1
+    padding: 0.01
+    adaptiveResRemapFactor: 3
+--- !u!114 &2220389678724525350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
+  m_Name: RenderObjects
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    passTag: RenderObjects
+    Event: 300
+    filterSettings:
+      RenderQueueType: 0
+      LayerMask:
+        serializedVersion: 2
+        m_Bits: 1
+      PassNames:
+      - HairBack
+      - HairFront
+    overrideMaterial: {fileID: 0}
+    overrideMaterialPassIndex: 0
+    overrideShader: {fileID: 0}
+    overrideShaderPassIndex: 0
+    overrideMode: 1
+    overrideDepthState: 0
+    depthCompareFunction: 2
+    enableWrite: 0
+    stencilSettings:
+      overrideStencilState: 0
+      stencilReference: 0
+      stencilCompareFunction: 8
+      passOperation: 0
+      failOperation: 0
+      zFailOperation: 0
+    cameraSettings:
+      overrideCamera: 0
+      restoreCamera: 1
+      offset: {x: 0, y: 0, z: 0, w: 0}
+      cameraFieldOfView: 60
+--- !u!114 &4838313540854933373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3609b89622ab75b4bb5af2a44e761da8, type: 3}
+  m_Name: PerObejctShadowFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings: {fileID: 11400000, guid: 09ea6e469aa4e79489fbb7186d3d1db1, type: 2}
+  lightGameObject: {fileID: 0}
+  lightCamera: {fileID: 0}
+--- !u!114 &6692268895707860768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e254c1a2b3debb8479c4b7bbfc7f8ccc, type: 3}
+  m_Name: SeparableSSS
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings: {fileID: 11400000, guid: 5d3a61e1f942bf641ab47172d86b6ec0, type: 2}

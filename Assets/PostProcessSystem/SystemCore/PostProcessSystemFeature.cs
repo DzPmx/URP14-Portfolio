@@ -1,18 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using PostProcessSystem.SystemCore;
 using RenderFeature.RenderPass;
-using UnityEngine;
-using UnityEngine.PlayerLoop;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using global::PostProcessSystem.SystemCore;
 
-namespace RenderFeature
+namespace PostProcessSystem.SystemCore
 {
     public class PostProcessSystemFeature : ScriptableRendererFeature
     {
-        private List<global::PostProcessSystem.SystemCore.PostProcessSystem> myPostProcessings;
+        private List<PostProcessSystem> myPostProcessings;
         private PostProcessSystemPass mAfterOpaqueAndSkyPass;
         private PostProcessSystemPass mBeforePostProcessPass;
         private PostProcessSystemPass mAfterPostProcessPass;
@@ -22,8 +18,8 @@ namespace RenderFeature
             this.name = "Post Process System";
             var stack = VolumeManager.instance.stack;
             myPostProcessings = VolumeManager.instance.baseComponentTypeArray
-                .Where(t => t.IsSubclassOf(typeof(global::PostProcessSystem.SystemCore.PostProcessSystem)))
-                .Select(t => stack.GetComponent(t) as global::PostProcessSystem.SystemCore.PostProcessSystem).ToList();
+                .Where(t => t.IsSubclassOf(typeof(PostProcessSystem)))
+                .Select(t => stack.GetComponent(t) as PostProcessSystem).ToList();
             GetRenderPass();
         }
 
