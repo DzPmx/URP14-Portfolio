@@ -58,8 +58,8 @@ Material:
     - _Normal: 1
     - _OcclusionStrength: 1
     - _Roughness: 0.5
-    - _RoughnessLobe1: 0.8
-    - _RoughnessLobe2: 0.5
+    - _RoughnessLobe1: 1
+    - _RoughnessLobe2: 0.7
     - _SH_OFF: 0
     - _SPECULAR_OFF: 0
     - _SSSIntensity: 1

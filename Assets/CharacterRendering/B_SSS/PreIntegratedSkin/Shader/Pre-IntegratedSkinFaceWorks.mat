@@ -92,7 +92,7 @@ Material:
     - _Metallic: 0
     - _Normal: 1.5
     - _OcclusionStrength: 1
-    - _Roughness: 0.6
+    - _Roughness: 0.7
     - _SH_OFF: 0
     - _SPECULAR_OFF: 0
     - _SSS_OFF: 0

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c14d215bd4f34c741bbc0cfaee36ff3f, type: 3}
   m_Name: DepthReconstructWorld
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
 --- !u!114 &-6136475045793877372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25,7 +25,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b813584b4d4502b41a72dcc433ad68e6, type: 3}
   m_Name: PlannarReflectionBlur
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
 --- !u!114 &-3921115351154897316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87,7 +87,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14a47a04183a8fb469cf73d988e46b91, type: 3}
   m_Name: Burley Normalized SSS
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings: {fileID: 11400000, guid: 40fa72f0c9bae1a4eac60fde5802193a, type: 2}
 --- !u!114 &-109192733445042888
 MonoBehaviour:
@@ -101,7 +101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9b4fd65f27f5194bad37b9141885cef, type: 3}
   m_Name: PerObjectShadowResolveRendererFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   perObjectShadowResolveSettings:
     renderPassEvent: 300
     resolveMat: {fileID: 2100000, guid: ca88230cc0101a044b2d3624acea35fc, type: 2}
@@ -131,7 +131,8 @@ MonoBehaviour:
   - {fileID: -7414869766205900350}
   - {fileID: 1557850565104172020}
   - {fileID: -109192733445042888}
-  m_RendererFeatureMap: 4dcc7c4679ebc1148432685275dcd6aa200f107e1ab7df5c16a2f12194f865e726ad510fa668d01ec27983b93b171999f4fb2ccad5989e15384df496c9117cfe
+  - {fileID: 3437455659404216601}
+  m_RendererFeatureMap: 4dcc7c4679ebc1148432685275dcd6aa200f107e1ab7df5c16a2f12194f865e726ad510fa668d01ec27983b93b171999f4fb2ccad5989e15384df496c9117cfe19c9f1b5b54bb42f
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -182,7 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e54a84002479402885ffc2fc44a1c5dc, type: 3}
   m_Name: Post Process System
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
 --- !u!114 &1557850565104172020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -195,7 +196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaf61419d4359c045ad1a25262d55641, type: 3}
   m_Name: PerObjectShadowRendererFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   renderPassEvent: 50
   perObjectShadowSettings:
     maxObjects: 16
@@ -226,7 +227,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
   m_Name: RenderObjects
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     passTag: RenderObjects
     Event: 300
@@ -258,6 +259,20 @@ MonoBehaviour:
       restoreCamera: 1
       offset: {x: 0, y: 0, z: 0, w: 0}
       cameraFieldOfView: 60
+--- !u!114 &3437455659404216601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ce189f4d5229944bad2243c58c497f0, type: 3}
+  m_Name: OIT
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  oitSettings: {fileID: 11400000, guid: 4cd9079d0a754324da31658454cfb1fb, type: 2}
 --- !u!114 &4838313540854933373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -286,5 +301,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e254c1a2b3debb8479c4b7bbfc7f8ccc, type: 3}
   m_Name: SeparableSSS
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings: {fileID: 11400000, guid: 5d3a61e1f942bf641ab47172d86b6ec0, type: 2}

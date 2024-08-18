@@ -32,7 +32,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _CurvatureMap:
-        m_Texture: {fileID: 2800000, guid: 3d43232781bcc004bbfffe0a67fc2013, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicMap:
@@ -88,7 +88,7 @@ Material:
     - _CLEARCOAT_OFF: 0
     - _ClearCoat: 1
     - _ClearCoatRoughness: 1
-    - _Curvature: 0.5
+    - _Curvature: 0.21
     - _Cutoff: 0.5
     - _DIFFUSE_OFF: 0
     - _EnvRotation: 360
@@ -96,7 +96,7 @@ Material:
     - _Metallic: 0
     - _Normal: 1.5
     - _OcclusionStrength: 1
-    - _Roughness: 0.6
+    - _Roughness: 0.7
     - _SH_OFF: 0
     - _SPECULAR_OFF: 0
     - _SSS_OFF: 0

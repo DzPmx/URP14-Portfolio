@@ -14,6 +14,16 @@ real Pow5(real x)
     return (x * x * x * x * x);
 }
 
+inline float4 EncodeFloatRGBA( float v )
+{
+    float4 kEncodeMul = float4(1.0, 255.0, 65025.0, 16581375.0);
+    float kEncodeBit = 1.0/255.0;
+    float4 enc = kEncodeMul * v;
+    enc = frac (enc);
+    enc -= enc.yzww * kEncodeBit;
+    return enc;
+}
+
 //--------------------基本数据准备--------------------
 struct HairData
 {

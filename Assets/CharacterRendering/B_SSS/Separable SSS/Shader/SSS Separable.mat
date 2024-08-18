@@ -61,7 +61,7 @@ Material:
     - _OcclusionStrength: 1
     - _Roughness: 1
     - _RoughnessLobe1: 1
-    - _RoughnessLobe2: 0.6
+    - _RoughnessLobe2: 0.65
     - _SH_OFF: 0
     - _SKINDIFFUSE_OFF: 0
     - _SKINDIFFUSE_ON: 1

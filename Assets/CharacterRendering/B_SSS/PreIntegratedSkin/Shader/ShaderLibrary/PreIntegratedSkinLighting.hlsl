@@ -378,7 +378,7 @@ CUSTOM_NAMESPACE_START(PBR)
     {
         float3 albedo = customSurfaceData.albedo;
         customSurfaceData.albedo = lerp(customSurfaceData.albedo, float3(0.0, 0.0, 0.0), customSurfaceData.metallic);
-        customSurfaceData.specular = lerp(float3(0.028, 0.028, 0.028), albedo, customSurfaceData.metallic);
+        customSurfaceData.specular = lerp(float3(0.08, 0.08, 0.08), albedo, customSurfaceData.metallic);
         half3x3 TBN = half3x3(customLitData.T, customLitData.B, customLitData.N);
         customLitData.N = normalize(mul(customSurfaceData.normalTS, TBN));
         customLitData.NB = normalize(mul(customSurfaceData.normalTSBlur, TBN));
@@ -404,7 +404,7 @@ CUSTOM_NAMESPACE_START(PBR)
     {
         float3 albedo = customSurfaceData.albedo;
         customSurfaceData.albedo = lerp(customSurfaceData.albedo, float3(0.0, 0.0, 0.0), customSurfaceData.metallic);
-        customSurfaceData.specular = lerp(float3(0.028, 0.028, 0.028), albedo, customSurfaceData.metallic);
+        customSurfaceData.specular = lerp(float3(0.08, 0.08, 0.08), albedo, customSurfaceData.metallic);
         half3x3 TBN = half3x3(customLitData.T, customLitData.B, customLitData.N);
         customLitData.N = normalize(mul(customSurfaceData.normalTS, TBN));
         customLitData.NB = normalize(mul(customSurfaceData.normalTSBlur, TBN));
