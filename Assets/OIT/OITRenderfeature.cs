@@ -1,47 +1,121 @@
-using System;
 using OIT.DepthPeeling;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-public class OITRenderfeature : ScriptableRendererFeature
+namespace OIT
 {
-    public OITSettings oitSettings;
-    private DepthPeelingRenderPass _oitRenderTransparentPass;
-
-    public override void Create()
+    public class OITRenderfeature : ScriptableRendererFeature
     {
-        _oitRenderTransparentPass = new DepthPeelingRenderPass();
-        name = "OIT";
-        _oitRenderTransparentPass.renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;
-    }
+        public OITSettings oitSettings;
+        private DepthPeelingOITRenderPass _depthPeelingOitRenderPass;
+        private WeightedBlendOITRenderPass _weightedBlendOitRenderPass;
 
-    public override bool SupportsNativeRenderPass()
-    {
-        return true;
-    }
-
-    public override void SetupRenderPasses(ScriptableRenderer renderer, in RenderingData renderingData)
-    {
-        _oitRenderTransparentPass.SetUp(renderingData.cameraData.renderer.cameraColorTargetHandle,
-            renderingData.cameraData.renderer.cameraDepthTargetHandle, oitSettings);
-    }
-
-    public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
-    {
-        //Dont Consider ReflecitionProbe Yet 
-        if (renderingData.cameraData.cameraType == CameraType.Preview ||
-            renderingData.cameraData.cameraType == CameraType.Reflection)
+        public override void Create()
         {
-            return;
-        }
-        
-        renderer.EnqueuePass(_oitRenderTransparentPass);
-    }
+            name = "OIT";
 
-    protected override void Dispose(bool disposing)
-    {
-        base.Dispose(disposing);
-        _oitRenderTransparentPass.Dispose();
+            switch (oitSettings.oitMode)
+            {
+                case OITMode.DepthPeeling:
+                    _depthPeelingOitRenderPass = new DepthPeelingOITRenderPass
+                    {
+                        renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing
+                    };
+                    break;
+                case OITMode.WeightedBlend:
+                    _weightedBlendOitRenderPass = new WeightedBlendOITRenderPass
+                    {
+                        renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing
+                    };
+                    break;
+                case OITMode.PerpiexlLinkedList:
+                    break;
+                case OITMode.PreviewAll:
+                    _depthPeelingOitRenderPass = new DepthPeelingOITRenderPass
+                    {
+                        renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing
+                    };
+
+                    _weightedBlendOitRenderPass = new WeightedBlendOITRenderPass
+                    {
+                        renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing
+                    };
+                    break;
+            }
+        }
+
+        public override bool SupportsNativeRenderPass()
+        {
+            return true;
+        }
+
+        public override void SetupRenderPasses(ScriptableRenderer renderer, in RenderingData renderingData)
+        {
+            switch (oitSettings.oitMode)
+            {
+                case OITMode.DepthPeeling:
+                    _depthPeelingOitRenderPass.SetUp(renderingData.cameraData.renderer.cameraColorTargetHandle,
+                        renderingData.cameraData.renderer.cameraDepthTargetHandle, oitSettings);
+                    break;
+                case OITMode.WeightedBlend:
+                    _weightedBlendOitRenderPass.SetUp(renderingData.cameraData.renderer.cameraColorTargetHandle,
+                        renderingData.cameraData.renderer.cameraDepthTargetHandle, oitSettings);
+                    break;
+                case OITMode.PerpiexlLinkedList:
+                    break;
+                case OITMode.PreviewAll:
+                    _depthPeelingOitRenderPass.SetUp(renderingData.cameraData.renderer.cameraColorTargetHandle,
+                        renderingData.cameraData.renderer.cameraDepthTargetHandle, oitSettings);
+                    _weightedBlendOitRenderPass.SetUp(renderingData.cameraData.renderer.cameraColorTargetHandle,
+                        renderingData.cameraData.renderer.cameraDepthTargetHandle, oitSettings);
+                    break;
+            }
+        }
+
+        public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
+        {
+            //Dont Consider ReflecitionProbe Yet 
+            if (renderingData.cameraData.cameraType == CameraType.Preview ||
+                renderingData.cameraData.cameraType == CameraType.Reflection)
+            {
+                return;
+            }
+
+            switch (oitSettings.oitMode)
+            {
+                case OITMode.DepthPeeling:
+                    renderer.EnqueuePass(_depthPeelingOitRenderPass);
+                    break;
+                case OITMode.WeightedBlend:
+                    renderer.EnqueuePass(_weightedBlendOitRenderPass);
+                    break;
+                case OITMode.PerpiexlLinkedList:
+                    break;
+                case OITMode.PreviewAll:
+                    renderer.EnqueuePass(_depthPeelingOitRenderPass);
+                    renderer.EnqueuePass(_weightedBlendOitRenderPass);
+                    break;
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            switch (oitSettings.oitMode)
+            {
+                case OITMode.DepthPeeling:
+                    _depthPeelingOitRenderPass.Dispose(disposing);
+                    break;
+                case OITMode.WeightedBlend:
+                    _weightedBlendOitRenderPass.Dispose(disposing);
+                    break;
+                case OITMode.PerpiexlLinkedList:
+                    break;
+                case OITMode.PreviewAll:
+                    _depthPeelingOitRenderPass.Dispose(disposing);
+                    _weightedBlendOitRenderPass.Dispose(disposing);
+                    break;
+            }
+        }
     }
 }

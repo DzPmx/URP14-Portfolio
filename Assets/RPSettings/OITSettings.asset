@@ -13,7 +13,11 @@ MonoBehaviour:
   m_Name: OITSettings
   m_EditorClassIdentifier: 
   oitMode: 1
-  layers: 4
-  initialShader: {fileID: 4800000, guid: 3654da9efc33dd04a90aa66675b0149c, type: 3}
-  depthPeelingShader: {fileID: 4800000, guid: 5e0468d05123865479c25cc31b8b6ce3, type: 3}
-  blendShader: {fileID: 4800000, guid: 460e42526a86bbe4281ab0906ee549db, type: 3}
+  layers: 2
+  DP_initialShader: {fileID: 4800000, guid: 3654da9efc33dd04a90aa66675b0149c, type: 3}
+  DP_depthPeelingShader: {fileID: 4800000, guid: 5e0468d05123865479c25cc31b8b6ce3, type: 3}
+  DP_blendShader: {fileID: 4800000, guid: 460e42526a86bbe4281ab0906ee549db, type: 3}
+  WeightFunction: 0
+  WB_accumulateShader: {fileID: 4800000, guid: f1eb527a28fd4934e9ad613331e68f89, type: 3}
+  WB_revealageShader: {fileID: 4800000, guid: 970b4a8fa87a8c64d9eeb39ebe6fa115, type: 3}
+  WB_blendShader: {fileID: 4800000, guid: c715d5156d492894b896bb0f5f4b9033, type: 3}

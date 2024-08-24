@@ -96,17 +96,17 @@ Shader "Universal Render Pipeline/OIT/DP_Initial"
 
             Blend One Zero
             ZWrite On
-            Cull Back
-          
+            Cull Off
+
 
             HLSLPROGRAM
             #pragma target 4.5
 
 
-            #pragma vertex LitPassVertex
-            #pragma fragment OIT_Iitial_LitPassFragment
-
-
+            #pragma vertex DP_LitPassVertex
+            #pragma fragment DP_OIT_Iitial_LitPassFragment
+            
+            
             #pragma shader_feature_local _NORMALMAP
             #pragma shader_feature_local _PARALLAXMAP
             #pragma shader_feature_local _RECEIVE_SHADOWS_OFF

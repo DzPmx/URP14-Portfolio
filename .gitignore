@@ -3,6 +3,7 @@
 [Oo]bj/
 [Bb]uild/
 [Pp]ackages/
+[Pp]rojectSettings/
 [Ll]ogs/
 [Uu]serSettings/
 [Mm]emoryCaptures/
@@ -10,6 +11,7 @@
 [Tt]oDoList/
 [Aa]llSky/
 [Rr]ecordings/
+[Uu]serSettings/
 
 *.sln
 *.conf

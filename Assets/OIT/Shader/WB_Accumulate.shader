@@ -1,4 +1,4 @@
-Shader "Universal Render Pipeline/OIT/DP_DepthPeeling"
+Shader "Universal Render Pipeline/OIT/WB_Accumulate"
 {
     Properties
     {
@@ -82,6 +82,8 @@ Shader "Universal Render Pipeline/OIT/DP_DepthPeeling"
             "RenderPipeline" = "UniversalPipeline"
             "UniversalMaterialType" = "Lit"
             "IgnoreProjector" = "True"
+            "Queue"="Transparent"
+            
         }
         LOD 300
 
@@ -91,22 +93,22 @@ Shader "Universal Render Pipeline/OIT/DP_DepthPeeling"
             Name "ForwardLit"
             Tags
             {
-                "LightMode" = "DP_Initialize"
+                "LightMode" = "WB_Accumulate"
             }
 
-            Blend One Zero
-            ZWrite On
-            
+            ZWrite Off
+            Blend One One
+            Cull Off
 
 
             HLSLPROGRAM
             #pragma target 4.5
 
 
-            #pragma vertex LitPassVertex
-            #pragma fragment OIT_DepthPeeling_LitPassFragment
-
-
+            #pragma vertex WB_LitPassVertex
+            #pragma fragment WB_OIT_Accumulate_LitPassFragment
+            
+            
             #pragma shader_feature_local _NORMALMAP
             #pragma shader_feature_local _PARALLAXMAP
             #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
@@ -121,7 +123,6 @@ Shader "Universal Render Pipeline/OIT/DP_DepthPeeling"
             #pragma shader_feature_local_fragment _SPECULARHIGHLIGHTS_OFF
             #pragma shader_feature_local_fragment _ENVIRONMENTREFLECTIONS_OFF
             #pragma shader_feature_local_fragment _SPECULAR_SETUP
-
 
 
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
@@ -142,6 +143,7 @@ Shader "Universal Render Pipeline/OIT/DP_DepthPeeling"
 
             // -------------------------------------
             // Unity defined keywords
+            #pragma multi_compile _WEIGHTED_FUNTION_1 _WEIGHTED_FUNTION_2 _WEIGHTED_FUNTION_3 _No_WEIGHTED
             #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
             #pragma multi_compile _ SHADOWS_SHADOWMASK
             #pragma multi_compile _ DIRLIGHTMAP_COMBINED

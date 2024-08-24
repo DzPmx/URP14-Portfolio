@@ -5,7 +5,7 @@ using UnityEngine.Rendering.Universal;
 
 namespace OIT.DepthPeeling
 {
-    public class DepthPeelingRenderPass : ScriptableRenderPass
+    public class DepthPeelingOITRenderPass : ScriptableRenderPass
     {
         private int layers;
         private RTHandle sourceColorRT;
@@ -26,9 +26,9 @@ namespace OIT.DepthPeeling
             sourceColorRT = color;
             sourceDepthRT = depth;
             this.layers = oitSettings.layers;
-            initializeShader = oitSettings.initialShader;
-            depthPeelingShader = oitSettings.depthPeelingShader;
-            blendShader = oitSettings.blendShader;
+            initializeShader = oitSettings.DP_initialShader;
+            depthPeelingShader = oitSettings.DP_depthPeelingShader;
+            blendShader = oitSettings.DP_blendShader;
         }
 
         public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
@@ -63,17 +63,22 @@ namespace OIT.DepthPeeling
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
+            GraphicsSettings.useScriptableRenderPipelineBatching = true;
+
             #region InitializeTransparent
 
-            CommandBuffer buffer = CommandBufferPool.Get("InitializeTransparent");
+            CommandBuffer buffer = CommandBufferPool.Get("DP_InitializeTransparent");
             CullingResults cullingResults = renderingData.cullResults;
-            SortingSettings sortingSettings = new SortingSettings(renderingData.cameraData.camera);
-            DrawingSettings drawingSettings = new DrawingSettings(new ShaderTagId("OrderdTrasparent"), sortingSettings);
+            DrawingSettings drawingSettings = CreateDrawingSettings(new ShaderTagId("OrderdTransparent"),
+                ref renderingData, renderingData.cameraData.defaultOpaqueSortFlags);
             drawingSettings.overrideShader = initializeShader;
+            drawingSettings.overrideShaderPassIndex = 0;
             FilteringSettings filteringSettings = new FilteringSettings(RenderQueueRange.transparent);
+            //2 is DP
+            filteringSettings.renderingLayerMask = 2;
 
 
-            using (new ProfilingScope(buffer, new ProfilingSampler("Initialize Transparent")))
+            using (new ProfilingScope(buffer, new ProfilingSampler("DP_Initialize Transparent")))
             {
                 context.ExecuteCommandBuffer(buffer);
                 buffer.Clear();
@@ -92,14 +97,14 @@ namespace OIT.DepthPeeling
             drawingSettings.overrideShader = depthPeelingShader;
             for (int i = 1; i < layers; i++)
             {
-                CommandBuffer depthPeelingbuffer = CommandBufferPool.Get("DepthPeeling " + i);
+                CommandBuffer depthPeelingbuffer = CommandBufferPool.Get("DP_DepthPeeling " + i);
                 mrtid[0] = colorRT[i].nameID;
                 mrtid[1] = depthRT[i % 2].nameID;
 
                 CoreUtils.SetRenderTarget(depthPeelingbuffer, mrtid, depthID);
                 CoreUtils.ClearRenderTarget(depthPeelingbuffer, ClearFlag.All, new Color(1.0f, 1.0f, 1.0f, 0.0f));
                 depthPeelingbuffer.SetGlobalTexture("_PrevDepthTex", depthRT[1 - i % 2]);
-                using (new ProfilingScope(depthPeelingbuffer, new ProfilingSampler("Depth Peeling")))
+                using (new ProfilingScope(depthPeelingbuffer, new ProfilingSampler("DP_Depth Peeling")))
                 {
                     context.ExecuteCommandBuffer(depthPeelingbuffer);
                     depthPeelingbuffer.Clear();
@@ -115,8 +120,8 @@ namespace OIT.DepthPeeling
 
             #region Blend
 
-            CommandBuffer blendBuffer = CommandBufferPool.Get("BlendTransparent");
-            using (new ProfilingScope(blendBuffer, new ProfilingSampler("Blend Transparent")))
+            CommandBuffer blendBuffer = CommandBufferPool.Get("DP_BlendTransparent");
+            using (new ProfilingScope(blendBuffer, new ProfilingSampler("DP_Blend Transparent")))
             {
                 context.ExecuteCommandBuffer(blendBuffer);
                 blendBuffer.Clear();
@@ -142,20 +147,23 @@ namespace OIT.DepthPeeling
         {
         }
 
-        public void Dispose()
+        public void Dispose(bool disposing)
         {
-            for (int i = 0; i < 2; i++)
+            if (disposing)
             {
-                depthRT[i]?.Release();
-                mrt[i]?.Release();
-            }
+                for (int i = 0; i < 2; i++)
+                {
+                    depthRT[i]?.Release();
+                    mrt[i]?.Release();
+                }
 
-            for (int i = 0; i < layers; i++)
-            {
-                colorRT[i]?.Release();
-            }
+                for (int i = 0; i < layers; i++)
+                {
+                    colorRT[i]?.Release();
+                }
 
-            BlendRT?.Release();
+                BlendRT?.Release();
+            }
         }
     }
 }
