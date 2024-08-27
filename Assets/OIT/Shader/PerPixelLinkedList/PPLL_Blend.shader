@@ -12,8 +12,7 @@ Shader "Universal Render Pipeline/OIT/PPLL_Blend"
         }
         Pass
         {
-            Name "URP Order-Independent Transparency Pass"
-            ZTest Always
+            ZTest LEqual
             ZWrite Off
             Cull Off
             Blend Off

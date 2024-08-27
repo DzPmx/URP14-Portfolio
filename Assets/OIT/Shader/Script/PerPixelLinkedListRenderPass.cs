@@ -7,7 +7,7 @@ namespace OIT
 {
     public class PerPixelLinkedListRenderPass : ScriptableRenderPass
     {
-        private const int MAX_SORTED_PIXELS = 24;
+        private const int MAX_SORTED_PIXELS = 16;
 
         private readonly int clearStartOffsetBufferKernel;
         private ComputeShader clearStartOffsetBuffer;
@@ -135,7 +135,7 @@ namespace OIT
                 context.ExecuteCommandBuffer(blitBuffer);
                 blitBuffer.Clear();
                 Blitter.BlitCameraTexture(blitBuffer, sourceColor, blitRT);
-                Blitter.BlitCameraTexture(blitBuffer, blitRT, sourceColor, linkedListMaterial, 0);
+                Blitter.BlitCameraTexture(blitBuffer, sourceColor, sourceColor, linkedListMaterial, 0);
             }
 
             context.ExecuteCommandBuffer(blitBuffer);

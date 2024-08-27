@@ -5,7 +5,7 @@ Shader "Universal Render Pipeline/OIT/WB_Blend"
 
         Pass
         {
-            ZTest Always
+            ZTest LEqual
             Cull Back
             ZWrite Off
 

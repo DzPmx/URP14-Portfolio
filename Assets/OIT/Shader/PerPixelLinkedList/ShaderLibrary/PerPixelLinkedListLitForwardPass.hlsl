@@ -202,6 +202,7 @@ Varyings LitPassVertex(Attributes input)
     output.screenPos = ComputeScreenPos(vertexInput.positionCS);
     return output;
 }
+[earlydepthstencil]
 void PPLL_OIT_LitPassFragment(
     Varyings input
     , out half4 outColor : SV_Target0,

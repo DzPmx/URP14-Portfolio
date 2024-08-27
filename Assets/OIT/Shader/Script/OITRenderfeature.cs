@@ -21,21 +21,21 @@ namespace OIT
                     _depthPeelingOitRenderPass?.Dispose(true);
                     _depthPeelingOitRenderPass = new DepthPeelingOITRenderPass
                     {
-                        renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing
+                        renderPassEvent = RenderPassEvent.AfterRenderingTransparents
                     };
                     break;
                 case OITMode.WeightedBlend:
                     _weightedBlendOitRenderPass?.Dispose(true);
                     _weightedBlendOitRenderPass = new WeightedBlendOITRenderPass
                     {
-                        renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing
+                        renderPassEvent = RenderPassEvent.AfterRenderingTransparents
                     };
                     break;
                 case OITMode.PerpiexlLinkedList:
                     _perPixelLinkedListRenderPass?.Dispose(true);
                     _perPixelLinkedListRenderPass = new PerPixelLinkedListRenderPass()
                     {
-                        renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing
+                        renderPassEvent = RenderPassEvent.AfterRenderingTransparents
                     };
                     break;
                 case OITMode.PreviewAll:
@@ -44,17 +44,17 @@ namespace OIT
                     _perPixelLinkedListRenderPass?.Dispose(true);
                     _depthPeelingOitRenderPass = new DepthPeelingOITRenderPass
                     {
-                        renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing
+                        renderPassEvent = RenderPassEvent.AfterRenderingTransparents
                     };
 
                     _weightedBlendOitRenderPass = new WeightedBlendOITRenderPass
                     {
-                        renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing
+                        renderPassEvent = RenderPassEvent.AfterRenderingTransparents
                     };
 
                     _perPixelLinkedListRenderPass = new PerPixelLinkedListRenderPass()
                     {
-                        renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing
+                        renderPassEvent = RenderPassEvent.AfterRenderingTransparents
                     };
                     break;
             }

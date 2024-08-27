@@ -49,6 +49,7 @@ namespace OIT
             RenderingUtils.ReAllocateIfNeeded(ref depthRT[1], in descriptor, name: "TransparentDepthRT " + 1);
             RenderingUtils.ReAllocateIfNeeded(ref BlendRT, in descriptor, name: "OpaqueDepthRT");
 
+            this.descriptor.depthBufferBits = 32;
             if (BlendMaterial == null)
             {
                 BlendMaterial = CoreUtils.CreateEngineMaterial(blendShader);
