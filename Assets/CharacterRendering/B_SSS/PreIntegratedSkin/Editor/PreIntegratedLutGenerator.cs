@@ -26,7 +26,7 @@ namespace PreIntegratedSkin.Editor
         {
             lutCompute =
                 AssetDatabase.LoadAssetAtPath<ComputeShader>(
-                    "Assets/CharacterRendering/SSS/PreIntegratedSkin/Shader/PreIntegratedLutCompute.compute");
+                    "Assets/CharacterRendering/B_SSS/PreIntegratedSkin/Shader/PreIntegratedLutCompute.compute");
             if (lutCompute == null)
             {
                 Debug.Log("Do Not Find LUT ComputeShader ");
@@ -225,7 +225,7 @@ namespace PreIntegratedSkin.Editor
                 savedTexture.ReadPixels(new Rect(0, 0, lut.width, lut.height), 0, 0);
                 savedTexture.Apply();
                 RenderTexture.active = null;
-                savedPath = "Assets/CharacterRendering/SSS/PreIntegratedSkin/Resources/" + savedTexture.name;
+                savedPath = "Assets/CharacterRendering/B_SSS/PreIntegratedSkin/Resources/" + savedTexture.name;
                 System.IO.File.WriteAllBytes(savedPath, savedTexture.EncodeToTGA());
                 AssetDatabase.ImportAsset(savedPath);
             }

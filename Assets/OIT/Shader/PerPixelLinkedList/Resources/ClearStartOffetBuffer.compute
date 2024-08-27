@@ -1,0 +1,12 @@
+#pragma kernel ClearStartOffset
+
+RWByteAddressBuffer startOffetBuffer;
+
+int screenWidth;
+
+//clear the buffer value to zero
+[numthreads(32,32,1)]
+void ClearStartOffset(uint3 id : SV_DispatchThreadID)
+{
+    startOffetBuffer.Store(4 * (screenWidth * id.y + id.x), 0);
+}

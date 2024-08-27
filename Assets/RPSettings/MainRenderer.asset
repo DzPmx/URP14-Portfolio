@@ -89,6 +89,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 0
   settings: {fileID: 11400000, guid: 40fa72f0c9bae1a4eac60fde5802193a, type: 2}
+--- !u!114 &-352834546972872397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ce189f4d5229944bad2243c58c497f0, type: 3}
+  m_Name: OIT
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  oitSettings: {fileID: 11400000, guid: 4cd9079d0a754324da31658454cfb1fb, type: 2}
 --- !u!114 &-109192733445042888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,8 +145,8 @@ MonoBehaviour:
   - {fileID: -7414869766205900350}
   - {fileID: 1557850565104172020}
   - {fileID: -109192733445042888}
-  - {fileID: 5278350302802638121}
-  m_RendererFeatureMap: 4dcc7c4679ebc1148432685275dcd6aa200f107e1ab7df5c16a2f12194f865e726ad510fa668d01ec27983b93b171999f4fb2ccad5989e15384df496c9117cfe2975a06ea2774049
+  - {fileID: -352834546972872397}
+  m_RendererFeatureMap: 4dcc7c4679ebc1148432685275dcd6aa200f107e1ab7df5c16a2f12194f865e726ad510fa668d01ec27983b93b171999f4fb2ccad5989e15384df496c9117cfe33313253d97a1afb
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -275,20 +289,6 @@ MonoBehaviour:
   settings: {fileID: 11400000, guid: 09ea6e469aa4e79489fbb7186d3d1db1, type: 2}
   lightGameObject: {fileID: 0}
   lightCamera: {fileID: 0}
---- !u!114 &5278350302802638121
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ce189f4d5229944bad2243c58c497f0, type: 3}
-  m_Name: OIT
-  m_EditorClassIdentifier: 
-  m_Active: 1
-  oitSettings: {fileID: 11400000, guid: 4cd9079d0a754324da31658454cfb1fb, type: 2}
 --- !u!114 &6692268895707860768
 MonoBehaviour:
   m_ObjectHideFlags: 0

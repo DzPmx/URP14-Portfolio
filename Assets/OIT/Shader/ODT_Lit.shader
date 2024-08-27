@@ -100,7 +100,7 @@ Shader "Universal Render Pipeline/OIT/ODT_Lit"
             AlphaToMask[_AlphaToMask]
 
             HLSLPROGRAM
-            #pragma target 2.0
+            #pragma target 4.5
 
 
             #pragma vertex LitPassVertex
