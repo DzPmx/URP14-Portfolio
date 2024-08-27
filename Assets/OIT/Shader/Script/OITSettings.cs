@@ -14,13 +14,13 @@ namespace OIT
         [FormerlySerializedAs("CullMode")] public CullMode cullMode = UnityEngine.Rendering.CullMode.Off;
 
         //Depth Peeling
-        [SerializeField] public int layers = 2;
+        [SerializeField] public int layers = 3;
         [SerializeField] public Shader DP_initialShader;
         [SerializeField] public Shader DP_depthPeelingShader;
         [SerializeField] public Shader DP_blendShader;
 
         //WeightedBlend
-        [SerializeField] public WeightFunction WeightFunction = WeightFunction.Function1;
+        [SerializeField] public WeightFunction WeightFunction = WeightFunction.Function3;
         [SerializeField] public Shader WB_accumulateShader;
         [SerializeField] public Shader WB_revealageShader;
         [SerializeField] public Shader WB_blendShader;
