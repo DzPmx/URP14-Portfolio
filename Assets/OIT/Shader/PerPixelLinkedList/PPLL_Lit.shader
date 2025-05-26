@@ -91,7 +91,7 @@ Shader "Universal Render Pipeline/OIT/PPLL_Lit"
             Name "ForwardLit"
             Tags
             {
-                "LightMode" = "UniversalForward"
+                "LightMode" = "PerPixelLinkedList"
             }
 
             ZTest LEqual

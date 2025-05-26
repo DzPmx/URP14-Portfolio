@@ -53,8 +53,6 @@ namespace SSS.Separable_SSS
         static readonly int sssTextureID = Shader.PropertyToID("_SeparableSSSTexture");
         static readonly int kernelID = Shader.PropertyToID("_Kernel");
         static readonly int sssScalerID = Shader.PropertyToID("_SSSScale");
-        static readonly int noiseID = Shader.PropertyToID("_Noise");
-        static readonly int jitterID = Shader.PropertyToID("_Jitter");
         static readonly int screenSizeID = Shader.PropertyToID("_screenSize");
         static readonly int noiseSizeID = Shader.PropertyToID("_NoiseSize");
         private RTHandle sourceColor;
@@ -93,10 +91,6 @@ namespace SSS.Separable_SSS
             Vector3 SSSFC = Vector3.Normalize(new Vector3(settings.subsurfaceFalloff.r, settings.subsurfaceFalloff.g,
                 settings.subsurfaceFalloff.b));
             SeparableSSSLibrary.CalculateKernel(kernelArray, 25, SSSC, SSSFC);
-            // Vector2 jitterSample = GenerateRandomOffset();
-            // material.SetVector(jitterID,
-            //     new Vector4((float)settings.blueNoise.width, (float)settings.blueNoise.height, jitterSample.x,
-            //         jitterSample.y));
             material.SetVector(screenSizeID,
                 new Vector4(renderingData.cameraData.camera.pixelWidth, renderingData.cameraData.camera.pixelHeight, 0,
                     0));
@@ -128,12 +122,7 @@ namespace SSS.Separable_SSS
             CullingResults cullingResults = renderingData.cullResults;
             SortingSettings sortingSettings = new SortingSettings(renderingData.cameraData.camera);
             DrawingSettings drawingSettings = new DrawingSettings(dualLobe, sortingSettings);
-            drawingSettings.perObjectData = PerObjectData.ReflectionProbes |
-                                            PerObjectData.Lightmaps | PerObjectData.ShadowMask |
-                                            PerObjectData.LightProbe | PerObjectData.OcclusionProbe |
-                                            PerObjectData.LightProbeProxyVolume |
-                                            PerObjectData.OcclusionProbeProxyVolume | PerObjectData.LightIndices |
-                                            PerObjectData.LightData | PerObjectData.MotionVectors;
+            drawingSettings.perObjectData = renderingData.perObjectData;
             FilteringSettings filteringSettings = FilteringSettings.defaultValue;
             context.DrawRenderers(cullingResults, ref drawingSettings, ref filteringSettings);
 
@@ -169,13 +158,6 @@ namespace SSS.Separable_SSS
 
         private int SampleCount = 64;
         private int SampleIndex = 0;
-
-        private Vector2 GenerateRandomOffset()
-        {
-            var offset = new Vector2(GetHaltonValue(SampleIndex & 1023, 2), GetHaltonValue(SampleIndex & 1023, 3));
-            if (SampleIndex++ >= SampleCount)
-                SampleIndex = 0;
-            return offset;
-        }
+        
     }
 }

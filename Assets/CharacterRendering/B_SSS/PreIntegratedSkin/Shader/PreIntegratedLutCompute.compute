@@ -85,35 +85,26 @@ float3 BakeSkinDiffuseLUT(float2 uv)
 float3 BakeSkinDiffuseLUTNVidiaFaceWorks(float2 uv)
 {
     //ring integrate
-    float NoL = uv.x * 2.0 - 1.0;;
-    float Curvature = 1.0 - uv.y;
+    float NoL = uv.x;
+    float INV_R = 1.0-uv.y;
 
-    float theta = acos(NoL);
-    float R = 1.0 / Curvature;
+    float theta = acos(NoL * 2.0 - 1.0);
+    float R = 1.0 / INV_R;
 
-    const int cIter = 200;
-    float3 rgb = float3(0.0, 0.0, 0.0);
-    float lowerBound = max(-PI * R, -10.0f);
-    float upperBound = min(PI * R, 10.0f);
-    float iterScale = (upperBound - lowerBound) / float(cIter);
-    float iterBias = lowerBound + 0.5f * iterScale;
-    for (int iIter = 0; iIter < cIter; ++iIter)
+    float3 scatteringFactor = float3(0.0, 0.0, 0.0);
+    float3 normalizationFactor = float3(0.0, 0.0, 0.0);
+
+    for (float x = -PI * _IntegralInterval / 2; x < PI * _IntegralInterval / 2; x += PI * 0.0001)
     {
-        float delta = float(iIter) * iterScale + iterBias;
-        float3 rgbDiffusion = EvaluateDiffusionProfile(delta, rgbDiffusion);
-
-        float NdotLDelta = max(0.0f, cos(theta - delta * Curvature));
-        rgb.x += NdotLDelta * rgbDiffusion.x;
-        rgb.y += NdotLDelta * rgbDiffusion.y;
-        rgb.z += NdotLDelta * rgbDiffusion.z;
+        float dis = 2.0 * R * sin(x / 2);
+        scatteringFactor += saturate(cos(x + theta)) * NvidiaDiffusionProfile(dis);
+        normalizationFactor += NvidiaDiffusionProfile(dis);
     }
-    float scale = (upperBound - lowerBound) / float(cIter);
-    rgb *= scale;
-    // Calculate delta from standard diffuse lighting (saturate(N.L)) to
-    // scattered result, remapped from [-.25, .25] to [0, 1].
-    float rgbAdjust = -max(0.0f, NoL) * 2.0f + 0.5f;
-    rgb = rgb * 2.0f + rgbAdjust;
-    float3 result = saturate(rgb);
+
+    float3 result = scatteringFactor / normalizationFactor;
+    float rgbAdjust = -max(0.0f, NoL * 2.0 - 1.0) * 2.0f + 0.5f;
+    result = result * 2.0f + rgbAdjust;
+   // result = pow(abs(result), 1 / 2.2);
     return result;
 }
 

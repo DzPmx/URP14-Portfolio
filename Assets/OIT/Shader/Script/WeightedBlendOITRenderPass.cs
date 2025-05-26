@@ -13,7 +13,7 @@ namespace OIT
         private RTHandle sourceDepth;
         private RTHandle accumRT;
         private RTHandle revealageRT;
-
+        
         private Shader accumulateShader;
         private Shader revealageShader;
         private Shader blendShader;
@@ -39,9 +39,8 @@ namespace OIT
             RenderTextureDescriptor descriptor = renderingData.cameraData.cameraTargetDescriptor;
             descriptor.depthBufferBits = 0;
             descriptor.graphicsFormat = GraphicsFormat.R16G16B16A16_SFloat;
-            descriptor.sRGB = false;
             RenderingUtils.ReAllocateIfNeeded(ref accumRT, descriptor, name: "accumulateRT");
-            descriptor.graphicsFormat = GraphicsFormat.R16_SFloat;
+            descriptor.graphicsFormat = GraphicsFormat.R8_UNorm;
             RenderingUtils.ReAllocateIfNeeded(ref revealageRT, descriptor, name: "revealageRT");
             descriptor.graphicsFormat = GraphicsFormat.B10G11R11_UFloatPack32;
             RenderingUtils.ReAllocateIfNeeded(ref BlitRT, descriptor, name: "BlitRT");
@@ -75,8 +74,7 @@ namespace OIT
             blitBuffer.Dispose();
 
             #endregion
-
-
+            
             CommandBuffer accumulateBuffer = CommandBufferPool.Get("WB_Accumulate");
             CoreUtils.SetRenderTarget(accumulateBuffer, accumRT, sourceDepth);
             CoreUtils.ClearRenderTarget(accumulateBuffer, ClearFlag.Color, Color.clear);

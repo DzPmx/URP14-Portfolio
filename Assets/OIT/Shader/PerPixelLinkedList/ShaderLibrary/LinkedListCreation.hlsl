@@ -6,6 +6,7 @@
 RWStructuredBuffer<FragmentAndLinkBuffer_STRUCT> fragLinkedBuffer : register(u1);
 RWByteAddressBuffer startOffetBuffer : register(u2);
 
+
 // PackRGBA takes a float4 value and packs it into a UINT (8 bits / float)
 uint PackRGBA(float4 unpackedInput)
 {

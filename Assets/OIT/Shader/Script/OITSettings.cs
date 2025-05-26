@@ -9,7 +9,7 @@ namespace OIT
     [CreateAssetMenu(fileName = "OITSettings", menuName = "OIT Settings")]
     public class OITSettings : ScriptableObject
     {
-        public OITMode oitMode = OITMode.DepthPeeling;
+        public OITMode oitMode = OITMode.PreviewAll;
 
         [FormerlySerializedAs("CullMode")] public CullMode cullMode = UnityEngine.Rendering.CullMode.Off;
 

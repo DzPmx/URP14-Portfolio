@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Unlit_Test1
+  m_Shader: {fileID: 4800000, guid: f6989712a42003249a73c92cadb60c49, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _DensityMap:
+        m_Texture: {fileID: 11700000, guid: de76066e92a84694ab0f5132230d254c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FogSkyColorSampler:
+        m_Texture: {fileID: 2800000, guid: 6311333fe272c6548baed62fa0ada359, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseMap:
+        m_Texture: {fileID: 11700000, guid: ab650d28eca93e94eab2c028834755b1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _NoiseIntensity: 15
+    - _NoiseTilling: 0.01
+    - _Slices: 40
+    - _SoftEdge: 0.01
+    - _UseSegFogAdjust: 0
+    m_Colors:
+    - _BetaMie: {r: 0.00000351482, g: 0.00000532746, b: 0.00000820421, a: 120}
+    - _BetaRay: {r: 0.00005, g: 0.00011, b: 0.00027, a: 0}
+    - _Bound: {r: -54.51778, g: 0, b: 0, a: -40.66007}
+    - _CloudSeaGreenstein: {r: 0.01512, g: 1.81, b: 1.8, a: 0}
+    - _Density: {r: 0.003, g: 1, b: 0, a: 0}
+    - _DiffuseColor: {r: 0.83088, g: 0.88802993, b: 1, a: 0.516}
+    - _FogIntensityScale: {r: 1, g: 1, b: 1, a: 1}
+    - _HeightFogData: {r: 0.002, g: 0.004, b: 0, a: 0}
+    - _LightIntensity: {r: 1, g: 10, b: 0, a: 0}
+    - _QSMainLightColor: {r: 1.61901, g: 1.16672, b: 0.86062, a: 0.5}
+    - _Radius: {r: 1300, g: 1300, b: 0, a: 0}
+    - _Tilling: {r: 0.0015, g: 0.02, b: 0.0015, a: 0}
+    - _VolumeTransform: {r: -10542.466, g: -10526.556, b: -5271.233, a: -5263.278}
+    - _ZFadeParam: {r: 0.33333, g: 0.00033, b: 3, a: 0.01}
+  m_BuildTextureStacks: []

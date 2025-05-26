@@ -10,7 +10,6 @@ namespace OIT
         private int layers;
         private RTHandle sourceColorRT;
         private RTHandle sourceDepthRT;
-        private RTHandle BlendRT;
         private RTHandle[] colorRT = new RTHandle[6];
         private RTHandle[] depthRT = new RTHandle[2];
         private RTHandle[] mrt = new RTHandle[2];
@@ -39,15 +38,14 @@ namespace OIT
             descriptor.graphicsFormat = GraphicsFormat.R8G8B8A8_UNorm;
             descriptor.depthBufferBits = 0;
 
-
+                
             for (int i = 0; i < layers; i++)
             {
                 RenderingUtils.ReAllocateIfNeeded(ref colorRT[i], in descriptor, name: "TransparentColorRT " + i);
             }
-
             RenderingUtils.ReAllocateIfNeeded(ref depthRT[0], in descriptor, name: "TransparentDepthRT " + 0);
             RenderingUtils.ReAllocateIfNeeded(ref depthRT[1], in descriptor, name: "TransparentDepthRT " + 1);
-            RenderingUtils.ReAllocateIfNeeded(ref BlendRT, in descriptor, name: "OpaqueDepthRT");
+
 
             this.descriptor.depthBufferBits = 32;
             if (BlendMaterial == null)
@@ -79,7 +77,6 @@ namespace OIT
             FilteringSettings filteringSettings = new FilteringSettings(RenderQueueRange.transparent);
             //2 is DP
             filteringSettings.renderingLayerMask = 2;
-
 
             using (new ProfilingScope(buffer, new ProfilingSampler("DP_Initialize Transparent")))
             {
@@ -161,8 +158,6 @@ namespace OIT
                 {
                     colorRT[i]?.Release();
                 }
-
-                BlendRT?.Release();
             }
         }
     }

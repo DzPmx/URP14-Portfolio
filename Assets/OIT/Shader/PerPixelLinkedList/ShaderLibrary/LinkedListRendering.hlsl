@@ -83,6 +83,7 @@ float4 renderLinkedList(float4 col, float2 pos, uint uSampleIndex)
 
         // Manual blending between current fragment and previous one
         col.rgb = lerp(col.rgb, vPixColor.rgb, vPixColor.a);
+        //col.rgb = vPixColor.a*vPixColor.rgb+(1.0-vPixColor.a)*col.rgb;
     }
 
     return col;

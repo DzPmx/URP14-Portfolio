@@ -36,6 +36,7 @@ public class MeshVertexManager : EditorWindow
         {
             fontColor = EditorGUILayout.ColorField("字体颜色", fontColor);
             fontSize = EditorGUILayout.IntField("字体大小", fontSize);
+            
         }
 
         EditorGUILayout.EndVertical();
@@ -221,54 +222,54 @@ public class MeshVertexManager : EditorWindow
 
                 AssetDatabase.CreateAsset(orderedMesh, DonePth + "/" + orderedMesh.name + ".asset");
             }
+        }
+    }
 
-            [DrawGizmo(GizmoType.Selected)]
-            static void ShowVertexIndices(Transform objectTransform, GizmoType gizmoType)
+    [DrawGizmo(GizmoType.Selected)]
+    static void ShowVertexIndices(Transform objectTransform, GizmoType gizmoType)
+    {
+        if (objectTransform == null) return;
+        if (!ShowVertexIndeces) return;
+
+        MeshFilter meshFilter = objectTransform.GetComponent<MeshFilter>();
+        if (meshFilter == null || meshFilter.sharedMesh == null) return;
+
+        Vector3[] vertices = meshFilter.sharedMesh.vertices;
+        Vector3[] normals = meshFilter.sharedMesh.normals;
+        Camera sceneCamera = SceneView.lastActiveSceneView.camera;
+        if (sceneCamera == null) return;
+
+        GUIStyle style = new GUIStyle();
+        style.fontSize = fontSize; // 设置字体大小
+        style.normal.textColor = fontColor; // 设置字体颜色
+
+
+        float distanceThreshold = 0.07f; // 距离阈值
+        List<Vector3> displayedPoints = new List<Vector3>();
+
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            Vector3 worldPos = objectTransform.TransformPoint(vertices[i]);
+            Vector3 worldNormal = objectTransform.TransformDirection(normals[i]);
+            Vector3 cameraDirection = (worldPos - sceneCamera.transform.position).normalized;
+
+            if (Vector3.Dot(worldNormal, cameraDirection) < 0.2)
             {
-                if (objectTransform == null) return;
-                if (!ShowVertexIndeces) return;
-
-                MeshFilter meshFilter = objectTransform.GetComponent<MeshFilter>();
-                if (meshFilter == null || meshFilter.sharedMesh == null) return;
-
-                Vector3[] vertices = meshFilter.sharedMesh.vertices;
-                Vector3[] normals = meshFilter.sharedMesh.normals;
-                Camera sceneCamera = SceneView.lastActiveSceneView.camera;
-                if (sceneCamera == null) return;
-
-                GUIStyle style = new GUIStyle();
-                style.fontSize = fontSize; // 设置字体大小
-                style.normal.textColor = fontColor; // 设置字体颜色
-
-
-                float distanceThreshold = 0.07f; // 距离阈值
-                List<Vector3> displayedPoints = new List<Vector3>();
-
-                for (int i = 0; i < vertices.Length; i++)
+                bool tooClose = false;
+                foreach (Vector3 point in displayedPoints)
                 {
-                    Vector3 worldPos = objectTransform.TransformPoint(vertices[i]);
-                    Vector3 worldNormal = objectTransform.TransformDirection(normals[i]);
-                    Vector3 cameraDirection = (worldPos - sceneCamera.transform.position).normalized;
-
-                    if (Vector3.Dot(worldNormal, cameraDirection) < 0.2)
+                    if (Vector3.Distance(worldPos, point) < distanceThreshold)
                     {
-                        bool tooClose = false;
-                        foreach (Vector3 point in displayedPoints)
-                        {
-                            if (Vector3.Distance(worldPos, point) < distanceThreshold)
-                            {
-                                tooClose = true;
-                                break;
-                            }
-                        }
-
-                        if (!tooClose)
-                        {
-                            Gizmos.DrawSphere(worldPos, 0.005f);
-                            Handles.Label(worldPos - new Vector3(0.001f, 0.001f, 0.001f), i.ToString(), style);
-                            displayedPoints.Add(worldPos);
-                        }
+                        tooClose = true;
+                        break;
                     }
+                }
+
+                if (!tooClose)
+                {
+                    Gizmos.DrawSphere(worldPos, 0.005f);
+                    Handles.Label(worldPos - new Vector3(0.001f, 0.001f, 0.001f), i.ToString(), style);
+                    displayedPoints.Add(worldPos);
                 }
             }
         }

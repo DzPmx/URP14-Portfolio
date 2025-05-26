@@ -8,7 +8,7 @@ Shader "Universal Render Pipeline/OIT/DP_Blend"
             ZTest Always
             Cull Off
             ZWrite Off
-            
+
             HLSLINCLUDE
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             ENDHLSL
@@ -17,10 +17,10 @@ Shader "Universal Render Pipeline/OIT/DP_Blend"
             #pragma vertex vert
             #pragma fragment frag
 
-            TEXTURE2D(_BlitTexture);
-            SAMPLER(sampler_BlitTexture);
-            TEXTURE2D(_LayerTex);
-            SAMPLER(sampler_LayerTex);
+            TEXTURE2D (_BlitTexture);
+            SAMPLER (sampler_BlitTexture);
+            TEXTURE2D (_LayerTex);
+            SAMPLER (sampler_LayerTex);
 
             struct Attributes
             {

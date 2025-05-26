@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace PreIntegratedSkin.Editor
 {
@@ -14,6 +15,8 @@ namespace PreIntegratedSkin.Editor
         private RenderTexture lut;
         private Texture2D savedTexture;
         private ComputeShader lutCompute;
+        private Shader gammaShader;
+        private Material gammaMaterial;
         private IntegralInterval interval = IntegralInterval.Half;
         private LutSize lutSize = LutSize._1024x1024;
         private TextureType textureType = TextureType.SkinDiffsue;
@@ -84,6 +87,16 @@ namespace PreIntegratedSkin.Editor
             var rect = EditorGUILayout.GetControlRect(true, position.height);
             if (lut != null)
             {
+                if (gammaShader == null)
+                {
+                    gammaShader = Shader.Find("Gamma2.2");
+                    if (gammaMaterial == null)
+                    {
+                        gammaMaterial = new Material(gammaShader);
+                        gammaMaterial.SetTexture("_MainTex", lut);
+                    }
+                }
+
                 EditorGUI.DrawPreviewTexture(rect, lut);
             }
             else
@@ -116,11 +129,6 @@ namespace PreIntegratedSkin.Editor
         private void BakeAndSaveLut()
         {
             EditorGUILayout.LabelField("预览与存储:", EditorStyles.boldLabel);
-            EditorGUI.indentLevel++;
-            EditorGUI.indentLevel++;
-            EditorGUILayout.LabelField("(注)为了解决纹理Banding的问题,预览图会比存储的图片颜色浅,这是正常的");
-            EditorGUI.indentLevel--;
-            EditorGUI.indentLevel--;
             EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
             if (GUILayout.Button("烘培纹理"))
             {
@@ -163,13 +171,14 @@ namespace PreIntegratedSkin.Editor
 
         private void SetupLut()
         {
-            lut = RenderTexture.GetTemporary((int)lutSize, (int)lutSize, 0, RenderTextureFormat.ARGB64);
+            lut = RenderTexture.GetTemporary((int)lutSize, (int)lutSize, 0, RenderTextureFormat.ARGB32,
+                RenderTextureReadWrite.sRGB);
             lut.enableRandomWrite = true;
         }
 
         private void SetupTexture2D()
         {
-            savedTexture = new Texture2D((int)lutSize, (int)lutSize, TextureFormat.RGBA64, true, true);
+            savedTexture = new Texture2D((int)lutSize, (int)lutSize, TextureFormat.ARGB32, false, false);
             savedTexture.name = textureType.ToString() + "Lut.TGA";
         }
 

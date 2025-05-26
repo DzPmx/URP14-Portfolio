@@ -118,7 +118,7 @@ namespace SSS.Burley_Normalized_Screen_Space_SSS
             using (new ProfilingScope(buffer, blurSampler))
             {
                 CoreUtils.SetRenderTarget(buffer, SSSTexture, sourceDepth);
-                CoreUtils.ClearRenderTarget(buffer, ClearFlag.Color, Color.grey);
+                CoreUtils.ClearRenderTarget(buffer, ClearFlag.Color, Color.black);
                 buffer.DrawProcedural(Matrix4x4.identity, material, 0, MeshTopology.Triangles, 3);
                 CoreUtils.SetRenderTarget(buffer, sourceColor, sourceDepth);
             }
@@ -129,12 +129,7 @@ namespace SSS.Burley_Normalized_Screen_Space_SSS
             CullingResults cullingResults = renderingData.cullResults;
             SortingSettings sortingSettings = new SortingSettings(renderingData.cameraData.camera);
             DrawingSettings drawingSettings = new DrawingSettings(dualLobe, sortingSettings);
-            drawingSettings.perObjectData = PerObjectData.ReflectionProbes |
-                                            PerObjectData.Lightmaps | PerObjectData.ShadowMask |
-                                            PerObjectData.LightProbe | PerObjectData.OcclusionProbe |
-                                            PerObjectData.LightProbeProxyVolume |
-                                            PerObjectData.OcclusionProbeProxyVolume | PerObjectData.LightIndices |
-                                            PerObjectData.LightData | PerObjectData.MotionVectors;
+            drawingSettings.perObjectData = renderingData.perObjectData;
             FilteringSettings filteringSettings = FilteringSettings.defaultValue;
             context.DrawRenderers(cullingResults, ref drawingSettings, ref filteringSettings);
 

@@ -11,8 +11,6 @@ namespace EnvironmentRendering.PlanarReflection
     [ExecuteInEditMode]
     public class PlanarReflections : MonoBehaviour
     {
-
-
         [Serializable]
         public class PlanarReflectionSettings
         {
@@ -21,22 +19,21 @@ namespace EnvironmentRendering.PlanarReflection
             public bool m_Shadows;
         }
 
-        [SerializeField]
-        public PlanarReflectionSettings m_settings = new PlanarReflectionSettings();
+        [SerializeField] public PlanarReflectionSettings m_settings = new PlanarReflectionSettings();
 
-        public GameObject target; 
+        public GameObject target;
         public float m_planeOffset;
         private static Camera _reflectionCamera;
         private RenderTexture _reflectionTexture;
         private readonly int _planarReflectionTextureId = Shader.PropertyToID("_PlanarReflectionTexture");
         private int2 _oldReflectionTextureSize;
-        
+
 
         private void OnEnable()
         {
             RenderPipelineManager.beginCameraRendering += ExecutePlanarReflections;
         }
-        
+
         private void OnDisable()
         {
             Cleanup();
@@ -51,11 +48,12 @@ namespace EnvironmentRendering.PlanarReflection
         {
             RenderPipelineManager.beginCameraRendering -= ExecutePlanarReflections;
 
-            if(_reflectionCamera)
+            if (_reflectionCamera)
             {
                 _reflectionCamera.targetTexture = null;
                 SafeDestroy(_reflectionCamera.gameObject);
             }
+
             if (_reflectionTexture)
             {
                 RenderTexture.ReleaseTemporary(_reflectionTexture);
@@ -82,7 +80,7 @@ namespace EnvironmentRendering.PlanarReflection
             dest.useOcclusionCulling = false;
             if (dest.gameObject.TryGetComponent(out UniversalAdditionalCameraData camData))
             {
-                camData.renderShadows = m_settings.m_Shadows; 
+                camData.renderShadows = m_settings.m_Shadows;
             }
         }
 
@@ -90,7 +88,7 @@ namespace EnvironmentRendering.PlanarReflection
         {
             if (_reflectionCamera == null)
                 _reflectionCamera = CreateMirrorObjects();
-            
+
             Vector3 pos = Vector3.zero;
             Vector3 normal = Vector3.up;
             if (target != null)
@@ -151,7 +149,7 @@ namespace EnvironmentRendering.PlanarReflection
             var newPos = new Vector3(pos.x, -pos.y, pos.z);
             return newPos;
         }
-        
+
 
         // Given position/normal of the plane, calculates plane in camera space.
         private Vector4 CameraSpacePlane(Camera cam, Vector3 pos, Vector3 normal, float sideSign)
@@ -160,12 +158,13 @@ namespace EnvironmentRendering.PlanarReflection
             var m = cam.worldToCameraMatrix;
             var posCamSpace = m.MultiplyPoint(offsetPos);
             var normalCamSpace = m.MultiplyVector(normal).normalized * sideSign;
-            return new Vector4(normalCamSpace.x, normalCamSpace.y, normalCamSpace.z, -Vector3.Dot(posCamSpace, normalCamSpace));
+            return new Vector4(normalCamSpace.x, normalCamSpace.y, normalCamSpace.z,
+                -Vector3.Dot(posCamSpace, normalCamSpace));
         }
 
         private Camera CreateMirrorObjects()
         {
-            var go = new GameObject("Planar Reflections",typeof(Camera));
+            var go = new GameObject("Planar Reflections", typeof(Camera));
             var cameraData = go.AddComponent(typeof(UniversalAdditionalCameraData)) as UniversalAdditionalCameraData;
 
             cameraData.requiresColorOption = CameraOverrideOption.Off;
@@ -189,18 +188,20 @@ namespace EnvironmentRendering.PlanarReflection
             {
                 var res = ReflectionResolution(cam, UniversalRenderPipeline.asset.renderScale);
                 bool useHdr10 = RenderingUtils.SupportsRenderTextureFormat(RenderTextureFormat.RGB111110Float);
-                RenderTextureFormat hdrFormat = useHdr10 ? RenderTextureFormat.RGB111110Float : RenderTextureFormat.DefaultHDR;
+                RenderTextureFormat hdrFormat =
+                    useHdr10 ? RenderTextureFormat.RGB111110Float : RenderTextureFormat.DefaultHDR;
                 _reflectionTexture = RenderTexture.GetTemporary(res.x, res.y, 16,
                     GraphicsFormatUtility.GetGraphicsFormat(hdrFormat, true));
                 _reflectionTexture.useMipMap = true;
                 _reflectionTexture.autoGenerateMips = true;
             }
-            _reflectionCamera.targetTexture =  _reflectionTexture;
+
+            _reflectionCamera.targetTexture = _reflectionTexture;
         }
 
         private int2 ReflectionResolution(Camera cam, float scale)
         {
-            var x = (int)(cam.pixelWidth * scale );
+            var x = (int)(cam.pixelWidth * scale);
             var y = (int)(cam.pixelHeight * scale);
             return new int2(x, y);
         }
@@ -212,11 +213,12 @@ namespace EnvironmentRendering.PlanarReflection
                 return;
             UpdateReflectionCamera(camera); // create reflected camera
             PlanarReflectionTexture(camera); // create and assign RenderTexture
-            var data = new PlanarReflectionSettingData(); // save quality settings and lower them for the planar reflections
+            var data =
+                new PlanarReflectionSettingData(); // save quality settings and lower them for the planar reflections
             data.Set(); // set quality settings
-            #pragma warning disable CS0618
+#pragma warning disable CS0618
             UniversalRenderPipeline.RenderSingleCamera(context, _reflectionCamera); // render planar reflections
-            #pragma warning restore CS0618
+#pragma warning restore CS0618
             data.Restore(); // restore the quality settings
             Shader.SetGlobalTexture(_planarReflectionTextureId, _reflectionTexture); // Assign texture to water shader
         }

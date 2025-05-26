@@ -38,7 +38,7 @@ namespace OIT
             clearStartOffsetBufferKernel = clearStartOffsetBuffer.FindKernel("ClearStartOffset");
             RenderPipelineManager.beginContextRendering += RenderCSBuffer;
         }
-
+        
         public void SetUp(RTHandle color, RTHandle depth, OITSettings oitSettings)
         {
             sourceColor = color;
@@ -52,7 +52,7 @@ namespace OIT
         {
             CommandBuffer renderCSBuffer = CommandBufferPool.Get("Render CS Buffer");
 
-            int bufferSize = Screen.width * Screen.height * MAX_SORTED_PIXELS;
+            int bufferSize = Screen.width * Screen.height*MAX_SORTED_PIXELS;
             int bufferStride = sizeof(uint) * 3;
 
 
@@ -63,8 +63,8 @@ namespace OIT
 
             int screenWidth = Screen.width;
             int screenHeight = Screen.height;
-            int bufferSizeHead = Screen.width * Screen.height * MAX_SORTED_PIXELS;
-            int bufferStrideHead = sizeof(uint) * 3;
+            int bufferSizeHead = Screen.width * Screen.height ;
+            int bufferStrideHead = sizeof(uint);
 
             if (startOffsetBuffer == null)
             {

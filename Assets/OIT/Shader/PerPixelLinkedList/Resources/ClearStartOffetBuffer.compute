@@ -2,6 +2,7 @@
 
 RWByteAddressBuffer startOffetBuffer;
 
+
 int screenWidth;
 
 //clear the buffer value to zero
